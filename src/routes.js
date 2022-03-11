@@ -33,16 +33,16 @@ async function Get(req, res, next) {
     if (search) {
       result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') ORDER BY acronym_id ASC LIMIT $2`;
       result_query.values.push(search.toLowerCase());
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') ORDER BY acronym_id ASC`;
+      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') GROUP BY acronym_id ORDER BY acronym_id ASC`;
       count_query.values.push(search.toLowerCase());
     } else {
       result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC LIMIT $2`;
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC`;
+      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 GROUP BY acronym_id ORDER BY acronym_id ASC`;
     }
     const count = await db.query(count_query);
-    // console.log(count);
+    console.log(count);
     const results = await db.query(result_query);
-    // console.log(results);
+    console.log(results);
     const nResults = results.rows.length;
     if (nResults < count.rows[0].result_count) {
       const fromId = results.rows[nResults - 1].acronym_id;
@@ -63,7 +63,7 @@ async function Post(req, res, next) {
       await db.connect();
       dbConnected = true;
     }
-    console.log(req);
+    // console.log(req);
     res.send('testing');
     return next();
   } catch (err) {
@@ -101,7 +101,7 @@ async function Delete(req, res, next) {
         req.authorization.basic.password !== API_PASSWORD) {
       return next(new errors.UnauthorizedError());
     }
-    console.log(req);
+    // console.log(req);
     res.send('testing');
     return next();
   } catch (err) {
