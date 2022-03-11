@@ -37,11 +37,15 @@ services:
     environment:
       - PORT: 8080
       - NODE_ENV: development
-      - DB_USER: acronymapi
-      - DB_PASSWORD: password
-      - DB_DBNAME: defaultdb
-      - DB_HOST: database
-      - DB_PORT: 5432
+      # https://node-postgres.com/features/connecting
+      - PGUSER: acronymapi
+      - PGPASSWORD: password
+      - PGDATABASE: defaultdb
+      - PGHOST: database
+      - PGPORT: 5432
+      # Credentials for POST and DELETE endpoints
+      - API_USER: username
+      - API_PASSWORD: password
 
 
 volumes:

@@ -54,8 +54,8 @@ jobs:
     - name: Run tests
       run: npm run test
       env:
-        DB_USER: acronymapi
-        DB_PASSWORD: password
-        DB_DBNAME: defaultdb
-        DB_HOST: database
-        DB_PORT: 5432
+        PGUSER: acronymapi
+        PGPASSWORD: password
+        PGDATABASE: defaultdb
+        PGHOST: database
+        PGPORT: 5432
