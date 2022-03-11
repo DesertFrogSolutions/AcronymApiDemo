@@ -49,7 +49,11 @@ describe.only('GET /acronym', () => {
       .then((res) => {
         // do something with response
         // console.log(res);
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
         return done();
@@ -68,7 +72,11 @@ describe.only('GET /acronym', () => {
       .expect(200)
       .then((res) => {
         // do something with response
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
         return done();
@@ -87,7 +95,11 @@ describe.only('GET /acronym', () => {
       .expect(200)
       .then((res) => {
         // do something with response
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
         return done();
@@ -107,7 +119,11 @@ describe.only('GET /acronym', () => {
       .expect(200)
       .then((res) => {
         // do something with response
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
 
@@ -128,7 +144,11 @@ describe.only('GET /acronym', () => {
       .expect(200)
       .then((res) => {
         // do something with response
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
 
@@ -149,7 +169,11 @@ describe.only('GET /acronym', () => {
       .expect(200)
       .then((res) => {
         // do something with response
-        assert.isOk(res.headers?.link);
+        if ('link' in res.headers) {
+          assert.isOk(res.headers.link);
+        } else {
+          assert.isOk(false, 'no link header');
+        }
         assert.isOk(res.body);
         assert.isAtLeast(res.body.length, resultRows.length);
 
