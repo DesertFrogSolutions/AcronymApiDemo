@@ -13,6 +13,7 @@
   "author": "Jonathan Goldfarb <jgoldfar@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bunyan": "1.8.15",
     "pg": "8.7.3",
     "restify": "8.6.1"
   },
