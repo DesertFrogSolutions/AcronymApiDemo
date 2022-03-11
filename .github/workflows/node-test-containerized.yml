@@ -51,8 +51,11 @@ jobs:
     - name: Install dependencies from package.json
       run: npm install
 
-    - name: Run tests
+    - name: Run tests with mocks
       run: npm run test
+
+    - name: Run tests against live Postgres server
+      run: npm run test:live
       env:
         PGUSER: acronymapi
         PGPASSWORD: password

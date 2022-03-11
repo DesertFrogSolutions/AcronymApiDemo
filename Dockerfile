@@ -7,4 +7,4 @@ RUN npm ci
 RUN chown -R node:node /app
 USER node
 
-CMD node index.js
+CMD npm run start

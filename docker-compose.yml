@@ -31,8 +31,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - type: bind
-        source: ./index.js
-        target: /app/index.js
+        source: ./src
+        target: /app/src
         read_only: true
     environment:
       - PORT: 8080

@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS acronym (
   created_at timestampz NOT NULL DEFAULT NOW(),
   updated_at timestampz NOT NULL DEFAULT NOW()
 );
+-- create index for faster searching on name
+CREATE INDEX acronym_name_txt ON acronym (name text_pattern_ops);
+-- create index for faster searching on description
+CREATE INDEX acronym_description_txt ON acronym (description text_pattern_ops);
 -- set updated_at for any change to acronym table
 CREATE TRIGGER update_acronym_updated_at BEFORE UPDATE ON acronym FOR EACH ROW EXECUTE PROCEDURE trigger_set_updated_at();
 -- Create INSERT INTO for data from acronym.json
