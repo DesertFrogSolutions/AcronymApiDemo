@@ -1,7 +1,7 @@
-if (!process.env?.API_USER) {
+if (!process.env.API_USER) {
   process.env.API_USER = 'username';
 }
-if (!process.env?.API_PASSWORD) {
+if (!process.env.API_PASSWORD) {
   process.env.API_PASSWORD = 'password';
 }
 

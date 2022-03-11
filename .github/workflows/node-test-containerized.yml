@@ -19,7 +19,7 @@ jobs:
     # - https://docs.github.com/en/actions/using-containerized-services/about-service-containers
     # - https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
     services:
-      # label for service
+      # label for service - since this job doesn't run in a container, this service is accessible at localhost
       database:
         image: postgres:14.2-alpine
         ports:
