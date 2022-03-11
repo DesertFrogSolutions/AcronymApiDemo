@@ -1,0 +1,48 @@
+version: "3"
+services:
+  # https://hub.docker.com/_/postgres/
+  database:
+    image: postgres:14.2-alpine
+    container_name: database
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./initdb.sql
+        target: /docker-entrypoint-initdb.d/00-init.sql
+        read_only: true
+    environment:
+      - POSTGRES_USER: acronymapi
+      - POSTGRES_PASSWORD: password
+      - POSTGRES_DB: defaultdb
+  # https://hub.docker.com/_/node
+  backend:
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./index.js
+        target: /app/index.js
+        read_only: true
+    environment:
+      - PORT: 8080
+      - NODE_ENV: development
+      - DB_USER: acronymapi
+      - DB_PASSWORD: password
+      - DB_DBNAME: defaultdb
+      - DB_HOST: database
+      - DB_PORT: 5432
+
+
+volumes:
+  pgdata: {}

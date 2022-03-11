@@ -1,0 +1,61 @@
+name: Test API against Postgres Service Container
+
+on:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '30 5 * * 2,4'
+
+jobs:
+  install-test:
+    strategy:
+      matrix:
+        node: ['12', '14', '16']
+    runs-on: 'ubuntu-20.04'
+    # These run alongside the job.
+    # See:
+    # - https://docs.github.com/en/actions/using-containerized-services/about-service-containers
+    # - https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
+    services:
+      # label for service
+      database:
+        image: postgres:14.2-alpine
+        volumes:
+          - ./initdb.sql:/docker-entrypoint-initdb.d/00-init.sql
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: acronymapi
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: defaultdb
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      # https://github.com/actions/checkout
+    - name: Checkout the commit triggering this job
+      uses: actions/checkout@v2
+
+      # https://github.com/actions/setup-node
+      # https://github.com/actions/cache is no longer needed with setup-node v2
+    - name: Setup Node with npm cache
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+        cache: 'npm'
+
+    - name: Install dependencies from package.json
+      run: npm install
+
+    - name: Run tests
+      run: npm run test
+      env:
+        DB_USER: acronymapi
+        DB_PASSWORD: password
+        DB_DBNAME: defaultdb
+        DB_HOST: database
+        DB_PORT: 5432
