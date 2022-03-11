@@ -23,7 +23,7 @@ async function Get(req, res, next) {
     const count_query = {
       name: 'get-acronyms-count',
       text: '',
-      values: [from, limit]
+      values: [from]
     };
     const result_query = {
       name: 'get-acronyms',
@@ -33,7 +33,7 @@ async function Get(req, res, next) {
     if (search) {
       result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') ORDER BY acronym_id ASC LIMIT $2`;
       result_query.values.push(search.toLowerCase());
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') GROUP BY acronym_id ORDER BY acronym_id ASC`;
+      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$2%' OR lower(description) LIKE '%$2%') GROUP BY acronym_id ORDER BY acronym_id ASC`;
       count_query.values.push(search.toLowerCase());
     } else {
       result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC LIMIT $2`;
