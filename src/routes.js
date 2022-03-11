@@ -37,7 +37,7 @@ async function Get(req, res, next) {
       count_query.values.push(search.toLowerCase());
     } else {
       result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC LIMIT $2`;
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND ORDER BY acronym_id ASC`;
+      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC`;
     }
     const count = await db.query(count_query);
     // console.log(count);
