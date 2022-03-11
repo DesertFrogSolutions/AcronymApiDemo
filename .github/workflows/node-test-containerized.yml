@@ -9,6 +9,7 @@ on:
 
 jobs:
   install-test:
+    name: Node application tests
     strategy:
       matrix:
         node: ['12', '14', '16']
@@ -21,8 +22,6 @@ jobs:
       # label for service
       database:
         image: postgres:14.2-alpine
-        volumes:
-          - ./initdb.sql:/docker-entrypoint-initdb.d/00-init.sql
         ports:
           - 5432:5432
         env:
@@ -39,7 +38,13 @@ jobs:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
       uses: actions/checkout@v2
-
+    - name: Install Postgres Client
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes --no-install-recommends postgresql-client
+    - name: Initialize database with initdb
+      run: |
+        PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
       # https://github.com/actions/setup-node
       # https://github.com/actions/cache is no longer needed with setup-node v2
     - name: Setup Node with npm cache
@@ -60,5 +65,5 @@ jobs:
         PGUSER: acronymapi
         PGPASSWORD: password
         PGDATABASE: defaultdb
-        PGHOST: database
+        PGHOST: localhost
         PGPORT: 5432

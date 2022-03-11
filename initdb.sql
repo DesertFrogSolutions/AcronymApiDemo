@@ -6,1560 +6,1567 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+-- Deletion of acronym table
+DROP TABLE IF EXISTS acronym;
 -- Creation of acronym table
 CREATE TABLE IF NOT EXISTS acronym (
   acronym_id serial NOT NULL PRIMARY KEY,
   name text NOT NULL,
   description text NOT NULL,
-  created_at timestampz NOT NULL DEFAULT NOW(),
-  updated_at timestampz NOT NULL DEFAULT NOW()
+  created_at timestamp with time zone NOT NULL DEFAULT NOW(),
+  updated_at timestamp with time zone NOT NULL DEFAULT NOW()
 );
+-- create index for faster searching on name
+DROP INDEX IF EXISTS acronym_name_txt;
+CREATE INDEX acronym_name_txt ON acronym (name text_pattern_ops);
+-- create index for faster searching on description
+DROP INDEX IF EXISTS acronym_description_txt;
+CREATE INDEX acronym_description_txt ON acronym (description text_pattern_ops);
 -- set updated_at for any change to acronym table
+DROP TRIGGER IF EXISTS update_acronym_updated_at ON acronym;
 CREATE TRIGGER update_acronym_updated_at BEFORE UPDATE ON acronym FOR EACH ROW EXECUTE PROCEDURE trigger_set_updated_at();
 -- Create INSERT INTO for data from acronym.json
 INSERT INTO acronym (name, description)
 VALUES
-
-($unk$'?'$unk$,$unk$'I don''t understand what you mean'$unk$)
-($unk$'?4U'$unk$,$unk$'I have a question for you'$unk$)
-($unk$';S'$unk$,$unk$'Gentle warning, like ''Hmm? What did you say?'''$unk$)
-($unk$'^^'$unk$,$unk$'Meaning ''read line'' or ''read message'' above'$unk$)
-($unk$'&lt;3'$unk$,$unk$'Meaning ''sideways heart'' (love, friendship)'$unk$)
-($unk$'&lt;33'$unk$,$unk$'Meaning ''heart or love'' (more 3s is a bigger heart)'$unk$)
-($unk$'@TEOTD'$unk$,$unk$'At the end of the day'$unk$)
-($unk$'.02'$unk$,$unk$'My (or your) two cents worth'$unk$)
-($unk$'1TG, 2TG'$unk$,$unk$'Meaning number of items needed for win (online gaming)'$unk$)
-($unk$'1UP'$unk$,$unk$'Meaning extra life (online gaming)'$unk$)
-($unk$'121'$unk$,$unk$'One-to-one (private chat initiation)'$unk$)
-($unk$'1337'$unk$,$unk$'Leet, meaning ''elite'''$unk$)
-($unk$'143'$unk$,$unk$'I love you'$unk$)
-($unk$'1432'$unk$,$unk$'I love you too'$unk$)
-($unk$'14AA41'$unk$,$unk$'One for all, and all for one'$unk$)
-($unk$'182'$unk$,$unk$'I hate you'$unk$)
-($unk$'19'$unk$,$unk$'Zero hand (online gaming)'$unk$)
-($unk$'10M'$unk$,$unk$'Ten man (online gaming)'$unk$)
-($unk$'10X'$unk$,$unk$'Thanks'$unk$)
-($unk$'10Q'$unk$,$unk$'Thank you'$unk$)
-($unk$'1CE'$unk$,$unk$'Once'$unk$)
-($unk$'1DR'$unk$,$unk$'I wonder'$unk$)
-($unk$'1NAM'$unk$,$unk$'One in a million'$unk$)
-($unk$'2'$unk$,$unk$'Meaning ''to'' in SMS'$unk$)
-($unk$'20'$unk$,$unk$'Meaning ''location'''$unk$)
-($unk$'2B'$unk$,$unk$'To be'$unk$)
-($unk$'2EZ'$unk$,$unk$'Too easy'$unk$)
-($unk$'2G2BT'$unk$,$unk$'Too good to be true'$unk$)
-($unk$'2M2H'$unk$,$unk$'Too much too handle'$unk$)
-($unk$'2MI'$unk$,$unk$'Too much information'$unk$)
-($unk$'2MOR'$unk$,$unk$'Tomorrow'$unk$)
-($unk$'2MORO'$unk$,$unk$'Tomorrow'$unk$)
-($unk$'2M2H'$unk$,$unk$'Too much to handle'$unk$)
-($unk$'2N8'$unk$,$unk$'Tonight'$unk$)
-($unk$'2NTE'$unk$,$unk$'Tonight'$unk$)
-($unk$'4'$unk$,$unk$'Short for ''for'' in SMS'$unk$)
-($unk$'411'$unk$,$unk$'Meaning ''information'''$unk$)
-($unk$'404'$unk$,$unk$'I don''t know'$unk$)
-($unk$'411'$unk$,$unk$'Meaning ''information'''$unk$)
-($unk$'420'$unk$,$unk$'Lets get high'$unk$)
-($unk$'420'$unk$,$unk$'Meaning ''Marijuana'''$unk$)
-($unk$'459'$unk$,$unk$'Means I love you (ILY is 459 using keypad numbers)'$unk$)
-($unk$'4AO'$unk$,$unk$'For adults only'$unk$)
-($unk$'4COL'$unk$,$unk$'For crying out loud'$unk$)
-($unk$'4EAE'$unk$,$unk$'Forever and ever&nbsp;'$unk$)
-($unk$'4EVA'$unk$,$unk$'Forever'$unk$)
-($unk$'4NR'$unk$,$unk$'Foreigner&nbsp;'$unk$)
-($unk$'4SALE'$unk$,$unk$'For sale'$unk$)
-($unk$'^5'$unk$,$unk$'High-five'$unk$)
-($unk$'511'$unk$,$unk$'Too much information (more than 411)'$unk$)
-($unk$'555'$unk$,$unk$'Sobbing, crying. (Mandarin Chinese txt msgs)'$unk$)
-($unk$'55555'$unk$,$unk$'Crying your eyes out (Mandarin Chinese txt msgs)'$unk$)
-($unk$'55555'$unk$,$unk$'Meaning Laughing (In Thai language the number 5 is pronounced ''ha''.)'$unk$)
-($unk$'6Y'$unk$,$unk$'Sexy'$unk$)
-($unk$'7K'$unk$,$unk$'Sick'$unk$)
-($unk$'81'$unk$,$unk$'Meaning Hells Angels (H=8th letter of alphabet, A=1st letter of alphabet)'$unk$)
-($unk$'831'$unk$,$unk$'I love you (8 letters, 3 words, 1 meaning)'$unk$)
-($unk$'86'$unk$,$unk$'Over'$unk$)
-($unk$'88'$unk$,$unk$'Bye-bye (Mandarin Chinese txt msgs)&nbsp;'$unk$)
-($unk$'88'$unk$,$unk$'Hugs and kisses'$unk$)
-($unk$'9'$unk$,$unk$'Parent is watching&nbsp;'$unk$)
-($unk$'*s*'$unk$,$unk$'Meaning ''smile'''$unk$)
-($unk$'*w*'$unk$,$unk$'Meaning ''wink'''$unk$)
-($unk$'A3'$unk$,$unk$'Anytime, anywhere, anyplace'$unk$)
-($unk$'AA'$unk$,$unk$'As above'$unk$)
-($unk$'AA'$unk$,$unk$'Ask about'$unk$)
-($unk$'AAF'$unk$,$unk$'As a matter of fact'$unk$)
-($unk$'AAF'$unk$,$unk$'As a friend'$unk$)
-($unk$'AAK'$unk$,$unk$'Asleep at keyboard'$unk$)
-($unk$'AAK'$unk$,$unk$'Alive and kicking'$unk$)
-($unk$'AAMOF'$unk$,$unk$'As a matter of fact'$unk$)
-($unk$'AAMOI'$unk$,$unk$'As a matter of interest'$unk$)
-($unk$'AAP'$unk$,$unk$'Always a pleasure'$unk$)
-($unk$'AAR'$unk$,$unk$'At any rate'$unk$)
-($unk$'AAS'$unk$,$unk$'Alive and smiling'$unk$)
-($unk$'AASHTA'$unk$,$unk$'As always, Sheldon has the answer (Bike mechanic Sheldon Brown)'$unk$)
-($unk$'AATK'$unk$,$unk$'Always at the keyboard'$unk$)
-($unk$'AAYF'$unk$,$unk$'As always, your friend'$unk$)
-($unk$'ABBR'$unk$,$unk$'Meaning abbreviation'$unk$)
-($unk$'ABC'$unk$,$unk$'Already been chewed'$unk$)
-($unk$'ABD'$unk$,$unk$'Already been done'$unk$)
-($unk$'ABT'$unk$,$unk$'About'$unk$)
-($unk$'ABT2'$unk$,$unk$'Meaning ''About to'''$unk$)
-($unk$'ABTA'$unk$,$unk$'Meaning Good-bye (signoff)'$unk$)
-($unk$'ABU'$unk$,$unk$'All bugged up'$unk$)
-($unk$'AC'$unk$,$unk$'Acceptable content'$unk$)
-($unk$'ACC'$unk$,$unk$'Anyone can come'$unk$)
-($unk$'ACD'$unk$,$unk$'ALT / CONTROL / DELETE'$unk$)
-($unk$'ACDNT'$unk$,$unk$'Accident (e-mail, Government)'$unk$)
-($unk$'ACE'$unk$,$unk$'Meaning marijuana cigarette'$unk$)
-($unk$'ACK'$unk$,$unk$'Acknowledge'$unk$)
-($unk$'ACPT'$unk$,$unk$'Accept (e-mail, Government)'$unk$)
-($unk$'ACQSTN'$unk$,$unk$'Acquisition (e-mail, Government)'$unk$)
-($unk$'ADAD'$unk$,$unk$'Another day, another dollar'$unk$)
-($unk$'ADBB'$unk$,$unk$'All done, bye-bye'$unk$)
-($unk$'ADD'$unk$,$unk$'Address'$unk$)
-($unk$'ADDY'$unk$,$unk$'Address'$unk$)
-($unk$'ADIH'$unk$,$unk$'Another day in hell'$unk$)
-($unk$'ADIP'$unk$,$unk$'Another day in paradise'$unk$)
-($unk$'ADMIN'$unk$,$unk$'Administrator'$unk$)
-($unk$'ADMINR'$unk$,$unk$'Administrator (Government)'$unk$)
-($unk$'ADN'$unk$,$unk$'Any day now'$unk$)
-($unk$'ADR'$unk$,$unk$'Address'$unk$)
-($unk$'AE'$unk$,$unk$'Area effect (online gaming)'$unk$)
-($unk$'AEAP'$unk$,$unk$'As early as possible'$unk$)
-($unk$'AF'$unk$,$unk$'April Fools'$unk$)
-($unk$'AF'$unk$,$unk$'As *Freak*'$unk$)
-($unk$'AF'$unk$,$unk$'Aggression factor (online gaming)'$unk$)
-($unk$'AFC'$unk$,$unk$'Away from computer'$unk$)
-($unk$'AFAIAA'$unk$,$unk$'As far as I am aware'$unk$)
-($unk$'AFAIC'$unk$,$unk$'As far as I am concerned'$unk$)
-($unk$'AFAIK'$unk$,$unk$'As far as I know'$unk$)
-($unk$'AFAIUI'$unk$,$unk$'As far as I understand it'$unk$)
-($unk$'AFAP'$unk$,$unk$'As far as possible'$unk$)
-($unk$'AFFA'$unk$,$unk$'Angels Forever, Forever Angels'$unk$)
-($unk$'AFJ'$unk$,$unk$'April Fool''s joke'$unk$)
-($unk$'AFK'$unk$,$unk$'Away from keyboard'$unk$)
-($unk$'AFZ'$unk$,$unk$'Acronym Free Zone'$unk$)
-($unk$'AFPOE'$unk$,$unk$'A fresh pair of eyes'$unk$)
-($unk$'AGI'$unk$,$unk$'Meaning ''agility'' (online gaming)'$unk$)
-($unk$'AH'$unk$,$unk$'At home'$unk$)
-($unk$'AIAMU'$unk$,$unk$'And I am a money''s uncle'$unk$)
-($unk$'AIGHT'$unk$,$unk$'Alright'$unk$)
-($unk$'AIR'$unk$,$unk$'As I remember'$unk$)
-($unk$'AISB'$unk$,$unk$'As it should be'$unk$)
-($unk$'AISB'$unk$,$unk$'As I said before'$unk$)
-($unk$'AISI'$unk$,$unk$'As I see it'$unk$)
-($unk$'AITR'$unk$,$unk$'Adult in the room'$unk$)
-($unk$'AKA'$unk$,$unk$'Also known as'$unk$)
-($unk$'ALCON'$unk$,$unk$'All concerned'$unk$)
-($unk$'ALOL'$unk$,$unk$'Actually laughing out loud'$unk$)
-($unk$'AMA'$unk$,$unk$'Ask me anything (Reddit)'$unk$)
-($unk$'AMAP'$unk$,$unk$'As much as possible'$unk$)
-($unk$'AMBW'$unk$,$unk$'All my best wishes'$unk$)
-($unk$'AML'$unk$,$unk$'All my love'$unk$)
-($unk$'AMOF'$unk$,$unk$'As a matter of fact'$unk$)
-($unk$'A/N'$unk$,$unk$'Author''s note'$unk$)
-($unk$'AO'$unk$,$unk$'Anarchy Online (online gaming)'$unk$)
-($unk$'AOC'$unk$,$unk$'Available on cell'$unk$)
-($unk$'AOE'$unk$,$unk$'Area of effect (online game)'$unk$)
-($unk$'AOM'$unk$,$unk$'Age of majority'$unk$)
-($unk$'AOM'$unk$,$unk$'Age of Mythology (online gaming)'$unk$)
-($unk$'AOTA'$unk$,$unk$'All of the above'$unk$)
-($unk$'AOYP'$unk$,$unk$'Angel on your pillow'$unk$)
-($unk$'APAC'$unk$,$unk$'All praise and credit'$unk$)
-($unk$'APP'$unk$,$unk$'Application'$unk$)
-($unk$'APP'$unk$,$unk$'Appreciate'$unk$)
-($unk$'AQAP'$unk$,$unk$'As quick (or quiet) as possible'$unk$)
-($unk$'ARC'$unk$,$unk$'Archive (compressed files)'$unk$)
-($unk$'ARE'$unk$,$unk$'Acronym rich environment'$unk$)
-($unk$'ARG'$unk$,$unk$'Argument'$unk$)
-($unk$'ASIG'$unk$,$unk$'And so it goes'$unk$)
-($unk$'ASAP'$unk$,$unk$'As soon as possible'$unk$)
-($unk$'A/S/L'$unk$,$unk$'Age/sex/location'$unk$)
-($unk$'ASL'$unk$,$unk$'Age/sex/location'$unk$)
-($unk$'ASLA'$unk$,$unk$'Age/sex/location/availability'$unk$)
-($unk$'AT'$unk$,$unk$'At your terminal'$unk$)
-($unk$'ATB'$unk$,$unk$'All the best'$unk$)
-($unk$'ATEOTD'$unk$,$unk$'At the end of the day'$unk$)
-($unk$'ATM'$unk$,$unk$'At the moment'$unk$)
-($unk$'ATSITS'$unk$,$unk$'All the stars in the sky'$unk$)
-($unk$'ATSL'$unk$,$unk$'Along the same line (or lines)'$unk$)
-($unk$'AWC'$unk$,$unk$'After awhile crocodile'$unk$)
-($unk$'AWESO'$unk$,$unk$'Awesome'$unk$)
-($unk$'AWOL'$unk$,$unk$'Away without leaving'$unk$)
-($unk$'AWOL'$unk$,$unk$'Absent without leave'$unk$)
-($unk$'AYDY'$unk$,$unk$'Are you done yet?'$unk$)
-($unk$'AYBABTU'$unk$,$unk$'All your base are belong to us (online gaming)'$unk$)
-($unk$'AYEC'$unk$,$unk$'At your earliest convenience'$unk$)
-($unk$'AYOR'$unk$,$unk$'At your own risk'$unk$)
-($unk$'AYSOS'$unk$,$unk$'Are you stupid or something?'$unk$)
-($unk$'AYS'$unk$,$unk$'Are you serious?'$unk$)
-($unk$'AYT'$unk$,$unk$'Are you there?'$unk$)
-($unk$'AYTMTB'$unk$,$unk$'And you''re telling me this because'$unk$)
-($unk$'AYV'$unk$,$unk$'Are you vertical?'$unk$)
-($unk$'AYW'$unk$,$unk$'As you were'$unk$)
-($unk$'AYW'$unk$,$unk$'As you want / As you wish'$unk$)
-($unk$'AZN'$unk$,$unk$'Asian'$unk$)
-($unk$'B'$unk$,$unk$'Back'$unk$)
-($unk$'B'$unk$,$unk$'Be'$unk$)
-($unk$'B&amp;'$unk$,$unk$'Banned'$unk$)
-($unk$'B2W'$unk$,$unk$'Back to work'$unk$)
-($unk$'B8'$unk$,$unk$'Bait (person teased or joked with, or under-aged person/teen)'$unk$)
-($unk$'B9'$unk$,$unk$'Boss is watching'$unk$)
-($unk$'B/F'$unk$,$unk$'Boyfriend'$unk$)
-($unk$'B/G'$unk$,$unk$'Background (personal information request)'$unk$)
-($unk$'B4'$unk$,$unk$'Before'$unk$)
-($unk$'B4N'$unk$,$unk$'Bye for now'$unk$)
-($unk$'BAG'$unk$,$unk$'Busting a gut'$unk$)
-($unk$'BA'$unk$,$unk$'Bad *a*'$unk$)
-($unk$'BAE'$unk$,$unk$'Before anyone else'$unk$)
-($unk$'BAE'$unk$,$unk$'Meaning Babe or baby'$unk$)
-($unk$'BAFO'$unk$,$unk$'Best and final offer'$unk$)
-($unk$'BAK'$unk$,$unk$'Back at keyboard'$unk$)
-($unk$'BAM'$unk$,$unk$'Below average mentality'$unk$)
-($unk$'BAMF'$unk$,$unk$'Bad *a* mother *f*'$unk$)
-($unk$'BAO'$unk$,$unk$'Be aware of'$unk$)
-($unk$'BAS'$unk$,$unk$'Big ''butt'' smile'$unk$)
-($unk$'BASIC'$unk$,$unk$'Meaning anything mainstream'$unk$)
-($unk$'BASOR'$unk$,$unk$'Breathing a sigh of relief'$unk$)
-($unk$'BAU'$unk$,$unk$'Business as usual'$unk$)
-($unk$'BAY'$unk$,$unk$'Back at ya'$unk$)
-($unk$'BB'$unk$,$unk$'Be back'$unk$)
-($unk$'BB'$unk$,$unk$'Big brother'$unk$)
-($unk$'BB'$unk$,$unk$'Bebi / Baby (Spanish SMS)'$unk$)
-($unk$'BBC'$unk$,$unk$'Big bad challenge'$unk$)
-($unk$'BBIAB'$unk$,$unk$'Be back in a bit'$unk$)
-($unk$'BBIAF'$unk$,$unk$'Be back in a few'$unk$)
-($unk$'BBIAM'$unk$,$unk$'Be back in a minute'$unk$)
-($unk$'BBIAS'$unk$,$unk$'Be back in a sec'$unk$)
-($unk$'BBL'$unk$,$unk$'Be back later'$unk$)
-($unk$'BBN'$unk$,$unk$'Bye, bye now'$unk$)
-($unk$'BBQ'$unk$,$unk$'Barbeque, ''Ownage'', shooting score/frag (online gaming)'$unk$)
-($unk$'BBS'$unk$,$unk$'Be back soon'$unk$)
-($unk$'BBT'$unk$,$unk$'Be back tomorrow'$unk$)
-($unk$'BC'$unk$,$unk$'Because'$unk$)
-($unk$'B/C'$unk$,$unk$'Because'$unk$)
-($unk$'BC'$unk$,$unk$'Be cool'$unk$)
-($unk$'BCNU'$unk$,$unk$'Be seeing you'$unk$)
-($unk$'BCOS'$unk$,$unk$'Because'$unk$)
-($unk$'BCO'$unk$,$unk$'Big crush on'$unk$)
-($unk$'BCOY'$unk$,$unk$'Big crush on you'$unk$)
-($unk$'BD'$unk$,$unk$'Big deal'$unk$)
-($unk$'BDAY'$unk$,$unk$'Birthday'$unk$)
-($unk$'B-DAY'$unk$,$unk$'Birthday'$unk$)
-($unk$'BDN'$unk$,$unk$'Big darn number'$unk$)
-($unk$'BEG'$unk$,$unk$'Big evil grin'$unk$)
-($unk$'BELF'$unk$,$unk$'Meaning ''Blood Elf'' (online gaming)'$unk$)
-($unk$'BF'$unk$,$unk$'Boyfriend'$unk$)
-($unk$'BF'$unk$,$unk$'Brain fart'$unk$)
-($unk$'BFAW'$unk$,$unk$'Best friend at work'$unk$)
-($unk$'BF2'$unk$,$unk$'Battlefield 2 (online gaming)'$unk$)
-($unk$'BF'$unk$,$unk$'Best friend'$unk$)
-($unk$'BFF'$unk$,$unk$'Best friends forever'$unk$)
-($unk$'BFFL'$unk$,$unk$'Best friends for life'$unk$)
-($unk$'BFFLNMW'$unk$,$unk$'Best friends for life, no matter what'$unk$)
-($unk$'BFD'$unk$,$unk$'Big freaking deal'$unk$)
-($unk$'BFG'$unk$,$unk$'Big&nbsp; freaking grin'$unk$)
-($unk$'BFFN'$unk$,$unk$'Best friend for now'$unk$)
-($unk$'BFN'$unk$,$unk$'Bye for now'$unk$)
-($unk$'BG'$unk$,$unk$'Big grin'$unk$)
-($unk$'BGWM'$unk$,$unk$'Be gentle with me'$unk$)
-($unk$'BHL8'$unk$,$unk$'Be home late'$unk$)
-($unk$'BIB'$unk$,$unk$'Boss is back'$unk$)
-($unk$'BIBO'$unk$,$unk$'Beer in, beer out'$unk$)
-($unk$'BIC'$unk$,$unk$'Butt in chair'$unk$)
-($unk$'BIF'$unk$,$unk$'Before I forget'$unk$)
-($unk$'BIH'$unk$,$unk$'Burn in hell'$unk$)
-($unk$'BIL'$unk$,$unk$'Brother in law'$unk$)
-($unk$'BIO'$unk$,$unk$'Meaning ''I''m going to the bathroom'' (or) ''Bathroom break'''$unk$)
-($unk$'BION'$unk$,$unk$'Believe it or not'$unk$)
-($unk$'BIOYA'$unk$,$unk$'Blow it out your *a*'$unk$)
-($unk$'BIOYN'$unk$,$unk$'Blow it out your nose'$unk$)
-($unk$'BIS'$unk$,$unk$'Best in slot (online gaming)'$unk$)
-($unk$'BISFLATM'$unk$,$unk$'Boy, I sure feel like a turquoise monkey! (unverified)'$unk$)
-($unk$'BITMT'$unk$,$unk$'But in the meantime'$unk$)
-($unk$'BL'$unk$,$unk$'Belly laugh'$unk$)
-($unk$'BLNT'$unk$,$unk$'Better luck next time'$unk$)
-($unk$'Bloke'$unk$,$unk$'Meaning Man (Discord)'$unk$)
-($unk$'BM'$unk$,$unk$'Bite me'$unk$)
-($unk$'BME'$unk$,$unk$'Based on my experience'$unk$)
-($unk$'BM&amp;Y'$unk$,$unk$'Between me and you'$unk$)
-($unk$'BOB'$unk$,$unk$'Back off *buddy*'$unk$)
-($unk$'BN'$unk$,$unk$'Bad news'$unk$)
-($unk$'BOE'$unk$,$unk$'Meaning ''bind on equip'' (online gaming)'$unk$)
-($unk$'BOHICA'$unk$,$unk$'Bend over here it comes again'$unk$)
-($unk$'BOL'$unk$,$unk$'Best of luck'$unk$)
-($unk$'BOM'$unk$,$unk$'*b* of mine'$unk$)
-($unk$'BOLO'$unk$,$unk$'Be on the look out'$unk$)
-($unk$'BOOMS'$unk$,$unk$'Bored out of my skull'$unk$)
-($unk$'BOP'$unk$,$unk$'Meaning ''bind on pickup'' (online gaming)'$unk$)
-($unk$'BOSMKL'$unk$,$unk$'Bending over smacking my knee laughing'$unk$)
-($unk$'BOT'$unk$,$unk$'Back on topic'$unk$)
-($unk$'BOT'$unk$,$unk$'Be on that'$unk$)
-($unk$'BMS'$unk$,$unk$'Broke my scale, used when rating someone'$unk$)
-($unk$'BOYF'$unk$,$unk$'Boyfriend'$unk$)
-($unk$'BPLM'$unk$,$unk$'Big person little mind'$unk$)
-($unk$'BRB'$unk$,$unk$'Be right back'$unk$)
-($unk$'BR'$unk$,$unk$'Best regards'$unk$)
-($unk$'BRBB'$unk$,$unk$'Be right back *b*'$unk$)
-($unk$'BRNC'$unk$,$unk$'Be right back, nature calls'$unk$)
-($unk$'BRD'$unk$,$unk$'Bored'$unk$)
-($unk$'BRH'$unk$,$unk$'Be right here'$unk$)
-($unk$'BRT'$unk$,$unk$'Be right there'$unk$)
-($unk$'BSF'$unk$,$unk$'But seriously folks'$unk$)
-($unk$'BSOD'$unk$,$unk$'Blue screen of death'$unk$)
-($unk$'BSTS'$unk$,$unk$'Better safe than sorry'$unk$)
-($unk$'BT'$unk$,$unk$'Bite this'$unk$)
-($unk$'BT'$unk$,$unk$'Between technologies'$unk$)
-($unk$'BTA'$unk$,$unk$'But then again'$unk$)
-($unk$'BTDT'$unk$,$unk$'Been there, done that'$unk$)
-($unk$'BTW'$unk$,$unk$'By the way&nbsp;'$unk$)
-($unk$'BTYCL'$unk$,$unk$'Meaning ''Bootycall'''$unk$)
-($unk$'BUBU'$unk$,$unk$'Slang term for the most beautiful of women'$unk$)
-($unk$'BURN'$unk$,$unk$'Used to reference an insult'$unk$)
-($unk$'Buff'$unk$,$unk$'Meaning ''changed and is now stronger'' (online gaming)'$unk$)
-($unk$'BWL'$unk$,$unk$'Bursting with laughter&nbsp;'$unk$)
-($unk$'BYOB'$unk$,$unk$'Bring your own beer&nbsp;'$unk$)
-($unk$'BYOC'$unk$,$unk$'Bring your own computer'$unk$)
-($unk$'BYOH'$unk$,$unk$'Bat you on (the) head'$unk$)
-($unk$'BYOP'$unk$,$unk$'Bring your own paint (paintball)'$unk$)
-($unk$'BYTM'$unk$,$unk$'Better you than me'$unk$)
-($unk$'C&amp;G'$unk$,$unk$'Chuckle &amp; grin'$unk$)
-($unk$'C4N'$unk$,$unk$'Ciao for now'$unk$)
-($unk$'CAD'$unk$,$unk$'Control + Alt + Delete'$unk$)
-($unk$'CAD'$unk$,$unk$'Short for Canada/Canadian'$unk$)
-($unk$'Cakeday'$unk$,$unk$'Meaning Birthday (Reddit)'$unk$)
-($unk$'CAM'$unk$,$unk$'Camera (SMS)'$unk$)
-($unk$'CB'$unk$,$unk$'Coffee break'$unk$)
-($unk$'CB'$unk$,$unk$'Chat break'$unk$)
-($unk$'CB'$unk$,$unk$'Crazy *b*'$unk$)
-($unk$'CD9'$unk$,$unk$'Code 9, Meaning ''parents are around'''$unk$)
-($unk$'CFS'$unk$,$unk$'Care for secret?'$unk$)
-($unk$'CFY'$unk$,$unk$'Calling for you'$unk$)
-($unk$'CHK'$unk$,$unk$'Check'$unk$)
-($unk$'CIAO'$unk$,$unk$'Good-bye (Italian word)'$unk$)
-($unk$'CICO'$unk$,$unk$'Coffee in, coffee out'$unk$)
-($unk$'CID'$unk$,$unk$'Crying in disgrace'$unk$)
-($unk$'CID'$unk$,$unk$'Consider it done'$unk$)
-($unk$'CLAB'$unk$,$unk$'Crying like a baby'$unk$)
-($unk$'CLD'$unk$,$unk$'Could'$unk$)
-($unk$'CLK'$unk$,$unk$'Click'$unk$)
-($unk$'CM'$unk$,$unk$'Call me'$unk$)
-($unk$'CMAP'$unk$,$unk$'Cover my *a* partner (online gaming)'$unk$)
-($unk$'CMB'$unk$,$unk$'Call me back'$unk$)
-($unk$'CMGR'$unk$,$unk$'Meaning ''Community manager'''$unk$)
-($unk$'CMIIW'$unk$,$unk$'Correct me if I''m wrong'$unk$)
-($unk$'CMON'$unk$,$unk$'Come on'$unk$)
-($unk$'CNP'$unk$,$unk$'Continued (in) next post'$unk$)
-($unk$'COB'$unk$,$unk$'Close of business'$unk$)
-($unk$'COH'$unk$,$unk$'City of Heroes (online gaming)'$unk$)
-($unk$'COS'$unk$,$unk$'Because'$unk$)
-($unk$'C/P'$unk$,$unk$'Cross post'$unk$)
-($unk$'CP'$unk$,$unk$'Chat post (or continue in IM)'$unk$)
-($unk$'CR8'$unk$,$unk$'Create'$unk$)
-($unk$'Cray'$unk$,$unk$'Meaning crazy'$unk$)
-($unk$'CRE8'$unk$,$unk$'Create'$unk$)
-($unk$'CRA CRA'$unk$,$unk$'Slang term meaning ''crazy'''$unk$)
-($unk$'CRAFT'$unk$,$unk$'Can''t remember a *freaking* thing'$unk$)
-($unk$'CRB'$unk$,$unk$'Come right back'$unk$)
-($unk$'CRBT'$unk$,$unk$'Crying really big tears'$unk$)
-($unk$'CRIT'$unk$,$unk$'Meaning ''critical hit'' (online gaming)'$unk$)
-($unk$'CRZ'$unk$,$unk$'Crazy'$unk$)
-($unk$'CRS&nbsp;'$unk$,$unk$'Can''t remember *stuff*'$unk$)
-($unk$'CSG'$unk$,$unk$'Chuckle, snicker, grin'$unk$)
-($unk$'CSL'$unk$,$unk$'Can''t stop laughing'$unk$)
-($unk$'CSS'$unk$,$unk$'Counter-Strike Source (online gaming)'$unk$)
-($unk$'CT'$unk$,$unk$'Can''t talk'$unk$)
-($unk$'CTC'$unk$,$unk$'Care to chat?'$unk$)
-($unk$'CTHU'$unk$,$unk$'Cracking the *heck* up'$unk$)
-($unk$'CTN'$unk$,$unk$'Can''t talk now'$unk$)
-($unk$'CTO'$unk$,$unk$'Check this out'$unk$)
-($unk$'CU'$unk$,$unk$'See you too'$unk$)
-($unk$'CU'$unk$,$unk$'See you'$unk$)
-($unk$'CU2'$unk$,$unk$'See you'$unk$)
-($unk$'CUA'$unk$,$unk$'See you around'$unk$)
-($unk$'CUL'$unk$,$unk$'See you later'$unk$)
-($unk$'CULA'$unk$,$unk$'See you later alligator'$unk$)
-($unk$'CUL8R'$unk$,$unk$'See you later'$unk$)
-($unk$'CUMID'$unk$,$unk$'See you in my dreams'$unk$)
-($unk$'CURLO'$unk$,$unk$'See you around like a donut'$unk$)
-($unk$'CWD'$unk$,$unk$'Comment when done'$unk$)
-($unk$'CWOT'$unk$,$unk$'Complete waste of time'$unk$)
-($unk$'CWYL'$unk$,$unk$'Chat with you later'$unk$)
-($unk$'CX'$unk$,$unk$'Meaning ''Correction'''$unk$)
-($unk$'CYA'$unk$,$unk$'See you'$unk$)
-($unk$'CYAL8R'$unk$,$unk$'See you later'$unk$)
-($unk$'CYE'$unk$,$unk$'Check your e-mail'$unk$)
-($unk$'CYEP'$unk$,$unk$'Close your eyes partner (online gaming)'$unk$)
-($unk$'CYO'$unk$,$unk$'See you online'$unk$)
-($unk$'D2'$unk$,$unk$'Dedos / fingers (Spanish SMS)'$unk$)
-($unk$'D46?'$unk$,$unk$'Down for sex?'$unk$)
-($unk$'DA'$unk$,$unk$'Meaning ''The'''$unk$)
-($unk$'DAE'$unk$,$unk$'Does anyone else?'$unk$)
-($unk$'DAFUQ'$unk$,$unk$'(What) the *Freak*?'$unk$)
-($unk$'DAM'$unk$,$unk$'Don''t annoy me'$unk$)
-($unk$'DAoC'$unk$,$unk$'Dark Age of Camelot (online gaming)'$unk$)
-($unk$'DBAU'$unk$,$unk$'Doing business as usual'$unk$)
-($unk$'DBEYR'$unk$,$unk$'Don''t believe everything you read'$unk$)
-($unk$'DC'$unk$,$unk$'Disconnect'$unk$)
-($unk$'DD'$unk$,$unk$'Dear (or Darling) daughter'$unk$)
-($unk$'DD'$unk$,$unk$'Due diligence'$unk$)
-($unk$'DDG'$unk$,$unk$'Drop dead gorgeous'$unk$)
-($unk$'DEEZ NUTZ'$unk$,$unk$'A phrase used in online chat to annoy or frustrate those involved in the conversation.'$unk$)
-($unk$'DEGT'$unk$,$unk$'Dear (or Darling) daughter'$unk$)
-($unk$'DERP'$unk$,$unk$'Meaning stupid or silly'$unk$)
-($unk$'DF'$unk$,$unk$'Don''t even go there'$unk$)
-($unk$'DFL'$unk$,$unk$'Dead *freaking* last (online gaming)'$unk$)
-($unk$'DGA'$unk$,$unk$'Don''t go anywhere'$unk$)
-($unk$'DGAF'$unk$,$unk$'Don''t give a *freak*'$unk$)
-($unk$'DGT'$unk$,$unk$'Don''t go there'$unk$)
-($unk$'DGTG'$unk$,$unk$'Don''t go there, girlfriend'$unk$)
-($unk$'DGYF'$unk$,$unk$'Dang, girl you fine'$unk$)
-($unk$'DH'$unk$,$unk$'Dear (or Darling) husband'$unk$)
-($unk$'DHU'$unk$,$unk$'Dinosaur hugs (used to show support)'$unk$)
-($unk$'DIIK'$unk$,$unk$'Darned if I know'$unk$)
-($unk$'DIKU'$unk$,$unk$'Do I know you?'$unk$)
-($unk$'DILLIGAF'$unk$,$unk$'Do I look like I give a *freak*?'$unk$)
-($unk$'DILLIGAS'$unk$,$unk$'Do I look like I give a sugar?'$unk$)
-($unk$'DIS'$unk$,$unk$'Did I say?'$unk$)
-($unk$'DITYID'$unk$,$unk$'Did I tell you I''m distressed?'$unk$)
-($unk$'DIY'$unk$,$unk$'Do it yourself'$unk$)
-($unk$'DKDC'$unk$,$unk$'Don''t know, don''t care'$unk$)
-($unk$'DKP'$unk$,$unk$'Dragon kill points (online gaming)'$unk$)
-($unk$'D/L'$unk$,$unk$'Download'$unk$)
-($unk$'DL'$unk$,$unk$'Download'$unk$)
-($unk$'DL'$unk$,$unk$'Down low'$unk$)
-($unk$'DL'$unk$,$unk$'Dead link'$unk$)
-($unk$'DLBBB'$unk$,$unk$'Don''t let (the) bed bugs bite'$unk$)
-($unk$'DLTBBB'$unk$,$unk$'Don''t let the bed bugs bite'$unk$)
-($unk$'DM'$unk$,$unk$'Doesn''t matter'$unk$)
-($unk$'DMNO'$unk$,$unk$'Dude Man No Offense'$unk$)
-($unk$'DMY'$unk$,$unk$'Don''t mess yourself'$unk$)
-($unk$'DN'$unk$,$unk$'Down'$unk$)
-($unk$'DNC'$unk$,$unk$'Do not compute (meaning I do not understand)'$unk$)
-($unk$'DNR'$unk$,$unk$'Dinner (SMS)'$unk$)
-($unk$'DNT'$unk$,$unk$'Don''t'$unk$)
-($unk$'d00d'$unk$,$unk$'Dude'$unk$)
-($unk$'DOE'$unk$,$unk$'Daughter of Eve'$unk$)
-($unk$'DORBS'$unk$,$unk$'Meaning ''Adorable'''$unk$)
-($unk$'DOT'$unk$,$unk$'Damage over time (online gaming)'$unk$)
-($unk$'Downvote'$unk$,$unk$'Voting negatively on a thread using Reddit’s voting system (Reddit)'$unk$)
-($unk$'DPS'$unk$,$unk$'Damage per second (online gaming)'$unk$)
-($unk$'DQMOT'$unk$,$unk$'Don''t quote me on this'$unk$)
-($unk$'DR'$unk$,$unk$'Didn''t read'$unk$)
-($unk$'DS'$unk$,$unk$'Dear (or Darling) son'$unk$)
-($unk$'DTR'$unk$,$unk$'Define the relationship'$unk$)
-($unk$'DTRT'$unk$,$unk$'Do the right thing'$unk$)
-($unk$'DTS'$unk$,$unk$'Don''t think so'$unk$)
-($unk$'DTTD'$unk$,$unk$'Don''t touch that dial'$unk$)
-($unk$'DUPE'$unk$,$unk$'Duplicate'$unk$)
-($unk$'DUR'$unk$,$unk$'Do you remember?'$unk$)
-($unk$'DV8'$unk$,$unk$'Deviate'$unk$)
-($unk$'DW'$unk$,$unk$'Dear (or Darling) wife'$unk$)
-($unk$'DWF'$unk$,$unk$'Divorced white female'$unk$)
-($unk$'DWM'$unk$,$unk$'Divorced white male'$unk$)
-($unk$'DXNRY'$unk$,$unk$'Dictionary'$unk$)
-($unk$'DYNWUTB'$unk$,$unk$'Do you know what you are talking about?'$unk$)
-($unk$'DYFI'$unk$,$unk$'Did you find it?'$unk$)
-($unk$'DYFM'$unk$,$unk$'Dude, you fascinate me'$unk$)
-($unk$'DYJHIW'$unk$,$unk$'Don''t you just hate it when...?'$unk$)
-($unk$'DYOR'$unk$,$unk$'Do your own research (common stock market chat slang)'$unk$)
-($unk$'E'$unk$,$unk$'Ecstasy'$unk$)
-($unk$'E'$unk$,$unk$'Enemy (online gaming)'$unk$)
-($unk$'E1'$unk$,$unk$'Everyone'$unk$)
-($unk$'E123'$unk$,$unk$'Easy as one, two, three'$unk$)
-($unk$'E2EG'$unk$,$unk$'Ear to ear grin'$unk$)
-($unk$'EAK'$unk$,$unk$'Eating at keyboard'$unk$)
-($unk$'EBKAC'$unk$,$unk$'Error between keyboard and chair'$unk$)
-($unk$'ED'$unk$,$unk$'Erase display'$unk$)
-($unk$'EF4T'$unk$,$unk$'Effort'$unk$)
-($unk$'EG'$unk$,$unk$'Evil grin'$unk$)
-($unk$'EI'$unk$,$unk$'Eat it'$unk$)
-($unk$'EIP'$unk$,$unk$'Editing in progress'$unk$)
-($unk$'ELI5'$unk$,$unk$'Explain like I''m 5'$unk$)
-($unk$'EM'$unk$,$unk$'E-mail'$unk$)
-($unk$'EMA'$unk$,$unk$'E-mail address'$unk$)
-($unk$'EMBAR'$unk$,$unk$'Meaning ''Embarassing'''$unk$)
-($unk$'EMFBI'$unk$,$unk$'Excuse me for butting in'$unk$)
-($unk$'EMFBI'$unk$,$unk$'Excuse me for jumping in'$unk$)
-($unk$'EMSG'$unk$,$unk$'E-mail message'$unk$)
-($unk$'ENUF'$unk$,$unk$'Enough'$unk$)
-($unk$'EOD'$unk$,$unk$'End of day'$unk$)
-($unk$'EOD'$unk$,$unk$'End of discussion'$unk$)
-($unk$'EOL'$unk$,$unk$'End of lecture'$unk$)
-($unk$'EOL'$unk$,$unk$'End of life'$unk$)
-($unk$'EOM'$unk$,$unk$'End of message'$unk$)
-($unk$'EOS'$unk$,$unk$'End of show'$unk$)
-($unk$'EOT'$unk$,$unk$'End of transmission'$unk$)
-($unk$'EQ'$unk$,$unk$'EverQuest (online gaming)'$unk$)
-($unk$'ERP'$unk$,$unk$'Meaning ''Erotic Role-Play'' (online gaming)'$unk$)
-($unk$'ERS2'$unk$,$unk$'Eres tz / are you (Spanish SMS)'$unk$)
-($unk$'ES'$unk$,$unk$'Erase screen'$unk$)
-($unk$'ESAD'$unk$,$unk$'Eat *S* and die!'$unk$)
-($unk$'ETA'$unk$,$unk$'Estimated time (of) arrival'$unk$)
-($unk$'ETA'$unk$,$unk$'Edited to add'$unk$)
-($unk$'EVA'$unk$,$unk$'Ever'$unk$)
-($unk$'EVO'$unk$,$unk$'Evolution'$unk$)
-($unk$'EWG'$unk$,$unk$'Evil wicked grin (in fun, teasing)'$unk$)
-($unk$'EWI'$unk$,$unk$'Emailing while intoxicated'$unk$)
-($unk$'EXTRA'$unk$,$unk$'Meaning over the top'$unk$)
-($unk$'EYC'$unk$,$unk$'Excitable, yet calm'$unk$)
-($unk$'EZ'$unk$,$unk$'Easy'$unk$)
-($unk$'EZY'$unk$,$unk$'Easy'$unk$)
-($unk$'F'$unk$,$unk$'Meaning female'$unk$)
-($unk$'F2F'$unk$,$unk$'Face to face'$unk$)
-($unk$'F2P'$unk$,$unk$'Free to play (online gaming)'$unk$)
-($unk$'F4F'$unk$,$unk$'Follow for follow (Instagram)'$unk$)
-($unk$'FAAK'$unk$,$unk$'Falling asleep at keyboard'$unk$)
-($unk$'FAB'$unk$,$unk$'Fabulous'$unk$)
-($unk$'Facepalm'$unk$,$unk$'Used to represent the gesture of ''smacking your forehead with your palm'' to express embarrassment or frustration'$unk$)
-($unk$'FAF'$unk$,$unk$'Funny as *freak*'$unk$)
-($unk$'FAM'$unk$,$unk$'FFamily, but not limited to actual family members. Could mean friends.'$unk$)
-($unk$'FAQ'$unk$,$unk$'Frequently asked questions'$unk$)
-($unk$'FAY'$unk$,$unk$'*Freak* all you'$unk$)
-($unk$'FB'$unk$,$unk$'Facebook'$unk$)
-($unk$'FBB'$unk$,$unk$'Meaning ''Facebook buddy'''$unk$)
-($unk$'FBC'$unk$,$unk$'Facebook chat'$unk$)
-($unk$'FBF'$unk$,$unk$'Flashback Friday'$unk$)
-($unk$'FBF'$unk$,$unk$'Meaning ''Facebook friend'''$unk$)
-($unk$'FBF'$unk$,$unk$'Fat boy food (e.g. pizza, burgers, fries)'$unk$)
-($unk$'FBFR'$unk$,$unk$'FaceBook friend'$unk$)
-($unk$'FBM'$unk$,$unk$'Fine by me'$unk$)
-($unk$'FBO'$unk$,$unk$'Facebook official (An official update from Facebook)'$unk$)
-($unk$'FBOW'$unk$,$unk$'For better or worse'$unk$)
-($unk$'FC'$unk$,$unk$'Fingers crossed'$unk$)
-($unk$'FC'$unk$,$unk$'Full card (online gaming)'$unk$)
-($unk$'FC''INGO'$unk$,$unk$'For crying out loud'$unk$)
-($unk$'FCOL'$unk$,$unk$'For crying out loud'$unk$)
-($unk$'Feelsbadman'$unk$,$unk$'A social meme that means to feel negative.'$unk$)
-($unk$'Feelsbatman'$unk$,$unk$'A social meme taking ''feelsbadman'' to the extreme. This references the DC super hero Batmanbecause he witnessed the murder of his parents.'$unk$)
-($unk$'Feelsgoodman'$unk$,$unk$'A social meme that means to feel positive.'$unk$)
-($unk$'FEITCTAJ'$unk$,$unk$'*Freak* ''em if they can''t take a joke'$unk$)
-($unk$'FF'$unk$,$unk$'Follow Friday'$unk$)
-($unk$'FFA'$unk$,$unk$'Free for all (online gaming)'$unk$)
-($unk$'FFS'$unk$,$unk$'For *freak''*sakes'$unk$)
-($unk$'FICCL'$unk$,$unk$'Frankly I couldn''t care a less'$unk$)
-($unk$'FIF'$unk$,$unk$'*Freak* I''m funny'$unk$)
-($unk$'FIIK'$unk$,$unk$'*Freaked* if I know'$unk$)
-($unk$'FIIOOH'$unk$,$unk$'Forget it, I''m out of here'$unk$)
-($unk$'FIL'$unk$,$unk$'Father in law'$unk$)
-($unk$'FIMH'$unk$,$unk$'Forever in my heart'$unk$)
-($unk$'Finna'$unk$,$unk$'Means ''Going to'''$unk$)
-($unk$'Finsta'$unk$,$unk$'A second Instagram account where someone can post things that they''re too afraid to post on their main account.'$unk$)
-($unk$'FISH'$unk$,$unk$'First in, still here'$unk$)
-($unk$'FITB'$unk$,$unk$'Fill in the blank'$unk$)
-($unk$'FML'$unk$,$unk$'*Freak* My Life'$unk$)
-($unk$'FOMC'$unk$,$unk$'Falling off my chair'$unk$)
-($unk$'FOMO'$unk$,$unk$'Fear of missing out'$unk$)
-($unk$'FOAD'$unk$,$unk$'*Freak* off and die'$unk$)
-($unk$'FOAF'$unk$,$unk$'Friend of a friend'$unk$)
-($unk$'FOMCL'$unk$,$unk$'Falling off my chair laughing'$unk$)
-($unk$'FRT'$unk$,$unk$'For real though'$unk$)
-($unk$'FTBOMH'$unk$,$unk$'From the bottom of my heart'$unk$)
-($unk$'FTFY'$unk$,$unk$'Fixed that for you'$unk$)
-($unk$'FTL'$unk$,$unk$'For the loss'$unk$)
-($unk$'FTW'$unk$,$unk$'For the win'$unk$)
-($unk$'FU'$unk$,$unk$'*Freak* you'$unk$)
-($unk$'FUBAR'$unk$,$unk$'Fouled up beyond all recognition'$unk$)
-($unk$'FUBB'$unk$,$unk$'Fouled up beyond belief'$unk$)
-($unk$'FUD'$unk$,$unk$'Face up deal (online gaming)'$unk$)
-($unk$'FUTAB'$unk$,$unk$'Feet up, take a break'$unk$)
-($unk$'FW'$unk$,$unk$'Forward'$unk$)
-($unk$'FWB'$unk$,$unk$'Friend with benefits'$unk$)
-($unk$'FWIW'$unk$,$unk$'For what it''s worth'$unk$)
-($unk$'FWM'$unk$,$unk$'Fine with me'$unk$)
-($unk$'FWP'$unk$,$unk$'First world problems'$unk$)
-($unk$'FYE'$unk$,$unk$'Fire, something that is cool'$unk$)
-($unk$'FYEO'$unk$,$unk$'For your eyes only'$unk$)
-($unk$'FYA'$unk$,$unk$'For your amusement'$unk$)
-($unk$'FYI'$unk$,$unk$'For your information'$unk$)
-($unk$'G'$unk$,$unk$'Grin'$unk$)
-($unk$'G'$unk$,$unk$'Giggle'$unk$)
-($unk$'G+'$unk$,$unk$'Google+'$unk$)
-($unk$'G/F'$unk$,$unk$'Girlfriend'$unk$)
-($unk$'G2CU'$unk$,$unk$'Good to see you'$unk$)
-($unk$'G2G'$unk$,$unk$'Got to go'$unk$)
-($unk$'G2GICYAL8ER'$unk$,$unk$'Got to go I''ll see you later'$unk$)
-($unk$'G2R'$unk$,$unk$'Got to run'$unk$)
-($unk$'G2TU'$unk$,$unk$'Got to tell u (you)'$unk$)
-($unk$'G4C'$unk$,$unk$'Going for coffee'$unk$)
-($unk$'G9'$unk$,$unk$'Genius'$unk$)
-($unk$'GA'$unk$,$unk$'Go ahead'$unk$)
-($unk$'GAC'$unk$,$unk$'Get a clue'$unk$)
-($unk$'GAFC'$unk$,$unk$'Get a *freaking* clue'$unk$)
-($unk$'GAL'$unk$,$unk$'Get a life'$unk$)
-($unk$'GANK'$unk$,$unk$'Meaning a player ambush or unfair player kill (online gaming)'$unk$)
-($unk$'GAS'$unk$,$unk$'Got a second?'$unk$)
-($unk$'GAS'$unk$,$unk$'Greetings and salutations'$unk$)
-($unk$'GB'$unk$,$unk$'Goodbye'$unk$)
-($unk$'GBTW'$unk$,$unk$'Get back to work'$unk$)
-($unk$'GBU'$unk$,$unk$'God bless you'$unk$)
-($unk$'GD'$unk$,$unk$'Good'$unk$)
-($unk$'GDR'$unk$,$unk$'Grinning, ducking, and running'$unk$)
-($unk$'GD/R'$unk$,$unk$'Grinning, ducking, and running'$unk$)
-($unk$'GFI'$unk$,$unk$'Go for it'$unk$)
-($unk$'GF'$unk$,$unk$'Girl friend'$unk$)
-($unk$'GFN'$unk$,$unk$'Gone for now'$unk$)
-($unk$'GG'$unk$,$unk$'Gotta Go'$unk$)
-($unk$'GG'$unk$,$unk$'Good Game (online gaming)'$unk$)
-($unk$'GG'$unk$,$unk$'Brother (Mandarin Chinese txt msgs)'$unk$)
-($unk$'GGA'$unk$,$unk$'Good game, all (online gaming)'$unk$)
-($unk$'GGE1'$unk$,$unk$'Good game, everyone (online gaming)'$unk$)
-($unk$'GGU2'$unk$,$unk$'Good game, you too'$unk$)
-($unk$'GGMSOT'$unk$,$unk$'Gotta get me some of that'$unk$)
-($unk$'GGOH'$unk$,$unk$'Gotta Get Outa Here'$unk$)
-($unk$'GGP'$unk$,$unk$'Got to go pee'$unk$)
-($unk$'GH'$unk$,$unk$'Good hand (online gaming)'$unk$)
-($unk$'GIAR'$unk$,$unk$'Give it a rest'$unk$)
-($unk$'GIC'$unk$,$unk$'Gift in crib (online gaming)'$unk$)
-($unk$'GIGO'$unk$,$unk$'Garbage in, garbage out'$unk$)
-($unk$'GIRL'$unk$,$unk$'Guy in real life'$unk$)
-($unk$'GJ'$unk$,$unk$'Good job'$unk$)
-($unk$'GL'$unk$,$unk$'Good luck'$unk$)
-($unk$'GL2U'$unk$,$unk$'Good luck to you (online gaming)'$unk$)
-($unk$'GLA'$unk$,$unk$'Good luck all (online gaming)'$unk$)
-($unk$'GL/HF'$unk$,$unk$'Good luck, have fun&nbsp; (online gaming)'$unk$)
-($unk$'GLE'$unk$,$unk$'Good luck everyone (online gaming)'$unk$)
-($unk$'GLE1'$unk$,$unk$'Good luck everyone (online gaming)'$unk$)
-($unk$'GLNG'$unk$,$unk$'Good luck next game (online gaming)'$unk$)
-($unk$'GMBA'$unk$,$unk$'Giggling my butt off'$unk$)
-($unk$'GMTA'$unk$,$unk$'Great minds think alike'$unk$)
-($unk$'GMV'$unk$,$unk$'Got my vote'$unk$)
-($unk$'GN'$unk$,$unk$'Good night'$unk$)
-($unk$'GNA'$unk$,$unk$'Good night all'$unk$)
-($unk$'GNE1'$unk$,$unk$'Good night everyone'$unk$)
-($unk$'GNIGHT'$unk$,$unk$'Good night'$unk$)
-($unk$'GNITE'$unk$,$unk$'Good night'$unk$)
-($unk$'GNSD'$unk$,$unk$'Good night, sweet dreams'$unk$)
-($unk$'GOAT'$unk$,$unk$'Greatest of all Time(s)'$unk$)
-($unk$'GOI'$unk$,$unk$'Get over it'$unk$)
-($unk$'GOL'$unk$,$unk$'Giggling out loud'$unk$)
-($unk$'GOMB'$unk$,$unk$'Get off my back'$unk$)
-($unk$'GPOY'$unk$,$unk$'Gratuitous picture of yourself'$unk$)
-($unk$'GR8'$unk$,$unk$'Great'$unk$)
-($unk$'GRATZ'$unk$,$unk$'Congratulations'$unk$)
-($unk$'GRL'$unk$,$unk$'Girl'$unk$)
-($unk$'GRWG'$unk$,$unk$'Get right with God'$unk$)
-($unk$'GR&amp;D'$unk$,$unk$'Grinning, running and ducking'$unk$)
-($unk$'GS'$unk$,$unk$'Good shot'$unk$)
-($unk$'GS'$unk$,$unk$'Good split (online gaming)'$unk$)
-($unk$'GT'$unk$,$unk$'Good try'$unk$)
-($unk$'GTFO'$unk$,$unk$'Get the *freak* out'$unk$)
-($unk$'GTFOH'$unk$,$unk$'Get the *freak* outta here'$unk$)
-($unk$'GTG'$unk$,$unk$'Got to go'$unk$)
-($unk$'GTM'$unk$,$unk$'Giggling to myself'$unk$)
-($unk$'GTRM'$unk$,$unk$'Going to read mail&nbsp;'$unk$)
-($unk$'GTSY'$unk$,$unk$'Great (or good) to see you'$unk$)
-($unk$'GUCCI'$unk$,$unk$'Good'$unk$)
-($unk$'GUD'$unk$,$unk$'Good&nbsp;'$unk$)
-($unk$'GWHTLC'$unk$,$unk$'Glad we had this little chat'$unk$)
-($unk$'H'$unk$,$unk$'Hug'$unk$)
-($unk$'H8'$unk$,$unk$'Hate'$unk$)
-($unk$'H8TTU'$unk$,$unk$'Hate to be you'$unk$)
-($unk$'HAG1'$unk$,$unk$'Have a good one'$unk$)
-($unk$'HAK'$unk$,$unk$'Hug and kiss'$unk$)
-($unk$'HALP'$unk$,$unk$'Help (Discord)'$unk$)
-($unk$'HAU'$unk$,$unk$'How about you?'$unk$)
-($unk$'H&amp;K'$unk$,$unk$'Hugs &amp; kisses'$unk$)
-($unk$'H2CUS'$unk$,$unk$'Hope to see you soon'$unk$)
-($unk$'HAGN'$unk$,$unk$'Have a good night'$unk$)
-($unk$'HAGO'$unk$,$unk$'Have a good one'$unk$)
-($unk$'HAND'$unk$,$unk$'Have a nice day'$unk$)
-($unk$'HAWT'$unk$,$unk$'Have a wonderful day (out-dated, see next in list)'$unk$)
-($unk$'HAWT'$unk$,$unk$'Meaning ''sexy'' or ''attractive'''$unk$)
-($unk$'HB'$unk$,$unk$'Hurry back'$unk$)
-($unk$'HB'$unk$,$unk$'Hug back'$unk$)
-($unk$'HBD'$unk$,$unk$'Happy birthday'$unk$)
-($unk$'H-BDAY'$unk$,$unk$'Happy Birthday'$unk$)
-($unk$'HBU'$unk$,$unk$'How about you?'$unk$)
-($unk$'HF'$unk$,$unk$'Have fun'$unk$)
-($unk$'HFAC'$unk$,$unk$'Holy flipping animal crackers'$unk$)
-($unk$'H-FDAY'$unk$,$unk$'Happy Father''s Day'$unk$)
-($unk$'HHIS'$unk$,$unk$'Head hanging in shame'$unk$)
-($unk$'HIFW'$unk$,$unk$'How I felt when... (Used with photo or gif)'$unk$)
-($unk$'HL'$unk$,$unk$'Half Life (online gaming)'$unk$)
-($unk$'HLA'$unk$,$unk$'Hola / hello (Spanish SMS)'$unk$)
-($unk$'H-MDAY'$unk$,$unk$'Happy Mother''s Day'$unk$)
-($unk$'HMU'$unk$,$unk$'Hit me up'$unk$)
-($unk$'HNL'$unk$,$unk$'(w)Hole ''nother level'$unk$)
-($unk$'HOAS'$unk$,$unk$'Hold on a second'$unk$)
-($unk$'HP'$unk$,$unk$'Hit points / Health points (online gaming)'$unk$)
-($unk$'HRU'$unk$,$unk$'How are you?'$unk$)
-($unk$'HTH'$unk$,$unk$'Hope this helps'$unk$)
-($unk$'HUB'$unk$,$unk$'Head up butt'$unk$)
-($unk$'HUYA'$unk$,$unk$'Head up your *butt*'$unk$)
-($unk$'HV'$unk$,$unk$'Have&nbsp;'$unk$)
-($unk$'HVH'$unk$,$unk$'Heroic Violet Hold (online gaming)'$unk$)
-($unk$'HW'$unk$,$unk$'Homework'$unk$)
-($unk$'HYFR'$unk$,$unk$'Hell yeah, *Freaking* right!'$unk$)
-($unk$'I2'$unk$,$unk$'I too (me too)'$unk$)
-($unk$'IA8'$unk$,$unk$'I already ate'$unk$)
-($unk$'IAAA'$unk$,$unk$'I am an accountant'$unk$)
-($unk$'IAAD'$unk$,$unk$'I am a doctor'$unk$)
-($unk$'IAAL'$unk$,$unk$'I am a lawyer'$unk$)
-($unk$'IAC'$unk$,$unk$'In any case'$unk$)
-($unk$'IAE'$unk$,$unk$'In any event'$unk$)
-($unk$'IANAC'$unk$,$unk$'I am not a crook'$unk$)
-($unk$'IANAL'$unk$,$unk$'I am not a lawyer'$unk$)
-($unk$'IAO'$unk$,$unk$'I am out (of here)'$unk$)
-($unk$'IB'$unk$,$unk$'I''m back'$unk$)
-($unk$'IB'$unk$,$unk$'I''m back'$unk$)
-($unk$'IC'$unk$,$unk$'I see'$unk$)
-($unk$'ICAM'$unk$,$unk$'I couldn''t agree more'$unk$)
-($unk$'ICBW'$unk$,$unk$'It could be worse'$unk$)
-($unk$'ICEDI'$unk$,$unk$'I can''t even discuss it'$unk$)
-($unk$'ICFILWU'$unk$,$unk$'I could fall in love with you'$unk$)
-($unk$'ICYMI'$unk$,$unk$'In case you missed it (Twitter slang)'$unk$)
-($unk$'IDBI'$unk$,$unk$'I don''t believe it'$unk$)
-($unk$'IDC'$unk$,$unk$'I don''t care'$unk$)
-($unk$'IDGAF'$unk$,$unk$'&nbsp;I don''t give a *freak*'$unk$)
-($unk$'IDK'$unk$,$unk$'I don''t know'$unk$)
-($unk$'IDTS'$unk$,$unk$'I don''t think so'$unk$)
-($unk$'IDUNNO'$unk$,$unk$'I don''t know'$unk$)
-($unk$'IFYP'$unk$,$unk$'I feel your pain'$unk$)
-($unk$'IG'$unk$,$unk$'Instagram'$unk$)
-($unk$'IG2R'$unk$,$unk$'I got to run'$unk$)
-($unk$'IGHT'$unk$,$unk$'I got high tonight'$unk$)
-($unk$'IGN'$unk$,$unk$'I (I''ve) got nothing'$unk$)
-($unk$'IGP'$unk$,$unk$'I got to (go) pee'$unk$)
-($unk$'IHNI'$unk$,$unk$'I have no idea'$unk$)
-($unk$'IIRC'$unk$,$unk$'If I remember correctly'$unk$)
-($unk$'IIIO'$unk$,$unk$'Intel inside, idiot outside'$unk$)
-($unk$'IK'$unk$,$unk$'I know'$unk$)
-($unk$'IKR'$unk$,$unk$'I know, right?'$unk$)
-($unk$'ILBL8'$unk$,$unk$'I''ll be late'$unk$)
-($unk$'ILU'$unk$,$unk$'I love you'$unk$)
-($unk$'ILUM'$unk$,$unk$'I love you man'$unk$)
-($unk$'ILYSM'$unk$,$unk$'I love you so much'$unk$)
-($unk$'ILY'$unk$,$unk$'I love you'$unk$)
-($unk$'IM'$unk$,$unk$'Instant message'$unk$)
-($unk$'IMAO'$unk$,$unk$'In my arrogant opinion'$unk$)
-($unk$'IMHO'$unk$,$unk$'In my humble opinion'$unk$)
-($unk$'ImL'$unk$,$unk$'(in Arial font) Means I love you (a way of using the American sign language in text)'$unk$)
-($unk$'IMNSHO'$unk$,$unk$'In my not so humble opinion'$unk$)
-($unk$'IMO'$unk$,$unk$'In my opinion'$unk$)
-($unk$'IMS'$unk$,$unk$'I am sorry'$unk$)
-($unk$'IMSB'$unk$,$unk$'I am so bored'$unk$)
-($unk$'IMTM'$unk$,$unk$'I am the man'$unk$)
-($unk$'IMU'$unk$,$unk$'I miss u (you)'$unk$)
-($unk$'INAL'$unk$,$unk$'I''m not a lawyer'$unk$)
-($unk$'INC'$unk$,$unk$'Meaning ''incoming'' (online gaming)'$unk$)
-($unk$'Inspoo'$unk$,$unk$'Inspiration'$unk$)
-($unk$'INV'$unk$,$unk$'Meaning ''Invite'''$unk$)
-($unk$'IOMH'$unk$,$unk$'In over my head'$unk$)
-($unk$'IOW'$unk$,$unk$'In other words'$unk$)
-($unk$'IRL'$unk$,$unk$'In real life'$unk$)
-($unk$'IRMC'$unk$,$unk$'I rest my case'$unk$)
-($unk$'ISLY'$unk$,$unk$'I still love you'$unk$)
-($unk$'ISO'$unk$,$unk$'In search of'$unk$)
-($unk$'ITAM'$unk$,$unk$'It''s The Accounting, Man (financial blogs)'$unk$)
-($unk$'ITT'$unk$,$unk$'In This Thread'$unk$)
-($unk$'ITYK'$unk$,$unk$'I thought you knew'$unk$)
-($unk$'IUSS'$unk$,$unk$'If you say so'$unk$)
-($unk$'IWALU'$unk$,$unk$'I will always love you'$unk$)
-($unk$'IWAWO'$unk$,$unk$'I want a way out'$unk$)
-($unk$'IWIAM'$unk$,$unk$'Idiot wrapped in a moron'$unk$)
-($unk$'IWSN'$unk$,$unk$'I want sex now'$unk$)
-($unk$'IYKWIM'$unk$,$unk$'If you know what I mean'$unk$)
-($unk$'IYO'$unk$,$unk$'In your opinion'$unk$)
-($unk$'IYQ'$unk$,$unk$'Meaning ''I like you'''$unk$)
-($unk$'IYSS'$unk$,$unk$'If you say so'$unk$)
-($unk$'j00'$unk$,$unk$'You'$unk$)
-($unk$'j00r'$unk$,$unk$'Your'$unk$)
-($unk$'JAC'$unk$,$unk$'Just a second'$unk$)
-($unk$'JAM'$unk$,$unk$'Just a minute'$unk$)
-($unk$'JAS'$unk$,$unk$'Just a second'$unk$)
-($unk$'JC (J/C)'$unk$,$unk$'Just checking'$unk$)
-($unk$'JDI'$unk$,$unk$'Just do it'$unk$)
-($unk$'JELLY'$unk$,$unk$'Meaning ''jealous'''$unk$)
-($unk$'JFF'$unk$,$unk$'Just for fun'$unk$)
-($unk$'JFGI'$unk$,$unk$'Just *freaking* Google it'$unk$)
-($unk$'JIC'$unk$,$unk$'Just in case'$unk$)
-($unk$'JJ (J/J)'$unk$,$unk$'Just joking'$unk$)
-($unk$'JJA'$unk$,$unk$'Just joking around'$unk$)
-($unk$'JK (J/K)'$unk$,$unk$'Just kidding'$unk$)
-($unk$'JLMK'$unk$,$unk$'Just let me know'$unk$)
-($unk$'JMO'$unk$,$unk$'Just my opinion'$unk$)
-($unk$'JP'$unk$,$unk$'Just playing&nbsp;'$unk$)
-($unk$'JP'$unk$,$unk$'Jackpot (online gaming, bingo games)'$unk$)
-($unk$'JT (J/T)'$unk$,$unk$'Just teasing'$unk$)
-($unk$'JTLYK'$unk$,$unk$'Just to let you know'$unk$)
-($unk$'JV'$unk$,$unk$'Joint venture'$unk$)
-($unk$'JW'$unk$,$unk$'Just wondering'$unk$)
-($unk$'K'$unk$,$unk$'Okay'$unk$)
-($unk$'KK'$unk$,$unk$'Knock, knock'$unk$)
-($unk$'KK'$unk$,$unk$'Okay, Okay!'$unk$)
-($unk$'K8T'$unk$,$unk$'Katie'$unk$)
-($unk$'k/b'$unk$,$unk$'Keyboard'$unk$)
-($unk$'KB'$unk$,$unk$'Keyboard'$unk$)
-($unk$'KB'$unk$,$unk$'Kick butt (online gaming)'$unk$)
-($unk$'KDFU'$unk$,$unk$'Means Cracking (K) the (D as in Da) *freak* up'$unk$)
-($unk$'KEWL'$unk$,$unk$'Cool'$unk$)
-($unk$'KEYA'$unk$,$unk$'I will key you later'$unk$)
-($unk$'KEYME'$unk$,$unk$'Key me when you get in'$unk$)
-($unk$'KFY'$unk$,$unk$'Kiss for you'$unk$)
-($unk$'KIA'$unk$,$unk$'Know it all'$unk$)
-($unk$'KIR'$unk$,$unk$'Keep it real'$unk$)
-($unk$'KISS'$unk$,$unk$'Keep it simple, stupid'$unk$)
-($unk$'KIT'$unk$,$unk$'Keep in touch'$unk$)
-($unk$'KMA'$unk$,$unk$'Kiss my *a*'$unk$)
-($unk$'KMK'$unk$,$unk$'Kiss my keister'$unk$)
-($unk$'KMS'$unk$,$unk$'Killing myself'$unk$)
-($unk$'KMT'$unk$,$unk$'Kiss my tushie'$unk$)
-($unk$'KOC'$unk$,$unk$'Kiss on cheek'$unk$)
-($unk$'KOL'$unk$,$unk$'Key opinion leader'$unk$)
-($unk$'Koreaboo'$unk$,$unk$'Someone obsessed with Korean culture'$unk$)
-($unk$'KOS'$unk$,$unk$'Kid over shoulder'$unk$)
-($unk$'KOS'$unk$,$unk$'Kill on sight (online gaming)'$unk$)
-($unk$'KOW'$unk$,$unk$'Knock on wood'$unk$)
-($unk$'KOTC'$unk$,$unk$'Kiss on the cheek'$unk$)
-($unk$'KOTD'$unk$,$unk$'Kicks of the day (Instagram)'$unk$)
-($unk$'KOTL'$unk$,$unk$'Kiss on the lips'$unk$)
-($unk$'KNIM'$unk$,$unk$'Know what I mean?'$unk$)
-($unk$'KNOW'$unk$,$unk$'Meaning ''knowledge'''$unk$)
-($unk$'KPC'$unk$,$unk$'Keeping parents clueless'$unk$)
-($unk$'KS'$unk$,$unk$'Kill then steal (online gaming)'$unk$)
-($unk$'KSC'$unk$,$unk$'Kind (of) sort (of) chuckle'$unk$)
-($unk$'KT'$unk$,$unk$'Katie'$unk$)
-($unk$'KUTGW'$unk$,$unk$'Keep up the good work'$unk$)
-($unk$'KYS'$unk$,$unk$'Kill yourself'$unk$)
-($unk$'L2G'$unk$,$unk$'Like to go?'$unk$)
-($unk$'L2G'$unk$,$unk$'(would) Love to go'$unk$)
-($unk$'L2K'$unk$,$unk$'Like to come'$unk$)
-($unk$'L2P'$unk$,$unk$'Learn to play'$unk$)
-($unk$'l33t'$unk$,$unk$'Leet, meaning ''elite'''$unk$)
-($unk$'L4L'$unk$,$unk$'Like for like (Instagram)'$unk$)
-($unk$'L8R'$unk$,$unk$'Later'$unk$)
-($unk$'L8RG8R'$unk$,$unk$'Later, gator'$unk$)
-($unk$'LAB'$unk$,$unk$'Life''s a *b*'$unk$)
-($unk$'LBAY'$unk$,$unk$'Laughing back at you'$unk$)
-($unk$'LBS'$unk$,$unk$'Laughing, but serious'$unk$)
-($unk$'LBVS'$unk$,$unk$'Laughing, but very serious'$unk$)
-($unk$'LD'$unk$,$unk$'Later, dude'$unk$)
-($unk$'LD'$unk$,$unk$'Long distance'$unk$)
-($unk$'LDO'$unk$,$unk$'Like, duh obviously'$unk$)
-($unk$'LEMENO'$unk$,$unk$'Let me know'$unk$)
-($unk$'LERK'$unk$,$unk$'Leaving easy reach of keyboard'$unk$)
-($unk$'LFD'$unk$,$unk$'Left for day'$unk$)
-($unk$'LFG'$unk$,$unk$'Looking for group (online gaming)'$unk$)
-($unk$'LFG'$unk$,$unk$'Looking for guard (online gaming)'$unk$)
-($unk$'LFM'$unk$,$unk$'Looking for more (online gaming)'$unk$)
-($unk$'LGH'$unk$,$unk$'Lets get high'$unk$)
-($unk$'LH6'$unk$,$unk$'Lets have sex'$unk$)
-($unk$'LHSX'$unk$,$unk$'Lets have sex'$unk$)
-($unk$'LHM'$unk$,$unk$'Lord help me'$unk$)
-($unk$'LHO'$unk$,$unk$'Laughing head off'$unk$)
-($unk$'LI'$unk$,$unk$'LinkedIn'$unk$)
-($unk$'LIC'$unk$,$unk$'Like I care'$unk$)
-($unk$'LIK'$unk$,$unk$'Meaning liquor'$unk$)
-($unk$'LIMT'$unk$,$unk$'Laugh in my tummy'$unk$)
-($unk$'LIT'$unk$,$unk$'Meaning really good or something fun and exciting'$unk$)
-($unk$'LIT'$unk$,$unk$'Extremely intoxicated'$unk$)
-($unk$'LLGB'$unk$,$unk$'Love, later, God bless'$unk$)
-($unk$'LLS'$unk$,$unk$'Laughing like *silly*'$unk$)
-($unk$'LMAO'$unk$,$unk$'Laughing my *a* off'$unk$)
-($unk$'LMBO'$unk$,$unk$'Laughing my butt off'$unk$)
-($unk$'LMFAO'$unk$,$unk$'Laughing my freaking *a* off'$unk$)
-($unk$'LMIRL'$unk$,$unk$'Lets meet in real life'$unk$)
-($unk$'LMK'$unk$,$unk$'Let me know'$unk$)
-($unk$'LMMFAO'$unk$,$unk$'Laughing my mother freaking a** off'$unk$)
-($unk$'LMNK'$unk$,$unk$'Leave my name out'$unk$)
-($unk$'LMS'$unk$,$unk$'Like my status (Facebook)'$unk$)
-($unk$'LNT'$unk$,$unk$'Meaning lost in translation'$unk$)
-($unk$'LOA'$unk$,$unk$'List of acronyms'$unk$)
-($unk$'LOL'$unk$,$unk$'Laughing out loud'$unk$)
-($unk$'LOLH'$unk$,$unk$'Laughing out loud hysterically'$unk$)
-($unk$'LOLO'$unk$,$unk$'Lots of love'$unk$)
-($unk$'LOLWTF'$unk$,$unk$'Laughing out loud (saying) ''What the *freak*?'''$unk$)
-($unk$'LOTI'$unk$,$unk$'Laughing on the inside'$unk$)
-($unk$'LOTR'$unk$,$unk$'Lord of The Rings (online gaming)'$unk$)
-($unk$'LQTM'$unk$,$unk$'Laughing quietly to myself'$unk$)
-($unk$'LSHMBH'$unk$,$unk$'Laugh so hard my belly hurts'$unk$)
-($unk$'LSV'$unk$,$unk$'Language, sex and violence'$unk$)
-($unk$'LTD'$unk$,$unk$'Living the dream'$unk$)
-($unk$'LTLWDLS'$unk$,$unk$'Let''s twist like we did last summer'$unk$)
-($unk$'LTNS'$unk$,$unk$'Long time no see'$unk$)
-($unk$'LTOD'$unk$,$unk$'Laptop of death'$unk$)
-($unk$'LTS'$unk$,$unk$'Laughing to self'$unk$)
-($unk$'LULT'$unk$,$unk$'Love you long time'$unk$)
-($unk$'LULZ'$unk$,$unk$'Meaning joke, or for laughs'$unk$)
-($unk$'LVM'$unk$,$unk$'Left voice mail'$unk$)
-($unk$'LWOS'$unk$,$unk$'Laughing without smiling'$unk$)
-($unk$'LY'$unk$,$unk$'Love ya&nbsp;'$unk$)
-($unk$'LYLAS'$unk$,$unk$'Love you like a sis'$unk$)
-($unk$'LYLC'$unk$,$unk$'Love you like crazy'$unk$)
-($unk$'LYSM'$unk$,$unk$'Love you so much'$unk$)
-($unk$'M$'$unk$,$unk$'Microsoft'$unk$)
-($unk$'M8'$unk$,$unk$'Mate'$unk$)
-($unk$'MB'$unk$,$unk$'Mamma''s boy'$unk$)
-($unk$'MBS'$unk$,$unk$'Mom behind shoulder'$unk$)
-($unk$'MC'$unk$,$unk$'Merry Christmas'$unk$)
-($unk$'MDIAC'$unk$,$unk$'My Dad is a cop'$unk$)
-($unk$'MEGO'$unk$,$unk$'My eyes glaze over'$unk$)
-($unk$'MEH'$unk$,$unk$'Meaning a ''shrug'' or shrugging shoulders'$unk$)
-($unk$'MEH'$unk$,$unk$'Meaning a ''so-so'' or ''just okay'''$unk$)
-($unk$'MEHH'$unk$,$unk$'Meaning a ''sigh'' or sighing'$unk$)
-($unk$'MEZ'$unk$,$unk$'Meaning ''mesmerize'' (online gaming)'$unk$)
-($unk$'MFI'$unk$,$unk$'Mad for it'$unk$)
-($unk$'MFW'$unk$,$unk$'My face when... (Used with photo or gif)'$unk$)
-($unk$'MGB'$unk$,$unk$'May God bless'$unk$)
-($unk$'MGMT'$unk$,$unk$'Management'$unk$)
-($unk$'MHOTY'$unk$,$unk$'My hat (is) off to you'$unk$)
-($unk$'MIRL'$unk$,$unk$'Me in real life'$unk$)
-($unk$'MIRL'$unk$,$unk$'Meet in real life'$unk$)
-($unk$'MISS.(number)'$unk$,$unk$'Meaning ''child and her age''. Miss.3 would be a 3-year old daughter'$unk$)
-($unk$'MKAY'$unk$,$unk$'Meaning ''Mmm, okay'''$unk$)
-($unk$'MLM'$unk$,$unk$'Meaning give the middle finger'$unk$)
-($unk$'MM'$unk$,$unk$'Sister (Mandarin Chinese txt msg)'$unk$)
-($unk$'MMK'$unk$,$unk$'Meaning okay? (as a question)'$unk$)
-($unk$'MNC'$unk$,$unk$'Mother nature calls'$unk$)
-($unk$'MNSG'$unk$,$unk$'Mensaje (message in Spanish)'$unk$)
-($unk$'MOD'$unk$,$unk$'Moderator'$unk$)
-($unk$'MOD'$unk$,$unk$'Modification (online gaming)'$unk$)
-($unk$'MORF'$unk$,$unk$'Male or female?'$unk$)
-($unk$'MOMBOY'$unk$,$unk$'Mamma''s boy'$unk$)
-($unk$'MOO'$unk$,$unk$'My own opinion'$unk$)
-($unk$'MOOS'$unk$,$unk$'Member of the opposite sex'$unk$)
-($unk$'MOS'$unk$,$unk$'Mother over shoulder'$unk$)
-($unk$'MOSS'$unk$,$unk$'Member of same sex'$unk$)
-($unk$'MP'$unk$,$unk$'Mana points (online gaming)'$unk$)
-($unk$'MR.(number)'$unk$,$unk$'Meaning ''child and his age''. Mr.3 would be a 3-year old son'$unk$)
-($unk$'MRT'$unk$,$unk$'Modified ReTweet'$unk$)
-($unk$'MRW'$unk$,$unk$'My reaction when... (Used with photo or gif)'$unk$)
-($unk$'MSG'$unk$,$unk$'Message'$unk$)
-($unk$'MTF'$unk$,$unk$'More to follow'$unk$)
-($unk$'MTFBWU'$unk$,$unk$'May the force be with you'$unk$)
-($unk$'MU'$unk$,$unk$'Miss U (you)'$unk$)
-($unk$'MUAH'$unk$,$unk$'Multiple unsuccessful attempts (at/to) humor'$unk$)
-($unk$'MUSM'$unk$,$unk$'Miss you so much'$unk$)
-($unk$'MWAH'$unk$,$unk$'Meaning ''kiss'' (it is is the sound made when kissing through the air)'$unk$)
-($unk$'MYO'$unk$,$unk$'Mind your own (business)'$unk$)
-($unk$'MYOB'$unk$,$unk$'Mind your own business'$unk$)
-($unk$'n00b'$unk$,$unk$'Newbie'$unk$)
-($unk$'N1'$unk$,$unk$'Nice one'$unk$)
-($unk$'N2M'$unk$,$unk$'Nothing too much'$unk$)
-($unk$'NADT'$unk$,$unk$'Not a darn thing'$unk$)
-($unk$'NALOPKT'$unk$,$unk$'Not a lot of people know that'$unk$)
-($unk$'NANA'$unk$,$unk$'Not now, no need'$unk$)
-($unk$'NBD'$unk$,$unk$'No big deal'$unk$)
-($unk$'NBFAB'$unk$,$unk$'No bad for a beginner (online gaming)'$unk$)
-($unk$'NC'$unk$,$unk$'Nice crib (online gaming)'$unk$)
-($unk$'ND'$unk$,$unk$'Nice double (online gaming)'$unk$)
-($unk$'NE'$unk$,$unk$'Any'$unk$)
-($unk$'NE1'$unk$,$unk$'Anyone'$unk$)
-($unk$'NERF'$unk$,$unk$'Meaning ''Changed and is now weaker'' (online gaming)'$unk$)
-($unk$'NFM'$unk$,$unk$'None for me / Not for me'$unk$)
-($unk$'NFM'$unk$,$unk$'Not for me'$unk$)
-($unk$'NGL'$unk$,$unk$'Not gonna (going to) lie'$unk$)
-($unk$'NFS'$unk$,$unk$'Need for Speed (online gaming)'$unk$)
-($unk$'NFS'$unk$,$unk$'Not for sale'$unk$)
-($unk$'NFW'$unk$,$unk$'No *freaking* way'$unk$)
-($unk$'NFW'$unk$,$unk$'Not for work'$unk$)
-($unk$'NFWS'$unk$,$unk$'Not for work safe'$unk$)
-($unk$'NH'$unk$,$unk$'Nice hand (online gaming)'$unk$)
-($unk$'NIFOC'$unk$,$unk$'Naked in front of computer'$unk$)
-($unk$'NIGI'$unk$,$unk$'Now I get it'$unk$)
-($unk$'NIMBY'$unk$,$unk$'Not in my back yard'$unk$)
-($unk$'NIROK'$unk$,$unk$'Not in reach of keyboard'$unk$)
-($unk$'NLT'$unk$,$unk$'No later than'$unk$)
-($unk$'NM'$unk$,$unk$'Nothing much'$unk$)
-($unk$'NM'$unk$,$unk$'Never mind'$unk$)
-($unk$'NM'$unk$,$unk$'Nice meld (online gaming)'$unk$)
-($unk$'NMH'$unk$,$unk$'Not much here'$unk$)
-($unk$'NMJC'$unk$,$unk$'Nothing much, just chilling'$unk$)
-($unk$'NMU'$unk$,$unk$'Not much, you?'$unk$)
-($unk$'NO1'$unk$,$unk$'No one'$unk$)
-($unk$'NOOB'$unk$,$unk$'Meaning someone who is bad at (online) games'$unk$)
-($unk$'NOWL'$unk$,$unk$'Meaning ''knowledge'''$unk$)
-($unk$'NOYB'$unk$,$unk$'None of your business'$unk$)
-($unk$'NP'$unk$,$unk$'No problem'$unk$)
-($unk$'NPC'$unk$,$unk$'Non-playing character (online gaming)'$unk$)
-($unk$'NQT'$unk$,$unk$'Newly qualified teacher'$unk$)
-($unk$'NR'$unk$,$unk$'Nice roll (online gaming)'$unk$)
-($unk$'NRN'$unk$,$unk$'No response/reply necessary'$unk$)
-($unk$'NS'$unk$,$unk$'Nice score (online gaming)'$unk$)
-($unk$'NS'$unk$,$unk$'Nice split (online gaming)'$unk$)
-($unk$'NSA'$unk$,$unk$'No strings attached'$unk$)
-($unk$'NSFL'$unk$,$unk$'Not safe for life'$unk$)
-($unk$'NSFW'$unk$,$unk$'Not safe for work'$unk$)
-($unk$'NSISR'$unk$,$unk$'Not sure if spelled right'$unk$)
-($unk$'NT'$unk$,$unk$'Nice try'$unk$)
-($unk$'NTHING'$unk$,$unk$'Nothing (SMS)'$unk$)
-($unk$'NTS'$unk$,$unk$'Note to self'$unk$)
-($unk$'NVM'$unk$,$unk$'Never mind'$unk$)
-($unk$'NVR'$unk$,$unk$'Never'$unk$)
-($unk$'NW'$unk$,$unk$'No way'$unk$)
-($unk$'NWO'$unk$,$unk$'No way out'$unk$)
-($unk$'O4U'$unk$,$unk$'Only for you'$unk$)
-($unk$'O'$unk$,$unk$'Opponent (online gaming)'$unk$)
-($unk$'O'$unk$,$unk$'Meaning ''hugs'''$unk$)
-($unk$'O'$unk$,$unk$'Over'$unk$)
-($unk$'OA'$unk$,$unk$'Online auctions'$unk$)
-($unk$'OATUS'$unk$,$unk$'On a totally unrelated subject'$unk$)
-($unk$'OB'$unk$,$unk$'Oh baby'$unk$)
-($unk$'OB'$unk$,$unk$'Oh brother'$unk$)
-($unk$'OBV'$unk$,$unk$'Obviously'$unk$)
-($unk$'OFC'$unk$,$unk$'Of course'$unk$)
-($unk$'OG'$unk$,$unk$'Original gangster'$unk$)
-($unk$'OGIM'$unk$,$unk$'Oh God, it''s Monday'$unk$)
-($unk$'OH'$unk$,$unk$'Overheard'$unk$)
-($unk$'OHHEMMGEE'$unk$,$unk$'Meaning ''Oh My God'' (alternate of OMG)'$unk$)
-($unk$'OI'$unk$,$unk$'Operator indisposed'$unk$)
-($unk$'OIB'$unk$,$unk$'Oh, I''m back'$unk$)
-($unk$'OIC'$unk$,$unk$'Oh, I see'$unk$)
-($unk$'OJ'$unk$,$unk$'Only joking'$unk$)
-($unk$'OL'$unk$,$unk$'Old lady'$unk$)
-($unk$'OLL'$unk$,$unk$'Online love'$unk$)
-($unk$'OM'$unk$,$unk$'Old man'$unk$)
-($unk$'OM'$unk$,$unk$'Oh, my'$unk$)
-($unk$'OMAA'$unk$,$unk$'Oh, my aching *A* (butt)'$unk$)
-($unk$'OMDB'$unk$,$unk$'Over my dead body'$unk$)
-($unk$'OMFG'$unk$,$unk$'Oh my *freaking* God'$unk$)
-($unk$'omfglmaobbqrofl'$unk$,$unk$'oh my *freaking* god, laugh my *a* off, owned, roll on floor spinning around I''m so sad'$unk$)
-($unk$'OMG'$unk$,$unk$'Oh my God'$unk$)
-($unk$'OMG'$unk$,$unk$'Oh my gosh'$unk$)
-($unk$'OMGYG2BK'$unk$,$unk$'Oh my God, you got to be kidding'$unk$)
-($unk$'OMGYS'$unk$,$unk$'Oh my gosh you suck&nbsp;'$unk$)
-($unk$'OMS'$unk$,$unk$'On my soul (meaning ''promise'')'$unk$)
-($unk$'OMW'$unk$,$unk$'On my way'$unk$)
-($unk$'ONL'$unk$,$unk$'Online'$unk$)
-($unk$'OO'$unk$,$unk$'Over and out'$unk$)
-($unk$'OOC'$unk$,$unk$'Out of character'$unk$)
-($unk$'OOH'$unk$,$unk$'Out of here'$unk$)
-($unk$'OOMF'$unk$,$unk$'One of my followers'$unk$)
-($unk$'OOTD'$unk$,$unk$'One of these days'$unk$)
-($unk$'OOTD'$unk$,$unk$'Outfit of the day (Instagram)'$unk$)
-($unk$'OOTO'$unk$,$unk$'Out of the office'$unk$)
-($unk$'OP'$unk$,$unk$'On phone'$unk$)
-($unk$'ORLY'$unk$,$unk$'Oh really?'$unk$)
-($unk$'OS'$unk$,$unk$'Operating system'$unk$)
-($unk$'OT'$unk$,$unk$'Off topic (discussion forums)'$unk$)
-($unk$'OTB'$unk$,$unk$'Off to bed'$unk$)
-($unk$'OTFL'$unk$,$unk$'On the floor laughing'$unk$)
-($unk$'OTL'$unk$,$unk$'Out to lunch'$unk$)
-($unk$'OTOH'$unk$,$unk$'On the other hand'$unk$)
-($unk$'OTP'$unk$,$unk$'On the phone'$unk$)
-($unk$'OTP'$unk$,$unk$'One true pairing; two people you would love to see as a couple'$unk$)
-($unk$'OTT'$unk$,$unk$'Over the top'$unk$)
-($unk$'OTTOMH'$unk$,$unk$'Off the top of my head'$unk$)
-($unk$'OTW'$unk$,$unk$'Off to work'$unk$)
-($unk$'OVA'$unk$,$unk$'Over'$unk$)
-($unk$'OYO'$unk$,$unk$'On your own'$unk$)
-($unk$'P'$unk$,$unk$'Partner (online gaming)'$unk$)
-($unk$'P2P'$unk$,$unk$'Parent to parent'$unk$)
-($unk$'P2P'$unk$,$unk$'Peer to peer'$unk$)
-($unk$'P2P'$unk$,$unk$'Pay to play (online gaming)'$unk$)
-($unk$'P911'$unk$,$unk$'Parents coming into room alert'$unk$)
-($unk$'PAP'$unk$,$unk$'Post a picture'$unk$)
-($unk$'PAT'$unk$,$unk$'Meaning ''patrol'' (online gaming)'$unk$)
-($unk$'PAW'$unk$,$unk$'Parents are watching'$unk$)
-($unk$'PBOOK'$unk$,$unk$'Phonebook (e-mail)'$unk$)
-($unk$'PC'$unk$,$unk$'Player character (online gaming)'$unk$)
-($unk$'PCM'$unk$,$unk$'Please call me'$unk$)
-($unk$'PDA'$unk$,$unk$'Personal display (of) affection'$unk$)
-($unk$'PDH'$unk$,$unk$'Pretty darn happy'$unk$)
-($unk$'PDS'$unk$,$unk$'Please don''t shoot'$unk$)
-($unk$'PDQ'$unk$,$unk$'Pretty darn quick'$unk$)
-($unk$'PEEPS'$unk$,$unk$'People'$unk$)
-($unk$'PFT'$unk$,$unk$'Pretty *freaking* tight'$unk$)
-($unk$'PIC'$unk$,$unk$'Picture'$unk$)
-($unk$'PIP'$unk$,$unk$'Peeing in pants (laughing hard)'$unk$)
-($unk$'PIR'$unk$,$unk$'Parents in room'$unk$)
-($unk$'PISS'$unk$,$unk$'Put in some sugar'$unk$)
-($unk$'PITA'$unk$,$unk$'Pain in the *butt*'$unk$)
-($unk$'PKMN'$unk$,$unk$'Pokemon (online gaming)'$unk$)
-($unk$'PL8'$unk$,$unk$'Plate'$unk$)
-($unk$'PLD'$unk$,$unk$'Played'$unk$)
-($unk$'PLMK'$unk$,$unk$'Please let me know'$unk$)
-($unk$'PLS'$unk$,$unk$'Please'$unk$)
-($unk$'PLU'$unk$,$unk$'People like us'$unk$)
-($unk$'PLZ'$unk$,$unk$'Please'$unk$)
-($unk$'PLZTLME'$unk$,$unk$'Please tell me'$unk$)
-($unk$'PM'$unk$,$unk$'Private Message'$unk$)
-($unk$'PMFI'$unk$,$unk$'Pardon me for interrupting'$unk$)
-($unk$'PMFJI'$unk$,$unk$'Pardon me for jumping in'$unk$)
-($unk$'PMSL'$unk$,$unk$'Pee myself laughing'$unk$)
-($unk$'POAHF'$unk$,$unk$'Put on a happy face'$unk$)
-($unk$'POIDH'$unk$,$unk$'Picture, or it didn''t happen'$unk$)
-($unk$'POS'$unk$,$unk$'Parent over shoulder'$unk$)
-($unk$'POT'$unk$,$unk$'Meaning ''potion'' (online gaming)'$unk$)
-($unk$'POTD'$unk$,$unk$'Photo of the day (Instagram)'$unk$)
-($unk$'POV'$unk$,$unk$'Point of view'$unk$)
-($unk$'POV'$unk$,$unk$'Privately owned vehicle (originally used to differentiate an individual''s vehicle from a military vehicle)'$unk$)
-($unk$'PPL'$unk$,$unk$'People'$unk$)
-($unk$'PPU'$unk$,$unk$'Pending pick-up'$unk$)
-($unk$'PRESH'$unk$,$unk$'Precious'$unk$)
-($unk$'PROBS'$unk$,$unk$'Probably'$unk$)
-($unk$'PROLLY'$unk$,$unk$'Probably'$unk$)
-($unk$'PROGGY'$unk$,$unk$'Meaning computer program'$unk$)
-($unk$'PRON'$unk$,$unk$'Meaning pornography'$unk$)
-($unk$'PRT'$unk$,$unk$'Party'$unk$)
-($unk$'PRT'$unk$,$unk$'Please Retweet'$unk$)
-($unk$'PRW'$unk$,$unk$'People/parents are watching'$unk$)
-($unk$'PSA'$unk$,$unk$'Public Service Announcement'$unk$)
-($unk$'PSOS'$unk$,$unk$'Parent standing over shoulder'$unk$)
-($unk$'PSP'$unk$,$unk$'Playstation Portable'$unk$)
-($unk$'PST'$unk$,$unk$'Please send tell (online gaming)'$unk$)
-($unk$'PTFO'$unk$,$unk$'Pass the *freak* out'$unk$)
-($unk$'PTIYPASI'$unk$,$unk$'Put that in your pipe and smoke it'$unk$)
-($unk$'PTL'$unk$,$unk$'Praise the Lord'$unk$)
-($unk$'PTMM'$unk$,$unk$'Please tell me more'$unk$)
-($unk$'PTO'$unk$,$unk$'Paid time off'$unk$)
-($unk$'PTO'$unk$,$unk$'Personal time off'$unk$)
-($unk$'PTO'$unk$,$unk$'Parent Teacher Organization'$unk$)
-($unk$'PUG'$unk$,$unk$'Pick up group (online gaming)'$unk$)
-($unk$'PVE'$unk$,$unk$'Player vs enemy, Player versus environment (online gaming)'$unk$)
-($unk$'PVP'$unk$,$unk$'Player versus player (online gaming)'$unk$)
-($unk$'PWN'$unk$,$unk$'Meaning ''own'''$unk$)
-($unk$'PXT'$unk$,$unk$'Please explain that'$unk$)
-($unk$'PU'$unk$,$unk$'That stinks!'$unk$)
-($unk$'PUKS'$unk$,$unk$'Pick up kids (SMS)'$unk$)
-($unk$'PYT'$unk$,$unk$'Pretty young thing'$unk$)
-($unk$'PZ'$unk$,$unk$'Peace&nbsp;'$unk$)
-($unk$'PZA'$unk$,$unk$'Pizza'$unk$)
-($unk$'Q'$unk$,$unk$'Queue'$unk$)
-($unk$'Q4U'$unk$,$unk$'(I have a) question for you'$unk$)
-($unk$'QC'$unk$,$unk$'Quality control'$unk$)
-($unk$'QFE'$unk$,$unk$'Question for everyone'$unk$)
-($unk$'QFI'$unk$,$unk$'Quoted for idiocy'$unk$)
-($unk$'QFI'$unk$,$unk$'Quoted for irony'$unk$)
-($unk$'QFT'$unk$,$unk$'Quoted for truth'$unk$)
-($unk$'QIK'$unk$,$unk$'Quick'$unk$)
-($unk$'QL'$unk$,$unk$'Quit laughing'$unk$)
-($unk$'QOTD'$unk$,$unk$'Quote of the day'$unk$)
-($unk$'QQ (qq) (Q_Q)'$unk$,$unk$'Meaning ''crying eyes'''$unk$)
-($unk$'QQ'$unk$,$unk$'Quick question'$unk$)
-($unk$'QSL'$unk$,$unk$'Reply&nbsp;'$unk$)
-($unk$'QSO'$unk$,$unk$'Conversation'$unk$)
-($unk$'QT'$unk$,$unk$'Cutie'$unk$)
-($unk$'QTPI'$unk$,$unk$'Cutie pie'$unk$)
-($unk$'R'$unk$,$unk$'Meaning ''are'''$unk$)
-($unk$'R8'$unk$,$unk$'Rate (SMS)'$unk$)
-($unk$'RBAY'$unk$,$unk$'Right back at you'$unk$)
-($unk$'RFN'$unk$,$unk$'Right *freaking* now'$unk$)
-($unk$'RGR'$unk$,$unk$'Roger (I agree, I understand)'$unk$)
-($unk$'RHIP'$unk$,$unk$'Rank has its privileges'$unk$)
-($unk$'RIP'$unk$,$unk$'Rest in peace'$unk$)
-($unk$'RL'$unk$,$unk$'Real life'$unk$)
-($unk$'RLY'$unk$,$unk$'Really'$unk$)
-($unk$'RME'$unk$,$unk$'Rolling my eyes'$unk$)
-($unk$'RMLB'$unk$,$unk$'Read my lips baby'$unk$)
-($unk$'RMMM'$unk$,$unk$'Read my mail man'$unk$)
-($unk$'ROFL'$unk$,$unk$'Rolling on floor laughing'$unk$)
-($unk$'ROFLCOPTER'$unk$,$unk$'Rolling on floor laughing and spinning around'$unk$)
-($unk$'ROFLMAO'$unk$,$unk$'Rolling on the floor, laughing my *butt* off'$unk$)
-($unk$'ROTFL'$unk$,$unk$'Rolling on the floor laughing'$unk$)
-($unk$'ROTFLUTS'$unk$,$unk$'Rolling on the floor laughing unable to speak'$unk$)
-($unk$'RS'$unk$,$unk$'Runescape (online gaming)'$unk$)
-($unk$'RSN'$unk$,$unk$'Real soon now'$unk$)
-($unk$'RT'$unk$,$unk$'Roger that'$unk$)
-($unk$'RT'$unk$,$unk$'Retweet'$unk$)
-($unk$'RTBS'$unk$,$unk$'Reason to be single'$unk$)
-($unk$'RTFM'$unk$,$unk$'Read the *freaking* manual'$unk$)
-($unk$'RTFQ'$unk$,$unk$'Read the *freaking* question'$unk$)
-($unk$'RTHX'$unk$,$unk$'Meaning ''Thanks for the RT (Retweet)'''$unk$)
-($unk$'RTMS'$unk$,$unk$'Read the manual, stupid'$unk$)
-($unk$'RTNTN'$unk$,$unk$'Retention (email, Government)'$unk$)
-($unk$'RTRCTV'$unk$,$unk$'Retroactive (email, Government)'$unk$)
-($unk$'RTRMT'$unk$,$unk$'Retirement (email, Government)'$unk$)
-($unk$'RTSM'$unk$,$unk$'Read the stupid manual'$unk$)
-($unk$'RTWFQ'$unk$,$unk$'Read the whole *freaking* question'$unk$)
-($unk$'RU'$unk$,$unk$'Are you?'$unk$)
-($unk$'RUMOF'$unk$,$unk$'Are you male or female?'$unk$)
-($unk$'RUT'$unk$,$unk$'Are u (you) there?'$unk$)
-($unk$'RUOK'$unk$,$unk$'Are you okay?'$unk$)
-($unk$'RX'$unk$,$unk$'Regards'$unk$)
-($unk$'RW'$unk$,$unk$'Real world'$unk$)
-($unk$'RX'$unk$,$unk$'Meaning drugs or prescriptions'$unk$)
-($unk$'RYB'$unk$,$unk$'Read your Bible&nbsp;'$unk$)
-($unk$'RYO'$unk$,$unk$'Roll your own'$unk$)
-($unk$'RYS'$unk$,$unk$'Read your screen&nbsp;'$unk$)
-($unk$'RYS'$unk$,$unk$'Are you single?'$unk$)
-($unk$'S2R'$unk$,$unk$'Send to receive (meaning send me your picture to get mine)'$unk$)
-($unk$'S2S'$unk$,$unk$'Sorry to say'$unk$)
-($unk$'S4L'$unk$,$unk$'Spam for life'$unk$)
-($unk$'SAL'$unk$,$unk$'Such a laugh'$unk$)
-($unk$'SAT'$unk$,$unk$'Sorry about that'$unk$)
-($unk$'SAVAGE'$unk$,$unk$'Slang for a shockingly careless expression or response to an event or message'$unk$)
-($unk$'SB'$unk$,$unk$'Snap back (Snapchat)'$unk$)
-($unk$'SB'$unk$,$unk$'Should be'$unk$)
-($unk$'SB'$unk$,$unk$'Smiling back'$unk$)
-($unk$'SBIA'$unk$,$unk$'Meaning Standing back in amazement'$unk$)
-($unk$'SBT'$unk$,$unk$'Sorry ''bout that'$unk$)
-($unk$'SC'$unk$,$unk$'Stay cool'$unk$)
-($unk$'SD'$unk$,$unk$'Sweet dreams'$unk$)
-($unk$'SDMB'$unk$,$unk$'Sweet dreams, my baby'$unk$)
-($unk$'SENPAI'$unk$,$unk$'Meaning someone older than you, someone you look up to'$unk$)
-($unk$'SEO'$unk$,$unk$'Search engine optimization'$unk$)
-($unk$'SETE'$unk$,$unk$'Smiling Ear-to-Ear'$unk$)
-($unk$'SELFIE'$unk$,$unk$'A photo that is taken of oneself for social media sharing'$unk$)
-($unk$'SFAIK'$unk$,$unk$'So far as I know'$unk$)
-($unk$'SH'$unk$,$unk$'Same here'$unk$)
-($unk$'SH^'$unk$,$unk$'Shut up'$unk$)
-($unk$'SHID'$unk$,$unk$'Slapping head in disgust'$unk$)
-($unk$'SHIP'$unk$,$unk$'Slang for ''wishing two people were in a relationship'''$unk$)
-($unk$'SICNR'$unk$,$unk$'Sorry, I could not resist'$unk$)
-($unk$'SIG2R'$unk$,$unk$'Sorry, I got to run'$unk$)
-($unk$'SIHTH'$unk$,$unk$'Stupidity is hard to take'$unk$)
-($unk$'SIMYC'$unk$,$unk$'Sorry I missed your call'$unk$)
-($unk$'SIR'$unk$,$unk$'Strike it rich'$unk$)
-($unk$'SIS'$unk$,$unk$'Snickering in silence'$unk$)
-($unk$'SIS'$unk$,$unk$'Meaning sister'$unk$)
-($unk$'SIT'$unk$,$unk$'Stay in touch'$unk$)
-($unk$'SITD'$unk$,$unk$'Still in the dark'$unk$)
-($unk$'SJW'$unk$,$unk$'Social justice warrior'$unk$)
-($unk$'SK8'$unk$,$unk$'Skate'$unk$)
-($unk$'SK8NG'$unk$,$unk$'Skating'$unk$)
-($unk$'SK8R'$unk$,$unk$'Skater'$unk$)
-($unk$'SK8RBOI'$unk$,$unk$'Skater Boy'$unk$)
-($unk$'SLAP'$unk$,$unk$'Sounds like a plan'$unk$)
-($unk$'Slay'$unk$,$unk$'To succeed at something'$unk$)
-($unk$'SM'$unk$,$unk$'Social media'$unk$)
-($unk$'SMAZED'$unk$,$unk$'Smoky haze (marijuana stoned)'$unk$)
-($unk$'SMEXI'$unk$,$unk$'Combination of sexy and Mexican, used to describe attractive people'$unk$)
-($unk$'SMH'$unk$,$unk$'Shaking my head'$unk$)
-($unk$'SMHID'$unk$,$unk$'Scratching my head in disbelief'$unk$)
-($unk$'SNAFU'$unk$,$unk$'Situation normal all fouled up'$unk$)
-($unk$'SNERT'$unk$,$unk$'Snot nosed egotistical rude teenager'$unk$)
-($unk$'SNR'$unk$,$unk$'Streaks and Recents (Snapchat)'$unk$)
-($unk$'SO'$unk$,$unk$'Significant other'$unk$)
-($unk$'SOAB'$unk$,$unk$'Son of a *B*'$unk$)
-($unk$'S''OK'$unk$,$unk$'Meaning It'' (s) okay (ok)'$unk$)
-($unk$'SOL'$unk$,$unk$'Sooner or later'$unk$)
-($unk$'SOMY'$unk$,$unk$'Sick of me yet?'$unk$)
-($unk$'SorG'$unk$,$unk$'Straight or Gay?'$unk$)
-($unk$'SOS'$unk$,$unk$'Meaning help'$unk$)
-($unk$'SOS'$unk$,$unk$'Son of Sam'$unk$)
-($unk$'SOT'$unk$,$unk$'Short of time'$unk$)
-($unk$'SOTMG'$unk$,$unk$'Short of time, must go'$unk$)
-($unk$'SOWM'$unk$,$unk$'Someone with me'$unk$)
-($unk$'SPK'$unk$,$unk$'Speak (SMS)'$unk$)
-($unk$'SRSLY'$unk$,$unk$'Seriously'$unk$)
-($unk$'SPST'$unk$,$unk$'Same place, same time'$unk$)
-($unk$'SPTO'$unk$,$unk$'Spoke to'$unk$)
-($unk$'SQ'$unk$,$unk$'Square'$unk$)
-($unk$'SRY'$unk$,$unk$'Sorry'$unk$)
-($unk$'SS'$unk$,$unk$'So sorry'$unk$)
-($unk$'SSDD'$unk$,$unk$'Same stuff, different day'$unk$)
-($unk$'SSIF'$unk$,$unk$'So stupid it''s funny'$unk$)
-($unk$'SSINF'$unk$,$unk$'So stupid it''s not funny'$unk$)
-($unk$'ST&amp;D'$unk$,$unk$'Stop texting and drive'$unk$)
-($unk$'Stan'$unk$,$unk$'Meaning a die-hard fan of someone (Snapchat)'$unk$)
-($unk$'STFU'$unk$,$unk$'Shut the *freak* up'$unk$)
-($unk$'STR8'$unk$,$unk$'Straight'$unk$)
-($unk$'STW'$unk$,$unk$'Search the Web'$unk$)
-($unk$'SU'$unk$,$unk$'Shut up'$unk$)
-($unk$'SUITM'$unk$,$unk$'See you in the morning'$unk$)
-($unk$'SUL'$unk$,$unk$'See you later'$unk$)
-($unk$'SUP'$unk$,$unk$'What''s up?'$unk$)
-($unk$'SUTH'$unk$,$unk$'So use(d) to haters (Facebook)'$unk$)
-($unk$'SUX'$unk$,$unk$'Meanings sucks or ''it sucks'''$unk$)
-($unk$'SUYF'$unk$,$unk$'Shut up you fool'$unk$)
-($unk$'SWAG'$unk$,$unk$'Meaning free stuff and giveaways from tech tradeshows'$unk$)
-($unk$'SWAG'$unk$,$unk$'Scientific wild *a* guess'$unk$)
-($unk$'SWAK'$unk$,$unk$'Sent (or sealed) with a kiss'$unk$)
-($unk$'SWALK'$unk$,$unk$'Sealed (or sealed) with a loving kiss'$unk$)
-($unk$'SWAT'$unk$,$unk$'Scientific wild *butt* guess'$unk$)
-($unk$'SWL'$unk$,$unk$'Screaming with laughter'$unk$)
-($unk$'SWMBO'$unk$,$unk$'She who must be obeyed. Meaning wife or partner'$unk$)
-($unk$'SYL'$unk$,$unk$'See you later&nbsp;'$unk$)
-($unk$'SYS'$unk$,$unk$'See you soon&nbsp;'$unk$)
-($unk$'SYY'$unk$,$unk$'Shut your yapper'$unk$)
-($unk$'T+'$unk$,$unk$'Think positive'$unk$)
-($unk$'T4BU'$unk$,$unk$'Thanks for being you'$unk$)
-($unk$'T:)T'$unk$,$unk$'Think happy thoughts'$unk$)
-($unk$'TA'$unk$,$unk$'Thanks a lot'$unk$)
-($unk$'TAFN'$unk$,$unk$'That''s all for now'$unk$)
-($unk$'TAM'$unk$,$unk$'Tomorro a.m.'$unk$)
-($unk$'TANK'$unk$,$unk$'Meaning really strong'$unk$)
-($unk$'TANKED'$unk$,$unk$'Meaning ''owned'''$unk$)
-($unk$'TANKING'$unk$,$unk$'Meaning ''owning'''$unk$)
-($unk$'TARFU'$unk$,$unk$'Things Are Really *fouled* Up.'$unk$)
-($unk$'TAU'$unk$,$unk$'Thinking about u (you)'$unk$)
-($unk$'TAUMUALU'$unk$,$unk$'Thinking about you miss you always love you'$unk$)
-($unk$'TBAG'$unk$,$unk$'Process of disgracing a corpse, taunting a fragged/killed player (online gaming)'$unk$)
-($unk$'TBBH'$unk$,$unk$'To be brutally honest'$unk$)
-($unk$'TBC'$unk$,$unk$'To be continued'$unk$)
-($unk$'TBD'$unk$,$unk$'To be determined'$unk$)
-($unk$'TBH'$unk$,$unk$'To be honest'$unk$)
-($unk$'TBL'$unk$,$unk$'Text back later'$unk$)
-($unk$'TBT'$unk$,$unk$'Throwback Thursday'$unk$)
-($unk$'TC'$unk$,$unk$'Take care'$unk$)
-($unk$'TCB'$unk$,$unk$'Take care of business'$unk$)
-($unk$'TCOY'$unk$,$unk$'Take care of yourself'$unk$)
-($unk$'TD'$unk$,$unk$'Tower defense (online gaming)'$unk$)
-($unk$'TD2M'$unk$,$unk$'Talk dirty to me'$unk$)
-($unk$'TDTM'$unk$,$unk$'Talk dirty to me'$unk$)
-($unk$'TEA'$unk$,$unk$'Meaning gossip'$unk$)
-($unk$'TFF'$unk$,$unk$'Too *freaking* funny'$unk$)
-($unk$'TFS'$unk$,$unk$'Thanks for sharing'$unk$)
-($unk$'TFTF'$unk$,$unk$'Thanks for the follow'$unk$)
-($unk$'TFTI'$unk$,$unk$'Thanks for the invitation'$unk$)
-($unk$'TFTT'$unk$,$unk$'Thanks for this tweet'$unk$)
-($unk$'TG'$unk$,$unk$'Thank goodness'$unk$)
-($unk$'TGIF'$unk$,$unk$'Thank God it''s Friday'$unk$)
-($unk$'THNQ'$unk$,$unk$'Thank-you (SMS)'$unk$)
-($unk$'THNX'$unk$,$unk$'Thanks'$unk$)
-($unk$'THOT'$unk$,$unk$'That wh*re over there'$unk$)
-($unk$'THT'$unk$,$unk$'Think happy thoughts'$unk$)
-($unk$'THX'$unk$,$unk$'Thanks'$unk$)
-($unk$'TIA'$unk$,$unk$'Thanks in advance'$unk$)
-($unk$'TIAD'$unk$,$unk$'Tomorrow is another day'$unk$)
-($unk$'TIC'$unk$,$unk$'Tongue-in-cheek'$unk$)
-($unk$'TIL'$unk$,$unk$'Today I learned'$unk$)
-($unk$'TILIS'$unk$,$unk$'Tell it like it is'$unk$)
-($unk$'TIR'$unk$,$unk$'Teacher in room'$unk$)
-($unk$'TLK2UL8R'$unk$,$unk$'Talk to you later'$unk$)
-($unk$'TL'$unk$,$unk$'Too long'$unk$)
-($unk$'TL;DR'$unk$,$unk$'Too long; didn''t read'$unk$)
-($unk$'TM'$unk$,$unk$'Trust me'$unk$)
-($unk$'TMA'$unk$,$unk$'Take my advice'$unk$)
-($unk$'TMB'$unk$,$unk$'Text me back'$unk$)
-($unk$'TMB'$unk$,$unk$'Tweet me back'$unk$)
-($unk$'TMI'$unk$,$unk$'Too much information'$unk$)
-($unk$'TMOT'$unk$,$unk$'Trust me on this'$unk$)
-($unk$'TMTH'$unk$,$unk$'Too much to handle'$unk$)
-($unk$'TMYL'$unk$,$unk$'Tell me your location'$unk$)
-($unk$'TMWFI'$unk$,$unk$'Take my word for it'$unk$)
-($unk$'TNSTAAFL'$unk$,$unk$'There''s no such thing as a free lunch'$unk$)
-($unk$'TNT'$unk$,$unk$'Til next time'$unk$)
-($unk$'TOJ'$unk$,$unk$'Tears of joy'$unk$)
-($unk$'TOS'$unk$,$unk$'Terms of service'$unk$)
-($unk$'TOTES'$unk$,$unk$'Totally'$unk$)
-($unk$'TOU'$unk$,$unk$'Thinking of you'$unk$)
-($unk$'TOY'$unk$,$unk$'Thinking of you'$unk$)
-($unk$'TPM'$unk$,$unk$'Tomorrow p.m.'$unk$)
-($unk$'TPTB'$unk$,$unk$'The powers that be'$unk$)
-($unk$'TQ'$unk$,$unk$'Te quiero / I love you (Spanish SMS)'$unk$)
-($unk$'TSH'$unk$,$unk$'Tripping so hard'$unk$)
-($unk$'TSNF'$unk$,$unk$'That''s so not fair'$unk$)
-($unk$'TSTB'$unk$,$unk$'The sooner, the better'$unk$)
-($unk$'TT'$unk$,$unk$'Trending topic'$unk$)
-($unk$'TTFN'$unk$,$unk$'Ta ta for now'$unk$)
-($unk$'TTLY'$unk$,$unk$'Totally'$unk$)
-($unk$'TTTT'$unk$,$unk$'These things take time'$unk$)
-($unk$'TTUL'$unk$,$unk$'Talk to you later'$unk$)
-($unk$'TU'$unk$,$unk$'Thank you'$unk$)
-($unk$'TUI'$unk$,$unk$'Turning you in'$unk$)
-($unk$'TURNT'$unk$,$unk$'Meaning excitement, turned up'$unk$)
-($unk$'TWSS'$unk$,$unk$'That''s what she said'$unk$)
-($unk$'TTG'$unk$,$unk$'Time to go'$unk$)
-($unk$'TTYAFN'$unk$,$unk$'Talk to you awhile from now'$unk$)
-($unk$'TTYL'$unk$,$unk$'Talk to you later'$unk$)
-($unk$'TTYS'$unk$,$unk$'Talk to you soon'$unk$)
-($unk$'TY'$unk$,$unk$'Thank you'$unk$)
-($unk$'TYFC'$unk$,$unk$'Thank you for charity (online gaming)'$unk$)
-($unk$'TYFYC'$unk$,$unk$'Thank you for your comment'$unk$)
-($unk$'TYS'$unk$,$unk$'Told you so'$unk$)
-($unk$'TYT'$unk$,$unk$'Take your time'$unk$)
-($unk$'TYSO'$unk$,$unk$'Thank you so much'$unk$)
-($unk$'TYAFY'$unk$,$unk$'Thank you and *freak* you'$unk$)
-($unk$'TYVM'$unk$,$unk$'Thank you very much'$unk$)
-($unk$'TX'$unk$,$unk$'Thanks'$unk$)
-($unk$'^URS'$unk$,$unk$'Up yours'$unk$)
-($unk$'UCMU'$unk$,$unk$'You crack me up'$unk$)
-($unk$'UDI'$unk$,$unk$'Unidentified drinking injury (meaning bruise, scratch, ache and so on)'$unk$)
-($unk$'UDM'$unk$,$unk$'U (You) da (the) man'$unk$)
-($unk$'UDS'$unk$,$unk$'Ugly domestic scene'$unk$)
-($unk$'UFB'$unk$,$unk$'Un *freaking* believable'$unk$)
-($unk$'UFN'$unk$,$unk$'Until further notice'$unk$)
-($unk$'UFWM'$unk$,$unk$'You *freaking* with me?'$unk$)
-($unk$'UGTBK'$unk$,$unk$'You''ve got to be kidding'$unk$)
-($unk$'UHGTBSM'$unk$,$unk$'You have got to be s#$t*ing me!'$unk$)
-($unk$'UKTR'$unk$,$unk$'You know that''s right'$unk$)
-($unk$'UL'$unk$,$unk$'Upload'$unk$)
-($unk$'U-L'$unk$,$unk$'Meaning ''You will'''$unk$)
-($unk$'UNA'$unk$,$unk$'Use no acronyms'$unk$)
-($unk$'UN4TUN8'$unk$,$unk$'Unfortunate'$unk$)
-($unk$'UNBLEFBLE'$unk$,$unk$'Unbelievable'$unk$)
-($unk$'UNCRTN'$unk$,$unk$'Uncertain'$unk$)
-($unk$'UNPC'$unk$,$unk$'Un- (not) politically correct'$unk$)
-($unk$'UOK'$unk$,$unk$'(Are) You ok?'$unk$)
-($unk$'UR'$unk$,$unk$'You are / You''re'$unk$)
-($unk$'UR2YS4ME'$unk$,$unk$'You are too wise for me'$unk$)
-($unk$'URA*'$unk$,$unk$'You are a star'$unk$)
-($unk$'URH'$unk$,$unk$'You are hot (U R Hot)'$unk$)
-($unk$'URSKTM'$unk$,$unk$'You are so kind to me'$unk$)
-($unk$'URTM'$unk$,$unk$'You are the man'$unk$)
-($unk$'URW'$unk$,$unk$'You are welcome'$unk$)
-($unk$'USBCA'$unk$,$unk$'Until something better comes along'$unk$)
-($unk$'USU'$unk$,$unk$'Usually'$unk$)
-($unk$'UT'$unk$,$unk$'Unreal Tournament (online gaming)'$unk$)
-($unk$'UT2L'$unk$,$unk$'You take too long'$unk$)
-($unk$'UTM'$unk$,$unk$'You tell me'$unk$)
-($unk$'UV'$unk$,$unk$'Unpleasant visual'$unk$)
-($unk$'UW'$unk$,$unk$'You''re welcome'$unk$)
-($unk$'UX'$unk$,$unk$'User experience'$unk$)
-($unk$'V'$unk$,$unk$'Very'$unk$)
-($unk$'VAT'$unk$,$unk$'Value added tax'$unk$)
-($unk$'VBL'$unk$,$unk$'Visible bra line'$unk$)
-($unk$'VBS'$unk$,$unk$'Very big smile'$unk$)
-($unk$'VC'$unk$,$unk$'Voice chat'$unk$)
-($unk$'VEG'$unk$,$unk$'Very evil grin'$unk$)
-($unk$'VFF'$unk$,$unk$'Very freaking funny'$unk$)
-($unk$'VFM'$unk$,$unk$'Value for money'$unk$)
-($unk$'VGC'$unk$,$unk$'Very good condition'$unk$)
-($unk$'VGG'$unk$,$unk$'Very good game (online gaming)'$unk$)
-($unk$'VGH'$unk$,$unk$'Very good hand (online gaming)'$unk$)
-($unk$'VIP'$unk$,$unk$'Very important person'$unk$)
-($unk$'VM'$unk$,$unk$'Voice mail'$unk$)
-($unk$'VN'$unk$,$unk$'Very nice'$unk$)
-($unk$'VNH'$unk$,$unk$'Very nice hand (online gaming)'$unk$)
-($unk$'VoIP'$unk$,$unk$'Voice over Internet Protocol'$unk$)
-($unk$'VRY'$unk$,$unk$'Very'$unk$)
-($unk$'VSC'$unk$,$unk$'Very soft chuckle'$unk$)
-($unk$'VSF'$unk$,$unk$'Very sad face'$unk$)
-($unk$'VWD'$unk$,$unk$'Very well done (online gaming)'$unk$)
-($unk$'VWP'$unk$,$unk$'Very well played (online gaming)'$unk$)
-($unk$'W@'$unk$,$unk$'What?'$unk$)
-($unk$'W/'$unk$,$unk$'With'$unk$)
-($unk$'W/B'$unk$,$unk$'Welcome back'$unk$)
-($unk$'W3'$unk$,$unk$'WWW (Web address)'$unk$)
-($unk$'W8'$unk$,$unk$'Wait'$unk$)
-($unk$'WAH'$unk$,$unk$'Working at home'$unk$)
-($unk$'WAJ'$unk$,$unk$'What a jerk'$unk$)
-($unk$'WAM'$unk$,$unk$'Wait a minute'$unk$)
-($unk$'WAN2'$unk$,$unk$'Want to? (SMS)'$unk$)
-($unk$'WAN2TLK'$unk$,$unk$'Want to talk'$unk$)
-($unk$'WAREZ'$unk$,$unk$'Meaning pirated (illegally gained) software'$unk$)
-($unk$'WAS'$unk$,$unk$'Wait a second'$unk$)
-($unk$'WAS'$unk$,$unk$'Wild *a* guess'$unk$)
-($unk$'WAT'$unk$,$unk$'What'$unk$)
-($unk$'WAWA'$unk$,$unk$'Where are we at?'$unk$)
-($unk$'WAYF'$unk$,$unk$'Where are you from?'$unk$)
-($unk$'W/B'$unk$,$unk$'Write back'$unk$)
-($unk$'WB'$unk$,$unk$'Welcome back'$unk$)
-($unk$'WBS'$unk$,$unk$'Write back soon'$unk$)
-($unk$'WBU'$unk$,$unk$'What about you?'$unk$)
-($unk$'WC'$unk$,$unk$'Welcome'$unk$)
-($unk$'WC'$unk$,$unk$'Who cares'$unk$)
-($unk$'WCA'$unk$,$unk$'Who cares anyway'$unk$)
-($unk$'W/E'$unk$,$unk$'Whatever'$unk$)
-($unk$'W/END'$unk$,$unk$'Weekend'$unk$)
-($unk$'WE'$unk$,$unk$'Whatever'$unk$)
-($unk$'WEBO'$unk$,$unk$'Webopedia'$unk$)
-($unk$'WEEBO'$unk$,$unk$'Describes a person obsessed with of Japanese culture'$unk$)
-($unk$'WEP'$unk$,$unk$'Weapon (online gaming)'$unk$)
-($unk$'WH5'$unk$,$unk$'Who, what, when, where, why'$unk$)
-($unk$'WHATEVES'$unk$,$unk$'Whatever'$unk$)
-($unk$'WIBNI'$unk$,$unk$'Wouldn''t it be nice if'$unk$)
-($unk$'WDALYIC'$unk$,$unk$'Who died and left you in charge'$unk$)
-($unk$'WDYK'$unk$,$unk$'What do you know?'$unk$)
-($unk$'WDYT'$unk$,$unk$'What do you think?'$unk$)
-($unk$'WGACA'$unk$,$unk$'What do you think?'$unk$)
-($unk$'WIIFM'$unk$,$unk$'What''s in it for me?'$unk$)
-($unk$'WISP'$unk$,$unk$'Winning is so pleasurable'$unk$)
-($unk$'WITP'$unk$,$unk$'What is the point?'$unk$)
-($unk$'WITW'$unk$,$unk$'What in the world'$unk$)
-($unk$'WIU'$unk$,$unk$'Wrap it up'$unk$)
-($unk$'WK'$unk$,$unk$'Week'$unk$)
-($unk$'WKD'$unk$,$unk$'Weekend'$unk$)
-($unk$'WRT'$unk$,$unk$'With regard to'$unk$)
-($unk$'WL'$unk$,$unk$'Whatta loser'$unk$)
-($unk$'W/O'$unk$,$unk$'Without'$unk$)
-($unk$'WOA'$unk$,$unk$'Work of Art'$unk$)
-($unk$'WOKE'$unk$,$unk$'Slang for people who are aware of current social issues, and politics'$unk$)
-($unk$'WOMBAT'$unk$,$unk$'Waste of money, brains and time'$unk$)
-($unk$'WOW'$unk$,$unk$'World of Warcraft (online gaming)'$unk$)
-($unk$'WRK'$unk$,$unk$'Work'$unk$)
-($unk$'WRU'$unk$,$unk$'Where are you?'$unk$)
-($unk$'WRU@'$unk$,$unk$'Where are you at?'$unk$)
-($unk$'WRUD'$unk$,$unk$'What are you doing?'$unk$)
-($unk$'WTB'$unk$,$unk$'Want to buy (online gaming)'$unk$)
-($unk$'WTF'$unk$,$unk$'What the *freak* ?'$unk$)
-($unk$'WTFE'$unk$,$unk$'What the *freak* ever'$unk$)
-($unk$'WTFO'$unk$,$unk$'What the *freak* ?, over.'$unk$)
-($unk$'WTG'$unk$,$unk$'Way to go'$unk$)
-($unk$'WTGP'$unk$,$unk$'Want to go private (talk out of public chat area)'$unk$)
-($unk$'WTH'$unk$,$unk$'What the heck?'$unk$)
-($unk$'WTM'$unk$,$unk$'Who''s the man?'$unk$)
-($unk$'WTS'$unk$,$unk$'Want to sell? (online gaming)'$unk$)
-($unk$'WTT'$unk$,$unk$'Want to trade? (online gaming)'$unk$)
-($unk$'WU'$unk$,$unk$'What''s up?'$unk$)
-($unk$'WUCIWUG'$unk$,$unk$'What you see is what you get'$unk$)
-($unk$'WUF'$unk$,$unk$'Where are you from?'$unk$)
-($unk$'WUP'$unk$,$unk$'What''s up?'$unk$)
-($unk$'WUT'$unk$,$unk$'Meaning ''what'''$unk$)
-($unk$'WUW'$unk$,$unk$'What u (you) want?'$unk$)
-($unk$'WUU2'$unk$,$unk$'What are you up to?'$unk$)
-($unk$'WUZ'$unk$,$unk$'Was'$unk$)
-($unk$'WWJD'$unk$,$unk$'What would Jesus do?'$unk$)
-($unk$'WWJD'$unk$,$unk$'What Would Judd Do? (Artist Donald Judd, who was known to do things in his own compulsive way.)'$unk$)
-($unk$'WWNC'$unk$,$unk$'Will wonders never cease'$unk$)
-($unk$'WWYC'$unk$,$unk$'Write when you can'$unk$)
-($unk$'WYCM'$unk$,$unk$'Will you call me?'$unk$)
-($unk$'WYD'$unk$,$unk$'What (are) you doing?'$unk$)
-($unk$'WYGAM'$unk$,$unk$'When you get a minute'$unk$)
-($unk$'WYHAM'$unk$,$unk$'When you have a minute'$unk$)
-($unk$'WYLEI'$unk$,$unk$'When you least expect it'$unk$)
-($unk$'WYSIWYG'$unk$,$unk$'What you see is what you get&nbsp;'$unk$)
-($unk$'WYWH'$unk$,$unk$'Wish you were here'$unk$)
-($unk$'X-1-10'$unk$,$unk$'Meaning ''Exciting'''$unk$)
-($unk$'X'$unk$,$unk$'Kiss'$unk$)
-($unk$'X!'$unk$,$unk$'Meaning ''a typical woman'''$unk$)
-($unk$'XD'$unk$,$unk$'Meaning ''really hard laugh'' (where D is a smiley mouth)'$unk$)
-($unk$'XD'$unk$,$unk$'Meaning a ''devilish smile'''$unk$)
-($unk$'XME'$unk$,$unk$'Excuse Me'$unk$)
-($unk$'XOXOXO'$unk$,$unk$'Hugs &amp; Kisses'$unk$)
-($unk$'XLNT'$unk$,$unk$'Excellent&nbsp;'$unk$)
-($unk$'XLR8'$unk$,$unk$'Meaning ''faster'' or ''going faster'''$unk$)
-($unk$'XPOST'$unk$,$unk$'Meaning Cross-post. A link posted to a subreddit that was already shared on a different subreddit (Reddit)'$unk$)
-($unk$'XYL'$unk$,$unk$'Ex-young lady, meaning wife. (amateur radio)&nbsp;'$unk$)
-($unk$'XYZ'$unk$,$unk$'Examine your zipper'$unk$)
-($unk$'Y?'$unk$,$unk$'Why?'$unk$)
-($unk$'Y'$unk$,$unk$'Meaning Yawn'$unk$)
-($unk$'Y2K'$unk$,$unk$'You''re too kind'$unk$)
-($unk$'YA'$unk$,$unk$'Your'$unk$)
-($unk$'YAA'$unk$,$unk$'Yet another acronym'$unk$)
-($unk$'YABA'$unk$,$unk$'Yet another bloody acronym'$unk$)
-($unk$'YARLY'$unk$,$unk$'Ya, really?'$unk$)
-($unk$'YAS'$unk$,$unk$'Meaning ''praise'''$unk$)
-($unk$'YBIC'$unk$,$unk$'Your brother in Christ'$unk$)
-($unk$'YBS'$unk$,$unk$'You''ll be sorry'$unk$)
-($unk$'YCDBWYCID'$unk$,$unk$'You can''t do business when your computer is down'$unk$)
-($unk$'YCHT'$unk$,$unk$'You can have them'$unk$)
-($unk$'YCLIU'$unk$,$unk$'You can look it up'$unk$)
-($unk$'YCMU'$unk$,$unk$'You crack me up'$unk$)
-($unk$'YCT'$unk$,$unk$'Meaning Your comment to?'$unk$)
-($unk$'YD'$unk$,$unk$'Yesterday'$unk$)
-($unk$'YEET'$unk$,$unk$'Meaning excitement, approval or display of energy (i.e. throwing something)'$unk$)
-($unk$'YF'$unk$,$unk$'Wife'$unk$)
-($unk$'YG'$unk$,$unk$'Young gentleman'$unk$)
-($unk$'YGG'$unk$,$unk$'You go girl'$unk$)
-($unk$'YGTBKM'$unk$,$unk$'You''ve got to be kidding me'$unk$)
-($unk$'YGTR'$unk$,$unk$'You got that right'$unk$)
-($unk$'YHBT'$unk$,$unk$'You have been trolled'$unk$)
-($unk$'YHBW'$unk$,$unk$'You have been warned'$unk$)
-($unk$'YHL'$unk$,$unk$'You have lost'$unk$)
-($unk$'YIU'$unk$,$unk$'Yes, I understand'$unk$)
-($unk$'YKW'$unk$,$unk$'You know what'$unk$)
-($unk$'YKWYCD'$unk$,$unk$'You know what you can do'$unk$)
-($unk$'YL'$unk$,$unk$'Young lady'$unk$)
-($unk$'YMMV'$unk$,$unk$'Your mileage may vary'$unk$)
-($unk$'YNK'$unk$,$unk$'You never know'$unk$)
-($unk$'YOLO'$unk$,$unk$'You only live once'$unk$)
-($unk$'YR'$unk$,$unk$'Your'$unk$)
-($unk$'YR'$unk$,$unk$'Yeah right'$unk$)
-($unk$'YRYOCC'$unk$,$unk$'You''re running your own cuckoo clock'$unk$)
-($unk$'YSIC'$unk$,$unk$'Your sister in Christ'$unk$)
-($unk$'YSYD'$unk$,$unk$'Yeah sure you do'$unk$)
-($unk$'YT'$unk$,$unk$'YouTube'$unk$)
-($unk$'YT'$unk$,$unk$'You there?'$unk$)
-($unk$'YTB'$unk$,$unk$'You''re the best'$unk$)
-($unk$'YTB'$unk$,$unk$'Youth talk back'$unk$)
-($unk$'YTTL'$unk$,$unk$'You take too long'$unk$)
-($unk$'YTG'$unk$,$unk$'You''re the greatest'$unk$)
-($unk$'YW'$unk$,$unk$'You''re welcome'$unk$)
-($unk$'YWHNB'$unk$,$unk$'Yes, we have no bananas'$unk$)
-($unk$'YWHOL'$unk$,$unk$'Yelling ''woohoo'' out loud'$unk$)
-($unk$'YWSYLS'$unk$,$unk$'You win some, you lose some'$unk$)
-($unk$'YYSSW'$unk$,$unk$'Yeah, yeah, sure, sure, whatever'$unk$)
-($unk$'Z'$unk$,$unk$'Zero'$unk$)
-($unk$'Z'$unk$,$unk$'Z''s are calling (meaning going to bed/sleep)'$unk$)
-($unk$'Z'$unk$,$unk$'Meaning ''Said'''$unk$)
-($unk$'Z%'$unk$,$unk$'Zoo'$unk$)
-($unk$'ZH'$unk$,$unk$'Sleeping Hour'$unk$)
-($unk$'ZOMG'$unk$,$unk$'Used in World of Warcraft to mean OMG (Oh My God)'$unk$)
-($unk$'ZOT'$unk$,$unk$'Zero tolerance'$unk$)
-($unk$'ZUP'$unk$,$unk$'Meaning ''What''s up?'''$unk$)
-($unk$'ZZZZ'$unk$,$unk$'Sleeping (or bored)'$unk$)
-;
+('?','I don''t understand what you mean'),
+('?4U','I have a question for you'),
+(';S','Gentle warning, like ''Hmm? What did you say?'''),
+('^^','Meaning ''read line'' or ''read message'' above'),
+('&lt;3','Meaning ''sideways heart'' (love, friendship)'),
+('&lt;33','Meaning ''heart or love'' (more 3s is a bigger heart)'),
+('@TEOTD','At the end of the day'),
+('.02','My (or your) two cents worth'),
+('1TG, 2TG','Meaning number of items needed for win (online gaming)'),
+('1UP','Meaning extra life (online gaming)'),
+('121','One-to-one (private chat initiation)'),
+('1337','Leet, meaning ''elite'''),
+('143','I love you'),
+('1432','I love you too'),
+('14AA41','One for all, and all for one'),
+('182','I hate you'),
+('19','Zero hand (online gaming)'),
+('10M','Ten man (online gaming)'),
+('10X','Thanks'),
+('10Q','Thank you'),
+('1CE','Once'),
+('1DR','I wonder'),
+('1NAM','One in a million'),
+('2','Meaning ''to'' in SMS'),
+('20','Meaning ''location'''),
+('2B','To be'),
+('2EZ','Too easy'),
+('2G2BT','Too good to be true'),
+('2M2H','Too much too handle'),
+('2MI','Too much information'),
+('2MOR','Tomorrow'),
+('2MORO','Tomorrow'),
+('2M2H','Too much to handle'),
+('2N8','Tonight'),
+('2NTE','Tonight'),
+('4','Short for ''for'' in SMS'),
+('411','Meaning ''information'''),
+('404','I don''t know'),
+('411','Meaning ''information'''),
+('420','Lets get high'),
+('420','Meaning ''Marijuana'''),
+('459','Means I love you (ILY is 459 using keypad numbers)'),
+('4AO','For adults only'),
+('4COL','For crying out loud'),
+('4EAE','Forever and ever&nbsp;'),
+('4EVA','Forever'),
+('4NR','Foreigner&nbsp;'),
+('4SALE','For sale'),
+('^5','High-five'),
+('511','Too much information (more than 411)'),
+('555','Sobbing, crying. (Mandarin Chinese txt msgs)'),
+('55555','Crying your eyes out (Mandarin Chinese txt msgs)'),
+('55555','Meaning Laughing (In Thai language the number 5 is pronounced ''ha''.)'),
+('6Y','Sexy'),
+('7K','Sick'),
+('81','Meaning Hells Angels (H=8th letter of alphabet, A=1st letter of alphabet)'),
+('831','I love you (8 letters, 3 words, 1 meaning)'),
+('86','Over'),
+('88','Bye-bye (Mandarin Chinese txt msgs)&nbsp;'),
+('88','Hugs and kisses'),
+('9','Parent is watching&nbsp;'),
+('*s*','Meaning ''smile'''),
+('*w*','Meaning ''wink'''),
+('A3','Anytime, anywhere, anyplace'),
+('AA','As above'),
+('AA','Ask about'),
+('AAF','As a matter of fact'),
+('AAF','As a friend'),
+('AAK','Asleep at keyboard'),
+('AAK','Alive and kicking'),
+('AAMOF','As a matter of fact'),
+('AAMOI','As a matter of interest'),
+('AAP','Always a pleasure'),
+('AAR','At any rate'),
+('AAS','Alive and smiling'),
+('AASHTA','As always, Sheldon has the answer (Bike mechanic Sheldon Brown)'),
+('AATK','Always at the keyboard'),
+('AAYF','As always, your friend'),
+('ABBR','Meaning abbreviation'),
+('ABC','Already been chewed'),
+('ABD','Already been done'),
+('ABT','About'),
+('ABT2','Meaning ''About to'''),
+('ABTA','Meaning Good-bye (signoff)'),
+('ABU','All bugged up'),
+('AC','Acceptable content'),
+('ACC','Anyone can come'),
+('ACD','ALT / CONTROL / DELETE'),
+('ACDNT','Accident (e-mail, Government)'),
+('ACE','Meaning marijuana cigarette'),
+('ACK','Acknowledge'),
+('ACPT','Accept (e-mail, Government)'),
+('ACQSTN','Acquisition (e-mail, Government)'),
+('ADAD','Another day, another dollar'),
+('ADBB','All done, bye-bye'),
+('ADD','Address'),
+('ADDY','Address'),
+('ADIH','Another day in hell'),
+('ADIP','Another day in paradise'),
+('ADMIN','Administrator'),
+('ADMINR','Administrator (Government)'),
+('ADN','Any day now'),
+('ADR','Address'),
+('AE','Area effect (online gaming)'),
+('AEAP','As early as possible'),
+('AF','April Fools'),
+('AF','As *Freak*'),
+('AF','Aggression factor (online gaming)'),
+('AFC','Away from computer'),
+('AFAIAA','As far as I am aware'),
+('AFAIC','As far as I am concerned'),
+('AFAIK','As far as I know'),
+('AFAIUI','As far as I understand it'),
+('AFAP','As far as possible'),
+('AFFA','Angels Forever, Forever Angels'),
+('AFJ','April Fool''s joke'),
+('AFK','Away from keyboard'),
+('AFZ','Acronym Free Zone'),
+('AFPOE','A fresh pair of eyes'),
+('AGI','Meaning ''agility'' (online gaming)'),
+('AH','At home'),
+('AIAMU','And I am a money''s uncle'),
+('AIGHT','Alright'),
+('AIR','As I remember'),
+('AISB','As it should be'),
+('AISB','As I said before'),
+('AISI','As I see it'),
+('AITR','Adult in the room'),
+('AKA','Also known as'),
+('ALCON','All concerned'),
+('ALOL','Actually laughing out loud'),
+('AMA','Ask me anything (Reddit)'),
+('AMAP','As much as possible'),
+('AMBW','All my best wishes'),
+('AML','All my love'),
+('AMOF','As a matter of fact'),
+('A/N','Author''s note'),
+('AO','Anarchy Online (online gaming)'),
+('AOC','Available on cell'),
+('AOE','Area of effect (online game)'),
+('AOM','Age of majority'),
+('AOM','Age of Mythology (online gaming)'),
+('AOTA','All of the above'),
+('AOYP','Angel on your pillow'),
+('APAC','All praise and credit'),
+('APP','Application'),
+('APP','Appreciate'),
+('AQAP','As quick (or quiet) as possible'),
+('ARC','Archive (compressed files)'),
+('ARE','Acronym rich environment'),
+('ARG','Argument'),
+('ASIG','And so it goes'),
+('ASAP','As soon as possible'),
+('A/S/L','Age/sex/location'),
+('ASL','Age/sex/location'),
+('ASLA','Age/sex/location/availability'),
+('AT','At your terminal'),
+('ATB','All the best'),
+('ATEOTD','At the end of the day'),
+('ATM','At the moment'),
+('ATSITS','All the stars in the sky'),
+('ATSL','Along the same line (or lines)'),
+('AWC','After awhile crocodile'),
+('AWESO','Awesome'),
+('AWOL','Away without leaving'),
+('AWOL','Absent without leave'),
+('AYDY','Are you done yet?'),
+('AYBABTU','All your base are belong to us (online gaming)'),
+('AYEC','At your earliest convenience'),
+('AYOR','At your own risk'),
+('AYSOS','Are you stupid or something?'),
+('AYS','Are you serious?'),
+('AYT','Are you there?'),
+('AYTMTB','And you''re telling me this because'),
+('AYV','Are you vertical?'),
+('AYW','As you were'),
+('AYW','As you want / As you wish'),
+('AZN','Asian'),
+('B','Back'),
+('B','Be'),
+('B&amp;','Banned'),
+('B2W','Back to work'),
+('B8','Bait (person teased or joked with, or under-aged person/teen)'),
+('B9','Boss is watching'),
+('B/F','Boyfriend'),
+('B/G','Background (personal information request)'),
+('B4','Before'),
+('B4N','Bye for now'),
+('BAG','Busting a gut'),
+('BA','Bad *a*'),
+('BAE','Before anyone else'),
+('BAE','Meaning Babe or baby'),
+('BAFO','Best and final offer'),
+('BAK','Back at keyboard'),
+('BAM','Below average mentality'),
+('BAMF','Bad *a* mother *f*'),
+('BAO','Be aware of'),
+('BAS','Big ''butt'' smile'),
+('BASIC','Meaning anything mainstream'),
+('BASOR','Breathing a sigh of relief'),
+('BAU','Business as usual'),
+('BAY','Back at ya'),
+('BB','Be back'),
+('BB','Big brother'),
+('BB','Bebi / Baby (Spanish SMS)'),
+('BBC','Big bad challenge'),
+('BBIAB','Be back in a bit'),
+('BBIAF','Be back in a few'),
+('BBIAM','Be back in a minute'),
+('BBIAS','Be back in a sec'),
+('BBL','Be back later'),
+('BBN','Bye, bye now'),
+('BBQ','Barbeque, ''Ownage'', shooting score/frag (online gaming)'),
+('BBS','Be back soon'),
+('BBT','Be back tomorrow'),
+('BC','Because'),
+('B/C','Because'),
+('BC','Be cool'),
+('BCNU','Be seeing you'),
+('BCOS','Because'),
+('BCO','Big crush on'),
+('BCOY','Big crush on you'),
+('BD','Big deal'),
+('BDAY','Birthday'),
+('B-DAY','Birthday'),
+('BDN','Big darn number'),
+('BEG','Big evil grin'),
+('BELF','Meaning ''Blood Elf'' (online gaming)'),
+('BF','Boyfriend'),
+('BF','Brain fart'),
+('BFAW','Best friend at work'),
+('BF2','Battlefield 2 (online gaming)'),
+('BF','Best friend'),
+('BFF','Best friends forever'),
+('BFFL','Best friends for life'),
+('BFFLNMW','Best friends for life, no matter what'),
+('BFD','Big freaking deal'),
+('BFG','Big&nbsp; freaking grin'),
+('BFFN','Best friend for now'),
+('BFN','Bye for now'),
+('BG','Big grin'),
+('BGWM','Be gentle with me'),
+('BHL8','Be home late'),
+('BIB','Boss is back'),
+('BIBO','Beer in, beer out'),
+('BIC','Butt in chair'),
+('BIF','Before I forget'),
+('BIH','Burn in hell'),
+('BIL','Brother in law'),
+('BIO','Meaning ''I''m going to the bathroom'' (or) ''Bathroom break'''),
+('BION','Believe it or not'),
+('BIOYA','Blow it out your *a*'),
+('BIOYN','Blow it out your nose'),
+('BIS','Best in slot (online gaming)'),
+('BISFLATM','Boy, I sure feel like a turquoise monkey! (unverified)'),
+('BITMT','But in the meantime'),
+('BL','Belly laugh'),
+('BLNT','Better luck next time'),
+('Bloke','Meaning Man (Discord)'),
+('BM','Bite me'),
+('BME','Based on my experience'),
+('BM&amp;Y','Between me and you'),
+('BOB','Back off *buddy*'),
+('BN','Bad news'),
+('BOE','Meaning ''bind on equip'' (online gaming)'),
+('BOHICA','Bend over here it comes again'),
+('BOL','Best of luck'),
+('BOM','*b* of mine'),
+('BOLO','Be on the look out'),
+('BOOMS','Bored out of my skull'),
+('BOP','Meaning ''bind on pickup'' (online gaming)'),
+('BOSMKL','Bending over smacking my knee laughing'),
+('BOT','Back on topic'),
+('BOT','Be on that'),
+('BMS','Broke my scale, used when rating someone'),
+('BOYF','Boyfriend'),
+('BPLM','Big person little mind'),
+('BRB','Be right back'),
+('BR','Best regards'),
+('BRBB','Be right back *b*'),
+('BRNC','Be right back, nature calls'),
+('BRD','Bored'),
+('BRH','Be right here'),
+('BRT','Be right there'),
+('BSF','But seriously folks'),
+('BSOD','Blue screen of death'),
+('BSTS','Better safe than sorry'),
+('BT','Bite this'),
+('BT','Between technologies'),
+('BTA','But then again'),
+('BTDT','Been there, done that'),
+('BTW','By the way&nbsp;'),
+('BTYCL','Meaning ''Bootycall'''),
+('BUBU','Slang term for the most beautiful of women'),
+('BURN','Used to reference an insult'),
+('Buff','Meaning ''changed and is now stronger'' (online gaming)'),
+('BWL','Bursting with laughter&nbsp;'),
+('BYOB','Bring your own beer&nbsp;'),
+('BYOC','Bring your own computer'),
+('BYOH','Bat you on (the) head'),
+('BYOP','Bring your own paint (paintball)'),
+('BYTM','Better you than me'),
+('C&amp;G','Chuckle &amp; grin'),
+('C4N','Ciao for now'),
+('CAD','Control + Alt + Delete'),
+('CAD','Short for Canada/Canadian'),
+('Cakeday','Meaning Birthday (Reddit)'),
+('CAM','Camera (SMS)'),
+('CB','Coffee break'),
+('CB','Chat break'),
+('CB','Crazy *b*'),
+('CD9','Code 9, Meaning ''parents are around'''),
+('CFS','Care for secret?'),
+('CFY','Calling for you'),
+('CHK','Check'),
+('CIAO','Good-bye (Italian word)'),
+('CICO','Coffee in, coffee out'),
+('CID','Crying in disgrace'),
+('CID','Consider it done'),
+('CLAB','Crying like a baby'),
+('CLD','Could'),
+('CLK','Click'),
+('CM','Call me'),
+('CMAP','Cover my *a* partner (online gaming)'),
+('CMB','Call me back'),
+('CMGR','Meaning ''Community manager'''),
+('CMIIW','Correct me if I''m wrong'),
+('CMON','Come on'),
+('CNP','Continued (in) next post'),
+('COB','Close of business'),
+('COH','City of Heroes (online gaming)'),
+('COS','Because'),
+('C/P','Cross post'),
+('CP','Chat post (or continue in IM)'),
+('CR8','Create'),
+('Cray','Meaning crazy'),
+('CRE8','Create'),
+('CRA CRA','Slang term meaning ''crazy'''),
+('CRAFT','Can''t remember a *freaking* thing'),
+('CRB','Come right back'),
+('CRBT','Crying really big tears'),
+('CRIT','Meaning ''critical hit'' (online gaming)'),
+('CRZ','Crazy'),
+('CRS&nbsp;','Can''t remember *stuff*'),
+('CSG','Chuckle, snicker, grin'),
+('CSL','Can''t stop laughing'),
+('CSS','Counter-Strike Source (online gaming)'),
+('CT','Can''t talk'),
+('CTC','Care to chat?'),
+('CTHU','Cracking the *heck* up'),
+('CTN','Can''t talk now'),
+('CTO','Check this out'),
+('CU','See you too'),
+('CU','See you'),
+('CU2','See you'),
+('CUA','See you around'),
+('CUL','See you later'),
+('CULA','See you later alligator'),
+('CUL8R','See you later'),
+('CUMID','See you in my dreams'),
+('CURLO','See you around like a donut'),
+('CWD','Comment when done'),
+('CWOT','Complete waste of time'),
+('CWYL','Chat with you later'),
+('CX','Meaning ''Correction'''),
+('CYA','See you'),
+('CYAL8R','See you later'),
+('CYE','Check your e-mail'),
+('CYEP','Close your eyes partner (online gaming)'),
+('CYO','See you online'),
+('D2','Dedos / fingers (Spanish SMS)'),
+('D46?','Down for sex?'),
+('DA','Meaning ''The'''),
+('DAE','Does anyone else?'),
+('DAFUQ','(What) the *Freak*?'),
+('DAM','Don''t annoy me'),
+('DAoC','Dark Age of Camelot (online gaming)'),
+('DBAU','Doing business as usual'),
+('DBEYR','Don''t believe everything you read'),
+('DC','Disconnect'),
+('DD','Dear (or Darling) daughter'),
+('DD','Due diligence'),
+('DDG','Drop dead gorgeous'),
+('DEEZ NUTZ','A phrase used in online chat to annoy or frustrate those involved in the conversation.'),
+('DEGT','Dear (or Darling) daughter'),
+('DERP','Meaning stupid or silly'),
+('DF','Don''t even go there'),
+('DFL','Dead *freaking* last (online gaming)'),
+('DGA','Don''t go anywhere'),
+('DGAF','Don''t give a *freak*'),
+('DGT','Don''t go there'),
+('DGTG','Don''t go there, girlfriend'),
+('DGYF','Dang, girl you fine'),
+('DH','Dear (or Darling) husband'),
+('DHU','Dinosaur hugs (used to show support)'),
+('DIIK','Darned if I know'),
+('DIKU','Do I know you?'),
+('DILLIGAF','Do I look like I give a *freak*?'),
+('DILLIGAS','Do I look like I give a sugar?'),
+('DIS','Did I say?'),
+('DITYID','Did I tell you I''m distressed?'),
+('DIY','Do it yourself'),
+('DKDC','Don''t know, don''t care'),
+('DKP','Dragon kill points (online gaming)'),
+('D/L','Download'),
+('DL','Download'),
+('DL','Down low'),
+('DL','Dead link'),
+('DLBBB','Don''t let (the) bed bugs bite'),
+('DLTBBB','Don''t let the bed bugs bite'),
+('DM','Doesn''t matter'),
+('DMNO','Dude Man No Offense'),
+('DMY','Don''t mess yourself'),
+('DN','Down'),
+('DNC','Do not compute (meaning I do not understand)'),
+('DNR','Dinner (SMS)'),
+('DNT','Don''t'),
+('d00d','Dude'),
+('DOE','Daughter of Eve'),
+('DORBS','Meaning ''Adorable'''),
+('DOT','Damage over time (online gaming)'),
+('Downvote','Voting negatively on a thread using Reddit’s voting system (Reddit)'),
+('DPS','Damage per second (online gaming)'),
+('DQMOT','Don''t quote me on this'),
+('DR','Didn''t read'),
+('DS','Dear (or Darling) son'),
+('DTR','Define the relationship'),
+('DTRT','Do the right thing'),
+('DTS','Don''t think so'),
+('DTTD','Don''t touch that dial'),
+('DUPE','Duplicate'),
+('DUR','Do you remember?'),
+('DV8','Deviate'),
+('DW','Dear (or Darling) wife'),
+('DWF','Divorced white female'),
+('DWM','Divorced white male'),
+('DXNRY','Dictionary'),
+('DYNWUTB','Do you know what you are talking about?'),
+('DYFI','Did you find it?'),
+('DYFM','Dude, you fascinate me'),
+('DYJHIW','Don''t you just hate it when...?'),
+('DYOR','Do your own research (common stock market chat slang)'),
+('E','Ecstasy'),
+('E','Enemy (online gaming)'),
+('E1','Everyone'),
+('E123','Easy as one, two, three'),
+('E2EG','Ear to ear grin'),
+('EAK','Eating at keyboard'),
+('EBKAC','Error between keyboard and chair'),
+('ED','Erase display'),
+('EF4T','Effort'),
+('EG','Evil grin'),
+('EI','Eat it'),
+('EIP','Editing in progress'),
+('ELI5','Explain like I''m 5'),
+('EM','E-mail'),
+('EMA','E-mail address'),
+('EMBAR','Meaning ''Embarassing'''),
+('EMFBI','Excuse me for butting in'),
+('EMFBI','Excuse me for jumping in'),
+('EMSG','E-mail message'),
+('ENUF','Enough'),
+('EOD','End of day'),
+('EOD','End of discussion'),
+('EOL','End of lecture'),
+('EOL','End of life'),
+('EOM','End of message'),
+('EOS','End of show'),
+('EOT','End of transmission'),
+('EQ','EverQuest (online gaming)'),
+('ERP','Meaning ''Erotic Role-Play'' (online gaming)'),
+('ERS2','Eres tz / are you (Spanish SMS)'),
+('ES','Erase screen'),
+('ESAD','Eat *S* and die!'),
+('ETA','Estimated time (of) arrival'),
+('ETA','Edited to add'),
+('EVA','Ever'),
+('EVO','Evolution'),
+('EWG','Evil wicked grin (in fun, teasing)'),
+('EWI','Emailing while intoxicated'),
+('EXTRA','Meaning over the top'),
+('EYC','Excitable, yet calm'),
+('EZ','Easy'),
+('EZY','Easy'),
+('F','Meaning female'),
+('F2F','Face to face'),
+('F2P','Free to play (online gaming)'),
+('F4F','Follow for follow (Instagram)'),
+('FAAK','Falling asleep at keyboard'),
+('FAB','Fabulous'),
+('Facepalm','Used to represent the gesture of ''smacking your forehead with your palm'' to express embarrassment or frustration'),
+('FAF','Funny as *freak*'),
+('FAM','FFamily, but not limited to actual family members. Could mean friends.'),
+('FAQ','Frequently asked questions'),
+('FAY','*Freak* all you'),
+('FB','Facebook'),
+('FBB','Meaning ''Facebook buddy'''),
+('FBC','Facebook chat'),
+('FBF','Flashback Friday'),
+('FBF','Meaning ''Facebook friend'''),
+('FBF','Fat boy food (e.g. pizza, burgers, fries)'),
+('FBFR','FaceBook friend'),
+('FBM','Fine by me'),
+('FBO','Facebook official (An official update from Facebook)'),
+('FBOW','For better or worse'),
+('FC','Fingers crossed'),
+('FC','Full card (online gaming)'),
+('FC''INGO','For crying out loud'),
+('FCOL','For crying out loud'),
+('Feelsbadman','A social meme that means to feel negative.'),
+('Feelsbatman','A social meme taking ''feelsbadman'' to the extreme. This references the DC super hero Batmanbecause he witnessed the murder of his parents.'),
+('Feelsgoodman','A social meme that means to feel positive.'),
+('FEITCTAJ','*Freak* ''em if they can''t take a joke'),
+('FF','Follow Friday'),
+('FFA','Free for all (online gaming)'),
+('FFS','For *freak''*sakes'),
+('FICCL','Frankly I couldn''t care a less'),
+('FIF','*Freak* I''m funny'),
+('FIIK','*Freaked* if I know'),
+('FIIOOH','Forget it, I''m out of here'),
+('FIL','Father in law'),
+('FIMH','Forever in my heart'),
+('Finna','Means ''Going to'''),
+('Finsta','A second Instagram account where someone can post things that they''re too afraid to post on their main account.'),
+('FISH','First in, still here'),
+('FITB','Fill in the blank'),
+('FML','*Freak* My Life'),
+('FOMC','Falling off my chair'),
+('FOMO','Fear of missing out'),
+('FOAD','*Freak* off and die'),
+('FOAF','Friend of a friend'),
+('FOMCL','Falling off my chair laughing'),
+('FRT','For real though'),
+('FTBOMH','From the bottom of my heart'),
+('FTFY','Fixed that for you'),
+('FTL','For the loss'),
+('FTW','For the win'),
+('FU','*Freak* you'),
+('FUBAR','Fouled up beyond all recognition'),
+('FUBB','Fouled up beyond belief'),
+('FUD','Face up deal (online gaming)'),
+('FUTAB','Feet up, take a break'),
+('FW','Forward'),
+('FWB','Friend with benefits'),
+('FWIW','For what it''s worth'),
+('FWM','Fine with me'),
+('FWP','First world problems'),
+('FYE','Fire, something that is cool'),
+('FYEO','For your eyes only'),
+('FYA','For your amusement'),
+('FYI','For your information'),
+('G','Grin'),
+('G','Giggle'),
+('G+','Google+'),
+('G/F','Girlfriend'),
+('G2CU','Good to see you'),
+('G2G','Got to go'),
+('G2GICYAL8ER','Got to go I''ll see you later'),
+('G2R','Got to run'),
+('G2TU','Got to tell u (you)'),
+('G4C','Going for coffee'),
+('G9','Genius'),
+('GA','Go ahead'),
+('GAC','Get a clue'),
+('GAFC','Get a *freaking* clue'),
+('GAL','Get a life'),
+('GANK','Meaning a player ambush or unfair player kill (online gaming)'),
+('GAS','Got a second?'),
+('GAS','Greetings and salutations'),
+('GB','Goodbye'),
+('GBTW','Get back to work'),
+('GBU','God bless you'),
+('GD','Good'),
+('GDR','Grinning, ducking, and running'),
+('GD/R','Grinning, ducking, and running'),
+('GFI','Go for it'),
+('GF','Girl friend'),
+('GFN','Gone for now'),
+('GG','Gotta Go'),
+('GG','Good Game (online gaming)'),
+('GG','Brother (Mandarin Chinese txt msgs)'),
+('GGA','Good game, all (online gaming)'),
+('GGE1','Good game, everyone (online gaming)'),
+('GGU2','Good game, you too'),
+('GGMSOT','Gotta get me some of that'),
+('GGOH','Gotta Get Outa Here'),
+('GGP','Got to go pee'),
+('GH','Good hand (online gaming)'),
+('GIAR','Give it a rest'),
+('GIC','Gift in crib (online gaming)'),
+('GIGO','Garbage in, garbage out'),
+('GIRL','Guy in real life'),
+('GJ','Good job'),
+('GL','Good luck'),
+('GL2U','Good luck to you (online gaming)'),
+('GLA','Good luck all (online gaming)'),
+('GL/HF','Good luck, have fun&nbsp; (online gaming)'),
+('GLE','Good luck everyone (online gaming)'),
+('GLE1','Good luck everyone (online gaming)'),
+('GLNG','Good luck next game (online gaming)'),
+('GMBA','Giggling my butt off'),
+('GMTA','Great minds think alike'),
+('GMV','Got my vote'),
+('GN','Good night'),
+('GNA','Good night all'),
+('GNE1','Good night everyone'),
+('GNIGHT','Good night'),
+('GNITE','Good night'),
+('GNSD','Good night, sweet dreams'),
+('GOAT','Greatest of all Time(s)'),
+('GOI','Get over it'),
+('GOL','Giggling out loud'),
+('GOMB','Get off my back'),
+('GPOY','Gratuitous picture of yourself'),
+('GR8','Great'),
+('GRATZ','Congratulations'),
+('GRL','Girl'),
+('GRWG','Get right with God'),
+('GR&amp;D','Grinning, running and ducking'),
+('GS','Good shot'),
+('GS','Good split (online gaming)'),
+('GT','Good try'),
+('GTFO','Get the *freak* out'),
+('GTFOH','Get the *freak* outta here'),
+('GTG','Got to go'),
+('GTM','Giggling to myself'),
+('GTRM','Going to read mail&nbsp;'),
+('GTSY','Great (or good) to see you'),
+('GUCCI','Good'),
+('GUD','Good&nbsp;'),
+('GWHTLC','Glad we had this little chat'),
+('H','Hug'),
+('H8','Hate'),
+('H8TTU','Hate to be you'),
+('HAG1','Have a good one'),
+('HAK','Hug and kiss'),
+('HALP','Help (Discord)'),
+('HAU','How about you?'),
+('H&amp;K','Hugs &amp; kisses'),
+('H2CUS','Hope to see you soon'),
+('HAGN','Have a good night'),
+('HAGO','Have a good one'),
+('HAND','Have a nice day'),
+('HAWT','Have a wonderful day (out-dated, see next in list)'),
+('HAWT','Meaning ''sexy'' or ''attractive'''),
+('HB','Hurry back'),
+('HB','Hug back'),
+('HBD','Happy birthday'),
+('H-BDAY','Happy Birthday'),
+('HBU','How about you?'),
+('HF','Have fun'),
+('HFAC','Holy flipping animal crackers'),
+('H-FDAY','Happy Father''s Day'),
+('HHIS','Head hanging in shame'),
+('HIFW','How I felt when... (Used with photo or gif)'),
+('HL','Half Life (online gaming)'),
+('HLA','Hola / hello (Spanish SMS)'),
+('H-MDAY','Happy Mother''s Day'),
+('HMU','Hit me up'),
+('HNL','(w)Hole ''nother level'),
+('HOAS','Hold on a second'),
+('HP','Hit points / Health points (online gaming)'),
+('HRU','How are you?'),
+('HTH','Hope this helps'),
+('HUB','Head up butt'),
+('HUYA','Head up your *butt*'),
+('HV','Have&nbsp;'),
+('HVH','Heroic Violet Hold (online gaming)'),
+('HW','Homework'),
+('HYFR','Hell yeah, *Freaking* right!'),
+('I2','I too (me too)'),
+('IA8','I already ate'),
+('IAAA','I am an accountant'),
+('IAAD','I am a doctor'),
+('IAAL','I am a lawyer'),
+('IAC','In any case'),
+('IAE','In any event'),
+('IANAC','I am not a crook'),
+('IANAL','I am not a lawyer'),
+('IAO','I am out (of here)'),
+('IB','I''m back'),
+('IB','I''m back'),
+('IC','I see'),
+('ICAM','I couldn''t agree more'),
+('ICBW','It could be worse'),
+('ICEDI','I can''t even discuss it'),
+('ICFILWU','I could fall in love with you'),
+('ICYMI','In case you missed it (Twitter slang)'),
+('IDBI','I don''t believe it'),
+('IDC','I don''t care'),
+('IDGAF','&nbsp;I don''t give a *freak*'),
+('IDK','I don''t know'),
+('IDTS','I don''t think so'),
+('IDUNNO','I don''t know'),
+('IFYP','I feel your pain'),
+('IG','Instagram'),
+('IG2R','I got to run'),
+('IGHT','I got high tonight'),
+('IGN','I (I''ve) got nothing'),
+('IGP','I got to (go) pee'),
+('IHNI','I have no idea'),
+('IIRC','If I remember correctly'),
+('IIIO','Intel inside, idiot outside'),
+('IK','I know'),
+('IKR','I know, right?'),
+('ILBL8','I''ll be late'),
+('ILU','I love you'),
+('ILUM','I love you man'),
+('ILYSM','I love you so much'),
+('ILY','I love you'),
+('IM','Instant message'),
+('IMAO','In my arrogant opinion'),
+('IMHO','In my humble opinion'),
+('ImL','(in Arial font) Means I love you (a way of using the American sign language in text)'),
+('IMNSHO','In my not so humble opinion'),
+('IMO','In my opinion'),
+('IMS','I am sorry'),
+('IMSB','I am so bored'),
+('IMTM','I am the man'),
+('IMU','I miss u (you)'),
+('INAL','I''m not a lawyer'),
+('INC','Meaning ''incoming'' (online gaming)'),
+('Inspoo','Inspiration'),
+('INV','Meaning ''Invite'''),
+('IOMH','In over my head'),
+('IOW','In other words'),
+('IRL','In real life'),
+('IRMC','I rest my case'),
+('ISLY','I still love you'),
+('ISO','In search of'),
+('ITAM','It''s The Accounting, Man (financial blogs)'),
+('ITT','In This Thread'),
+('ITYK','I thought you knew'),
+('IUSS','If you say so'),
+('IWALU','I will always love you'),
+('IWAWO','I want a way out'),
+('IWIAM','Idiot wrapped in a moron'),
+('IWSN','I want sex now'),
+('IYKWIM','If you know what I mean'),
+('IYO','In your opinion'),
+('IYQ','Meaning ''I like you'''),
+('IYSS','If you say so'),
+('j00','You'),
+('j00r','Your'),
+('JAC','Just a second'),
+('JAM','Just a minute'),
+('JAS','Just a second'),
+('JC (J/C)','Just checking'),
+('JDI','Just do it'),
+('JELLY','Meaning ''jealous'''),
+('JFF','Just for fun'),
+('JFGI','Just *freaking* Google it'),
+('JIC','Just in case'),
+('JJ (J/J)','Just joking'),
+('JJA','Just joking around'),
+('JK (J/K)','Just kidding'),
+('JLMK','Just let me know'),
+('JMO','Just my opinion'),
+('JP','Just playing&nbsp;'),
+('JP','Jackpot (online gaming, bingo games)'),
+('JT (J/T)','Just teasing'),
+('JTLYK','Just to let you know'),
+('JV','Joint venture'),
+('JW','Just wondering'),
+('K','Okay'),
+('KK','Knock, knock'),
+('KK','Okay, Okay!'),
+('K8T','Katie'),
+('k/b','Keyboard'),
+('KB','Keyboard'),
+('KB','Kick butt (online gaming)'),
+('KDFU','Means Cracking (K) the (D as in Da) *freak* up'),
+('KEWL','Cool'),
+('KEYA','I will key you later'),
+('KEYME','Key me when you get in'),
+('KFY','Kiss for you'),
+('KIA','Know it all'),
+('KIR','Keep it real'),
+('KISS','Keep it simple, stupid'),
+('KIT','Keep in touch'),
+('KMA','Kiss my *a*'),
+('KMK','Kiss my keister'),
+('KMS','Killing myself'),
+('KMT','Kiss my tushie'),
+('KOC','Kiss on cheek'),
+('KOL','Key opinion leader'),
+('Koreaboo','Someone obsessed with Korean culture'),
+('KOS','Kid over shoulder'),
+('KOS','Kill on sight (online gaming)'),
+('KOW','Knock on wood'),
+('KOTC','Kiss on the cheek'),
+('KOTD','Kicks of the day (Instagram)'),
+('KOTL','Kiss on the lips'),
+('KNIM','Know what I mean?'),
+('KNOW','Meaning ''knowledge'''),
+('KPC','Keeping parents clueless'),
+('KS','Kill then steal (online gaming)'),
+('KSC','Kind (of) sort (of) chuckle'),
+('KT','Katie'),
+('KUTGW','Keep up the good work'),
+('KYS','Kill yourself'),
+('L2G','Like to go?'),
+('L2G','(would) Love to go'),
+('L2K','Like to come'),
+('L2P','Learn to play'),
+('l33t','Leet, meaning ''elite'''),
+('L4L','Like for like (Instagram)'),
+('L8R','Later'),
+('L8RG8R','Later, gator'),
+('LAB','Life''s a *b*'),
+('LBAY','Laughing back at you'),
+('LBS','Laughing, but serious'),
+('LBVS','Laughing, but very serious'),
+('LD','Later, dude'),
+('LD','Long distance'),
+('LDO','Like, duh obviously'),
+('LEMENO','Let me know'),
+('LERK','Leaving easy reach of keyboard'),
+('LFD','Left for day'),
+('LFG','Looking for group (online gaming)'),
+('LFG','Looking for guard (online gaming)'),
+('LFM','Looking for more (online gaming)'),
+('LGH','Lets get high'),
+('LH6','Lets have sex'),
+('LHSX','Lets have sex'),
+('LHM','Lord help me'),
+('LHO','Laughing head off'),
+('LI','LinkedIn'),
+('LIC','Like I care'),
+('LIK','Meaning liquor'),
+('LIMT','Laugh in my tummy'),
+('LIT','Meaning really good or something fun and exciting'),
+('LIT','Extremely intoxicated'),
+('LLGB','Love, later, God bless'),
+('LLS','Laughing like *silly*'),
+('LMAO','Laughing my *a* off'),
+('LMBO','Laughing my butt off'),
+('LMFAO','Laughing my freaking *a* off'),
+('LMIRL','Lets meet in real life'),
+('LMK','Let me know'),
+('LMMFAO','Laughing my mother freaking a** off'),
+('LMNK','Leave my name out'),
+('LMS','Like my status (Facebook)'),
+('LNT','Meaning lost in translation'),
+('LOA','List of acronyms'),
+('LOL','Laughing out loud'),
+('LOLH','Laughing out loud hysterically'),
+('LOLO','Lots of love'),
+('LOLWTF','Laughing out loud (saying) ''What the *freak*?'''),
+('LOTI','Laughing on the inside'),
+('LOTR','Lord of The Rings (online gaming)'),
+('LQTM','Laughing quietly to myself'),
+('LSHMBH','Laugh so hard my belly hurts'),
+('LSV','Language, sex and violence'),
+('LTD','Living the dream'),
+('LTLWDLS','Let''s twist like we did last summer'),
+('LTNS','Long time no see'),
+('LTOD','Laptop of death'),
+('LTS','Laughing to self'),
+('LULT','Love you long time'),
+('LULZ','Meaning joke, or for laughs'),
+('LVM','Left voice mail'),
+('LWOS','Laughing without smiling'),
+('LY','Love ya&nbsp;'),
+('LYLAS','Love you like a sis'),
+('LYLC','Love you like crazy'),
+('LYSM','Love you so much'),
+('M$','Microsoft'),
+('M8','Mate'),
+('MB','Mamma''s boy'),
+('MBS','Mom behind shoulder'),
+('MC','Merry Christmas'),
+('MDIAC','My Dad is a cop'),
+('MEGO','My eyes glaze over'),
+('MEH','Meaning a ''shrug'' or shrugging shoulders'),
+('MEH','Meaning a ''so-so'' or ''just okay'''),
+('MEHH','Meaning a ''sigh'' or sighing'),
+('MEZ','Meaning ''mesmerize'' (online gaming)'),
+('MFI','Mad for it'),
+('MFW','My face when... (Used with photo or gif)'),
+('MGB','May God bless'),
+('MGMT','Management'),
+('MHOTY','My hat (is) off to you'),
+('MIRL','Me in real life'),
+('MIRL','Meet in real life'),
+('MISS.(number)','Meaning ''child and her age''. Miss.3 would be a 3-year old daughter'),
+('MKAY','Meaning ''Mmm, okay'''),
+('MLM','Meaning give the middle finger'),
+('MM','Sister (Mandarin Chinese txt msg)'),
+('MMK','Meaning okay? (as a question)'),
+('MNC','Mother nature calls'),
+('MNSG','Mensaje (message in Spanish)'),
+('MOD','Moderator'),
+('MOD','Modification (online gaming)'),
+('MORF','Male or female?'),
+('MOMBOY','Mamma''s boy'),
+('MOO','My own opinion'),
+('MOOS','Member of the opposite sex'),
+('MOS','Mother over shoulder'),
+('MOSS','Member of same sex'),
+('MP','Mana points (online gaming)'),
+('MR.(number)','Meaning ''child and his age''. Mr.3 would be a 3-year old son'),
+('MRT','Modified ReTweet'),
+('MRW','My reaction when... (Used with photo or gif)'),
+('MSG','Message'),
+('MTF','More to follow'),
+('MTFBWU','May the force be with you'),
+('MU','Miss U (you)'),
+('MUAH','Multiple unsuccessful attempts (at/to) humor'),
+('MUSM','Miss you so much'),
+('MWAH','Meaning ''kiss'' (it is is the sound made when kissing through the air)'),
+('MYO','Mind your own (business)'),
+('MYOB','Mind your own business'),
+('n00b','Newbie'),
+('N1','Nice one'),
+('N2M','Nothing too much'),
+('NADT','Not a darn thing'),
+('NALOPKT','Not a lot of people know that'),
+('NANA','Not now, no need'),
+('NBD','No big deal'),
+('NBFAB','No bad for a beginner (online gaming)'),
+('NC','Nice crib (online gaming)'),
+('ND','Nice double (online gaming)'),
+('NE','Any'),
+('NE1','Anyone'),
+('NERF','Meaning ''Changed and is now weaker'' (online gaming)'),
+('NFM','None for me / Not for me'),
+('NFM','Not for me'),
+('NGL','Not gonna (going to) lie'),
+('NFS','Need for Speed (online gaming)'),
+('NFS','Not for sale'),
+('NFW','No *freaking* way'),
+('NFW','Not for work'),
+('NFWS','Not for work safe'),
+('NH','Nice hand (online gaming)'),
+('NIFOC','Naked in front of computer'),
+('NIGI','Now I get it'),
+('NIMBY','Not in my back yard'),
+('NIROK','Not in reach of keyboard'),
+('NLT','No later than'),
+('NM','Nothing much'),
+('NM','Never mind'),
+('NM','Nice meld (online gaming)'),
+('NMH','Not much here'),
+('NMJC','Nothing much, just chilling'),
+('NMU','Not much, you?'),
+('NO1','No one'),
+('NOOB','Meaning someone who is bad at (online) games'),
+('NOWL','Meaning ''knowledge'''),
+('NOYB','None of your business'),
+('NP','No problem'),
+('NPC','Non-playing character (online gaming)'),
+('NQT','Newly qualified teacher'),
+('NR','Nice roll (online gaming)'),
+('NRN','No response/reply necessary'),
+('NS','Nice score (online gaming)'),
+('NS','Nice split (online gaming)'),
+('NSA','No strings attached'),
+('NSFL','Not safe for life'),
+('NSFW','Not safe for work'),
+('NSISR','Not sure if spelled right'),
+('NT','Nice try'),
+('NTHING','Nothing (SMS)'),
+('NTS','Note to self'),
+('NVM','Never mind'),
+('NVR','Never'),
+('NW','No way'),
+('NWO','No way out'),
+('O4U','Only for you'),
+('O','Opponent (online gaming)'),
+('O','Meaning ''hugs'''),
+('O','Over'),
+('OA','Online auctions'),
+('OATUS','On a totally unrelated subject'),
+('OB','Oh baby'),
+('OB','Oh brother'),
+('OBV','Obviously'),
+('OFC','Of course'),
+('OG','Original gangster'),
+('OGIM','Oh God, it''s Monday'),
+('OH','Overheard'),
+('OHHEMMGEE','Meaning ''Oh My God'' (alternate of OMG)'),
+('OI','Operator indisposed'),
+('OIB','Oh, I''m back'),
+('OIC','Oh, I see'),
+('OJ','Only joking'),
+('OL','Old lady'),
+('OLL','Online love'),
+('OM','Old man'),
+('OM','Oh, my'),
+('OMAA','Oh, my aching *A* (butt)'),
+('OMDB','Over my dead body'),
+('OMFG','Oh my *freaking* God'),
+('omfglmaobbqrofl','oh my *freaking* god, laugh my *a* off, owned, roll on floor spinning around I''m so sad'),
+('OMG','Oh my God'),
+('OMG','Oh my gosh'),
+('OMGYG2BK','Oh my God, you got to be kidding'),
+('OMGYS','Oh my gosh you suck&nbsp;'),
+('OMS','On my soul (meaning ''promise'')'),
+('OMW','On my way'),
+('ONL','Online'),
+('OO','Over and out'),
+('OOC','Out of character'),
+('OOH','Out of here'),
+('OOMF','One of my followers'),
+('OOTD','One of these days'),
+('OOTD','Outfit of the day (Instagram)'),
+('OOTO','Out of the office'),
+('OP','On phone'),
+('ORLY','Oh really?'),
+('OS','Operating system'),
+('OT','Off topic (discussion forums)'),
+('OTB','Off to bed'),
+('OTFL','On the floor laughing'),
+('OTL','Out to lunch'),
+('OTOH','On the other hand'),
+('OTP','On the phone'),
+('OTP','One true pairing; two people you would love to see as a couple'),
+('OTT','Over the top'),
+('OTTOMH','Off the top of my head'),
+('OTW','Off to work'),
+('OVA','Over'),
+('OYO','On your own'),
+('P','Partner (online gaming)'),
+('P2P','Parent to parent'),
+('P2P','Peer to peer'),
+('P2P','Pay to play (online gaming)'),
+('P911','Parents coming into room alert'),
+('PAP','Post a picture'),
+('PAT','Meaning ''patrol'' (online gaming)'),
+('PAW','Parents are watching'),
+('PBOOK','Phonebook (e-mail)'),
+('PC','Player character (online gaming)'),
+('PCM','Please call me'),
+('PDA','Personal display (of) affection'),
+('PDH','Pretty darn happy'),
+('PDS','Please don''t shoot'),
+('PDQ','Pretty darn quick'),
+('PEEPS','People'),
+('PFT','Pretty *freaking* tight'),
+('PIC','Picture'),
+('PIP','Peeing in pants (laughing hard)'),
+('PIR','Parents in room'),
+('PISS','Put in some sugar'),
+('PITA','Pain in the *butt*'),
+('PKMN','Pokemon (online gaming)'),
+('PL8','Plate'),
+('PLD','Played'),
+('PLMK','Please let me know'),
+('PLS','Please'),
+('PLU','People like us'),
+('PLZ','Please'),
+('PLZTLME','Please tell me'),
+('PM','Private Message'),
+('PMFI','Pardon me for interrupting'),
+('PMFJI','Pardon me for jumping in'),
+('PMSL','Pee myself laughing'),
+('POAHF','Put on a happy face'),
+('POIDH','Picture, or it didn''t happen'),
+('POS','Parent over shoulder'),
+('POT','Meaning ''potion'' (online gaming)'),
+('POTD','Photo of the day (Instagram)'),
+('POV','Point of view'),
+('POV','Privately owned vehicle (originally used to differentiate an individual''s vehicle from a military vehicle)'),
+('PPL','People'),
+('PPU','Pending pick-up'),
+('PRESH','Precious'),
+('PROBS','Probably'),
+('PROLLY','Probably'),
+('PROGGY','Meaning computer program'),
+('PRON','Meaning pornography'),
+('PRT','Party'),
+('PRT','Please Retweet'),
+('PRW','People/parents are watching'),
+('PSA','Public Service Announcement'),
+('PSOS','Parent standing over shoulder'),
+('PSP','Playstation Portable'),
+('PST','Please send tell (online gaming)'),
+('PTFO','Pass the *freak* out'),
+('PTIYPASI','Put that in your pipe and smoke it'),
+('PTL','Praise the Lord'),
+('PTMM','Please tell me more'),
+('PTO','Paid time off'),
+('PTO','Personal time off'),
+('PTO','Parent Teacher Organization'),
+('PUG','Pick up group (online gaming)'),
+('PVE','Player vs enemy, Player versus environment (online gaming)'),
+('PVP','Player versus player (online gaming)'),
+('PWN','Meaning ''own'''),
+('PXT','Please explain that'),
+('PU','That stinks!'),
+('PUKS','Pick up kids (SMS)'),
+('PYT','Pretty young thing'),
+('PZ','Peace&nbsp;'),
+('PZA','Pizza'),
+('Q','Queue'),
+('Q4U','(I have a) question for you'),
+('QC','Quality control'),
+('QFE','Question for everyone'),
+('QFI','Quoted for idiocy'),
+('QFI','Quoted for irony'),
+('QFT','Quoted for truth'),
+('QIK','Quick'),
+('QL','Quit laughing'),
+('QOTD','Quote of the day'),
+('QQ (qq) (Q_Q)','Meaning ''crying eyes'''),
+('QQ','Quick question'),
+('QSL','Reply&nbsp;'),
+('QSO','Conversation'),
+('QT','Cutie'),
+('QTPI','Cutie pie'),
+('R','Meaning ''are'''),
+('R8','Rate (SMS)'),
+('RBAY','Right back at you'),
+('RFN','Right *freaking* now'),
+('RGR','Roger (I agree, I understand)'),
+('RHIP','Rank has its privileges'),
+('RIP','Rest in peace'),
+('RL','Real life'),
+('RLY','Really'),
+('RME','Rolling my eyes'),
+('RMLB','Read my lips baby'),
+('RMMM','Read my mail man'),
+('ROFL','Rolling on floor laughing'),
+('ROFLCOPTER','Rolling on floor laughing and spinning around'),
+('ROFLMAO','Rolling on the floor, laughing my *butt* off'),
+('ROTFL','Rolling on the floor laughing'),
+('ROTFLUTS','Rolling on the floor laughing unable to speak'),
+('RS','Runescape (online gaming)'),
+('RSN','Real soon now'),
+('RT','Roger that'),
+('RT','Retweet'),
+('RTBS','Reason to be single'),
+('RTFM','Read the *freaking* manual'),
+('RTFQ','Read the *freaking* question'),
+('RTHX','Meaning ''Thanks for the RT (Retweet)'''),
+('RTMS','Read the manual, stupid'),
+('RTNTN','Retention (email, Government)'),
+('RTRCTV','Retroactive (email, Government)'),
+('RTRMT','Retirement (email, Government)'),
+('RTSM','Read the stupid manual'),
+('RTWFQ','Read the whole *freaking* question'),
+('RU','Are you?'),
+('RUMOF','Are you male or female?'),
+('RUT','Are u (you) there?'),
+('RUOK','Are you okay?'),
+('RX','Regards'),
+('RW','Real world'),
+('RX','Meaning drugs or prescriptions'),
+('RYB','Read your Bible&nbsp;'),
+('RYO','Roll your own'),
+('RYS','Read your screen&nbsp;'),
+('RYS','Are you single?'),
+('S2R','Send to receive (meaning send me your picture to get mine)'),
+('S2S','Sorry to say'),
+('S4L','Spam for life'),
+('SAL','Such a laugh'),
+('SAT','Sorry about that'),
+('SAVAGE','Slang for a shockingly careless expression or response to an event or message'),
+('SB','Snap back (Snapchat)'),
+('SB','Should be'),
+('SB','Smiling back'),
+('SBIA','Meaning Standing back in amazement'),
+('SBT','Sorry ''bout that'),
+('SC','Stay cool'),
+('SD','Sweet dreams'),
+('SDMB','Sweet dreams, my baby'),
+('SENPAI','Meaning someone older than you, someone you look up to'),
+('SEO','Search engine optimization'),
+('SETE','Smiling Ear-to-Ear'),
+('SELFIE','A photo that is taken of oneself for social media sharing'),
+('SFAIK','So far as I know'),
+('SH','Same here'),
+('SH^','Shut up'),
+('SHID','Slapping head in disgust'),
+('SHIP','Slang for ''wishing two people were in a relationship'''),
+('SICNR','Sorry, I could not resist'),
+('SIG2R','Sorry, I got to run'),
+('SIHTH','Stupidity is hard to take'),
+('SIMYC','Sorry I missed your call'),
+('SIR','Strike it rich'),
+('SIS','Snickering in silence'),
+('SIS','Meaning sister'),
+('SIT','Stay in touch'),
+('SITD','Still in the dark'),
+('SJW','Social justice warrior'),
+('SK8','Skate'),
+('SK8NG','Skating'),
+('SK8R','Skater'),
+('SK8RBOI','Skater Boy'),
+('SLAP','Sounds like a plan'),
+('Slay','To succeed at something'),
+('SM','Social media'),
+('SMAZED','Smoky haze (marijuana stoned)'),
+('SMEXI','Combination of sexy and Mexican, used to describe attractive people'),
+('SMH','Shaking my head'),
+('SMHID','Scratching my head in disbelief'),
+('SNAFU','Situation normal all fouled up'),
+('SNERT','Snot nosed egotistical rude teenager'),
+('SNR','Streaks and Recents (Snapchat)'),
+('SO','Significant other'),
+('SOAB','Son of a *B*'),
+('S''OK','Meaning It'' (s) okay (ok)'),
+('SOL','Sooner or later'),
+('SOMY','Sick of me yet?'),
+('SorG','Straight or Gay?'),
+('SOS','Meaning help'),
+('SOS','Son of Sam'),
+('SOT','Short of time'),
+('SOTMG','Short of time, must go'),
+('SOWM','Someone with me'),
+('SPK','Speak (SMS)'),
+('SRSLY','Seriously'),
+('SPST','Same place, same time'),
+('SPTO','Spoke to'),
+('SQ','Square'),
+('SRY','Sorry'),
+('SS','So sorry'),
+('SSDD','Same stuff, different day'),
+('SSIF','So stupid it''s funny'),
+('SSINF','So stupid it''s not funny'),
+('ST&amp;D','Stop texting and drive'),
+('Stan','Meaning a die-hard fan of someone (Snapchat)'),
+('STFU','Shut the *freak* up'),
+('STR8','Straight'),
+('STW','Search the Web'),
+('SU','Shut up'),
+('SUITM','See you in the morning'),
+('SUL','See you later'),
+('SUP','What''s up?'),
+('SUTH','So use(d) to haters (Facebook)'),
+('SUX','Meanings sucks or ''it sucks'''),
+('SUYF','Shut up you fool'),
+('SWAG','Meaning free stuff and giveaways from tech tradeshows'),
+('SWAG','Scientific wild *a* guess'),
+('SWAK','Sent (or sealed) with a kiss'),
+('SWALK','Sealed (or sealed) with a loving kiss'),
+('SWAT','Scientific wild *butt* guess'),
+('SWL','Screaming with laughter'),
+('SWMBO','She who must be obeyed. Meaning wife or partner'),
+('SYL','See you later&nbsp;'),
+('SYS','See you soon&nbsp;'),
+('SYY','Shut your yapper'),
+('T+','Think positive'),
+('T4BU','Thanks for being you'),
+('T:)T','Think happy thoughts'),
+('TA','Thanks a lot'),
+('TAFN','That''s all for now'),
+('TAM','Tomorro a.m.'),
+('TANK','Meaning really strong'),
+('TANKED','Meaning ''owned'''),
+('TANKING','Meaning ''owning'''),
+('TARFU','Things Are Really *fouled* Up.'),
+('TAU','Thinking about u (you)'),
+('TAUMUALU','Thinking about you miss you always love you'),
+('TBAG','Process of disgracing a corpse, taunting a fragged/killed player (online gaming)'),
+('TBBH','To be brutally honest'),
+('TBC','To be continued'),
+('TBD','To be determined'),
+('TBH','To be honest'),
+('TBL','Text back later'),
+('TBT','Throwback Thursday'),
+('TC','Take care'),
+('TCB','Take care of business'),
+('TCOY','Take care of yourself'),
+('TD','Tower defense (online gaming)'),
+('TD2M','Talk dirty to me'),
+('TDTM','Talk dirty to me'),
+('TEA','Meaning gossip'),
+('TFF','Too *freaking* funny'),
+('TFS','Thanks for sharing'),
+('TFTF','Thanks for the follow'),
+('TFTI','Thanks for the invitation'),
+('TFTT','Thanks for this tweet'),
+('TG','Thank goodness'),
+('TGIF','Thank God it''s Friday'),
+('THNQ','Thank-you (SMS)'),
+('THNX','Thanks'),
+('THOT','That wh*re over there'),
+('THT','Think happy thoughts'),
+('THX','Thanks'),
+('TIA','Thanks in advance'),
+('TIAD','Tomorrow is another day'),
+('TIC','Tongue-in-cheek'),
+('TIL','Today I learned'),
+('TILIS','Tell it like it is'),
+('TIR','Teacher in room'),
+('TLK2UL8R','Talk to you later'),
+('TL','Too long'),
+('TL;DR','Too long; didn''t read'),
+('TM','Trust me'),
+('TMA','Take my advice'),
+('TMB','Text me back'),
+('TMB','Tweet me back'),
+('TMI','Too much information'),
+('TMOT','Trust me on this'),
+('TMTH','Too much to handle'),
+('TMYL','Tell me your location'),
+('TMWFI','Take my word for it'),
+('TNSTAAFL','There''s no such thing as a free lunch'),
+('TNT','Til next time'),
+('TOJ','Tears of joy'),
+('TOS','Terms of service'),
+('TOTES','Totally'),
+('TOU','Thinking of you'),
+('TOY','Thinking of you'),
+('TPM','Tomorrow p.m.'),
+('TPTB','The powers that be'),
+('TQ','Te quiero / I love you (Spanish SMS)'),
+('TSH','Tripping so hard'),
+('TSNF','That''s so not fair'),
+('TSTB','The sooner, the better'),
+('TT','Trending topic'),
+('TTFN','Ta ta for now'),
+('TTLY','Totally'),
+('TTTT','These things take time'),
+('TTUL','Talk to you later'),
+('TU','Thank you'),
+('TUI','Turning you in'),
+('TURNT','Meaning excitement, turned up'),
+('TWSS','That''s what she said'),
+('TTG','Time to go'),
+('TTYAFN','Talk to you awhile from now'),
+('TTYL','Talk to you later'),
+('TTYS','Talk to you soon'),
+('TY','Thank you'),
+('TYFC','Thank you for charity (online gaming)'),
+('TYFYC','Thank you for your comment'),
+('TYS','Told you so'),
+('TYT','Take your time'),
+('TYSO','Thank you so much'),
+('TYAFY','Thank you and *freak* you'),
+('TYVM','Thank you very much'),
+('TX','Thanks'),
+('^URS','Up yours'),
+('UCMU','You crack me up'),
+('UDI','Unidentified drinking injury (meaning bruise, scratch, ache and so on)'),
+('UDM','U (You) da (the) man'),
+('UDS','Ugly domestic scene'),
+('UFB','Un *freaking* believable'),
+('UFN','Until further notice'),
+('UFWM','You *freaking* with me?'),
+('UGTBK','You''ve got to be kidding'),
+('UHGTBSM','You have got to be s#$t*ing me!'),
+('UKTR','You know that''s right'),
+('UL','Upload'),
+('U-L','Meaning ''You will'''),
+('UNA','Use no acronyms'),
+('UN4TUN8','Unfortunate'),
+('UNBLEFBLE','Unbelievable'),
+('UNCRTN','Uncertain'),
+('UNPC','Un- (not) politically correct'),
+('UOK','(Are) You ok?'),
+('UR','You are / You''re'),
+('UR2YS4ME','You are too wise for me'),
+('URA*','You are a star'),
+('URH','You are hot (U R Hot)'),
+('URSKTM','You are so kind to me'),
+('URTM','You are the man'),
+('URW','You are welcome'),
+('USBCA','Until something better comes along'),
+('USU','Usually'),
+('UT','Unreal Tournament (online gaming)'),
+('UT2L','You take too long'),
+('UTM','You tell me'),
+('UV','Unpleasant visual'),
+('UW','You''re welcome'),
+('UX','User experience'),
+('V','Very'),
+('VAT','Value added tax'),
+('VBL','Visible bra line'),
+('VBS','Very big smile'),
+('VC','Voice chat'),
+('VEG','Very evil grin'),
+('VFF','Very freaking funny'),
+('VFM','Value for money'),
+('VGC','Very good condition'),
+('VGG','Very good game (online gaming)'),
+('VGH','Very good hand (online gaming)'),
+('VIP','Very important person'),
+('VM','Voice mail'),
+('VN','Very nice'),
+('VNH','Very nice hand (online gaming)'),
+('VoIP','Voice over Internet Protocol'),
+('VRY','Very'),
+('VSC','Very soft chuckle'),
+('VSF','Very sad face'),
+('VWD','Very well done (online gaming)'),
+('VWP','Very well played (online gaming)'),
+('W@','What?'),
+('W/','With'),
+('W/B','Welcome back'),
+('W3','WWW (Web address)'),
+('W8','Wait'),
+('WAH','Working at home'),
+('WAJ','What a jerk'),
+('WAM','Wait a minute'),
+('WAN2','Want to? (SMS)'),
+('WAN2TLK','Want to talk'),
+('WAREZ','Meaning pirated (illegally gained) software'),
+('WAS','Wait a second'),
+('WAS','Wild *a* guess'),
+('WAT','What'),
+('WAWA','Where are we at?'),
+('WAYF','Where are you from?'),
+('W/B','Write back'),
+('WB','Welcome back'),
+('WBS','Write back soon'),
+('WBU','What about you?'),
+('WC','Welcome'),
+('WC','Who cares'),
+('WCA','Who cares anyway'),
+('W/E','Whatever'),
+('W/END','Weekend'),
+('WE','Whatever'),
+('WEBO','Webopedia'),
+('WEEBO','Describes a person obsessed with of Japanese culture'),
+('WEP','Weapon (online gaming)'),
+('WH5','Who, what, when, where, why'),
+('WHATEVES','Whatever'),
+('WIBNI','Wouldn''t it be nice if'),
+('WDALYIC','Who died and left you in charge'),
+('WDYK','What do you know?'),
+('WDYT','What do you think?'),
+('WGACA','What do you think?'),
+('WIIFM','What''s in it for me?'),
+('WISP','Winning is so pleasurable'),
+('WITP','What is the point?'),
+('WITW','What in the world'),
+('WIU','Wrap it up'),
+('WK','Week'),
+('WKD','Weekend'),
+('WRT','With regard to'),
+('WL','Whatta loser'),
+('W/O','Without'),
+('WOA','Work of Art'),
+('WOKE','Slang for people who are aware of current social issues, and politics'),
+('WOMBAT','Waste of money, brains and time'),
+('WOW','World of Warcraft (online gaming)'),
+('WRK','Work'),
+('WRU','Where are you?'),
+('WRU@','Where are you at?'),
+('WRUD','What are you doing?'),
+('WTB','Want to buy (online gaming)'),
+('WTF','What the *freak* ?'),
+('WTFE','What the *freak* ever'),
+('WTFO','What the *freak* ?, over.'),
+('WTG','Way to go'),
+('WTGP','Want to go private (talk out of public chat area)'),
+('WTH','What the heck?'),
+('WTM','Who''s the man?'),
+('WTS','Want to sell? (online gaming)'),
+('WTT','Want to trade? (online gaming)'),
+('WU','What''s up?'),
+('WUCIWUG','What you see is what you get'),
+('WUF','Where are you from?'),
+('WUP','What''s up?'),
+('WUT','Meaning ''what'''),
+('WUW','What u (you) want?'),
+('WUU2','What are you up to?'),
+('WUZ','Was'),
+('WWJD','What would Jesus do?'),
+('WWJD','What Would Judd Do? (Artist Donald Judd, who was known to do things in his own compulsive way.)'),
+('WWNC','Will wonders never cease'),
+('WWYC','Write when you can'),
+('WYCM','Will you call me?'),
+('WYD','What (are) you doing?'),
+('WYGAM','When you get a minute'),
+('WYHAM','When you have a minute'),
+('WYLEI','When you least expect it'),
+('WYSIWYG','What you see is what you get&nbsp;'),
+('WYWH','Wish you were here'),
+('X-1-10','Meaning ''Exciting'''),
+('X','Kiss'),
+('X!','Meaning ''a typical woman'''),
+('XD','Meaning ''really hard laugh'' (where D is a smiley mouth)'),
+('XD','Meaning a ''devilish smile'''),
+('XME','Excuse Me'),
+('XOXOXO','Hugs &amp; Kisses'),
+('XLNT','Excellent&nbsp;'),
+('XLR8','Meaning ''faster'' or ''going faster'''),
+('XPOST','Meaning Cross-post. A link posted to a subreddit that was already shared on a different subreddit (Reddit)'),
+('XYL','Ex-young lady, meaning wife. (amateur radio)&nbsp;'),
+('XYZ','Examine your zipper'),
+('Y?','Why?'),
+('Y','Meaning Yawn'),
+('Y2K','You''re too kind'),
+('YA','Your'),
+('YAA','Yet another acronym'),
+('YABA','Yet another bloody acronym'),
+('YARLY','Ya, really?'),
+('YAS','Meaning ''praise'''),
+('YBIC','Your brother in Christ'),
+('YBS','You''ll be sorry'),
+('YCDBWYCID','You can''t do business when your computer is down'),
+('YCHT','You can have them'),
+('YCLIU','You can look it up'),
+('YCMU','You crack me up'),
+('YCT','Meaning Your comment to?'),
+('YD','Yesterday'),
+('YEET','Meaning excitement, approval or display of energy (i.e. throwing something)'),
+('YF','Wife'),
+('YG','Young gentleman'),
+('YGG','You go girl'),
+('YGTBKM','You''ve got to be kidding me'),
+('YGTR','You got that right'),
+('YHBT','You have been trolled'),
+('YHBW','You have been warned'),
+('YHL','You have lost'),
+('YIU','Yes, I understand'),
+('YKW','You know what'),
+('YKWYCD','You know what you can do'),
+('YL','Young lady'),
+('YMMV','Your mileage may vary'),
+('YNK','You never know'),
+('YOLO','You only live once'),
+('YR','Your'),
+('YR','Yeah right'),
+('YRYOCC','You''re running your own cuckoo clock'),
+('YSIC','Your sister in Christ'),
+('YSYD','Yeah sure you do'),
+('YT','YouTube'),
+('YT','You there?'),
+('YTB','You''re the best'),
+('YTB','Youth talk back'),
+('YTTL','You take too long'),
+('YTG','You''re the greatest'),
+('YW','You''re welcome'),
+('YWHNB','Yes, we have no bananas'),
+('YWHOL','Yelling ''woohoo'' out loud'),
+('YWSYLS','You win some, you lose some'),
+('YYSSW','Yeah, yeah, sure, sure, whatever'),
+('Z','Zero'),
+('Z','Z''s are calling (meaning going to bed/sleep)'),
+('Z','Meaning ''Said'''),
+('Z%','Zoo'),
+('ZH','Sleeping Hour'),
+('ZOMG','Used in World of Warcraft to mean OMG (Oh My God)'),
+('ZOT','Zero tolerance'),
+('ZUP','Meaning ''What''s up?'''),
+('ZZZZ','Sleeping (or bored)');
 SELECT * FROM acronym LIMIT 10;
