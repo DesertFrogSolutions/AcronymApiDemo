@@ -12,7 +12,7 @@ jobs:
     name: Node application tests
     strategy:
       matrix:
-        node: ['12', '14', '16']
+        node: ['14', '16']
     runs-on: 'ubuntu-20.04'
     # These run alongside the job.
     # See:
