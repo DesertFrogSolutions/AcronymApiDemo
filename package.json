@@ -6,7 +6,6 @@
   "scripts": {
     "test": "mocha --reporter spec --ui bdd **/*.spec.js",
     "test:watch": "mocha --reporter spec --ui bdd --watch **/*.spec.js",
-    "test:live": "mocha --reporter spec --ui bdd src/live.test.js",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "generate-initdb": "node src/generate-initdb.js > initdb.sql"
@@ -15,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "bunyan": "1.8.15",
+    "nconf": "0.11.3",
     "pg": "8.7.3",
     "restify": "8.6.1",
     "restify-errors": "8.0.2"

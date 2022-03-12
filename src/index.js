@@ -1,12 +1,20 @@
+// application name
+const appname = 'acronymapi';
+
 // logging
 const bunyan = require('bunyan');
-const log = bunyan.createLogger({name: "acronym"});
+const log = bunyan.createLogger({name: appname});
 
+// Include routes for server
 const routes = require('./routes');
 
+// include configuration
+const config = require('./config');
+
+// initialize server
 const restify = require('restify');
 const server = restify.createServer({
-  name: 'acronymapi',
+  name: appname,
   log: log
 });
 
@@ -25,7 +33,7 @@ server.use(restify.plugins.bodyParser());
 server.post('/acronym', routes.Post);
 server.put('/acronym/:acronym', routes.Put);
 
-server.listen(process.env.PORT || 8080, function() {
+server.listen(parseInt(config.conf.get('PORT')), function() {
   console.log('%s listening at %s', server.name, server.url);
 });
 
