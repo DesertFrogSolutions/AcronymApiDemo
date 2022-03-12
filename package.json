@@ -4,7 +4,7 @@
   "description": "Acronym API Demo",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec --ui bdd **/*.spec.js",
+    "test": "mocha --timeout 10000 --reporter spec --ui bdd **/*.spec.js",
     "test:watch": "mocha --reporter spec --ui bdd --watch **/*.spec.js",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",

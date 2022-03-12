@@ -5,6 +5,9 @@ const appname = 'acronymapi';
 const bunyan = require('bunyan');
 const log = bunyan.createLogger({name: appname});
 
+// DB for close handler
+const db = require('./db');
+
 // Include routes for server
 const routes = require('./routes');
 
@@ -36,6 +39,24 @@ server.put('/acronym/:acronym', routes.Put);
 server.listen(parseInt(config.conf.get('PORT')), function() {
   console.log('%s listening at %s', server.name, server.url);
 });
+
+// the pool will emit an error on behalf of any idle clients
+// it contains if a backend error or network partition happens
+db.pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err);
+  return server.close();
+});
+
+
+// cleanup on server close
+function doClose() {
+  console.log('Closing pool.');
+  return db.end().then((e) => {
+    console.log('Closed', e);
+    process.exit(0);
+  });
+}
+server.on('close', doClose);
 
 // error handling
 function handleError(req, res, err, callback) {

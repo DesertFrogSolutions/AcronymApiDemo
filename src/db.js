@@ -10,14 +10,6 @@ const pool = new Pool({
   port: parseInt(config.conf.get('PGPORT'))
 });
 
-// the pool will emit an error on behalf of any idle clients
-// it contains if a backend error or network partition happens
-pool.on('error', (err, client) => {
-  console.error('Unexpected error on idle client', err);
-  server.close(() => {
-    console.log('Server closed');
-  });
-});
 
 const COLUMNS = {
   acronym_id: 'acronym_id',
@@ -124,5 +116,14 @@ module.exports = {
   getAcronyms: getAcronyms,
   insertAcronym: insertAcronym,
   upsertAcronym: upsertAcronym,
-  deleteAcronym: deleteAcronym
+  deleteAcronym: deleteAcronym,
+  end: () => {
+    try {
+      return pool.end();
+    } catch (err) {
+      console.log('Error ending pool: ', err);
+      return null;
+    }
+  },
+  pool: pool
 };
