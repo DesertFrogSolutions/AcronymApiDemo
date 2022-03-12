@@ -60,7 +60,8 @@ jobs:
       run: npm run test
 
     - name: Run tests against live Postgres server
-      run: npm run test:live
+      if: matrix.node == '16'
+      run: npm --test_live_server=true run test
       env:
         PGUSER: acronymapi
         PGPASSWORD: password
