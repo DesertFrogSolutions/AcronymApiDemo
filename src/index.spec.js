@@ -15,14 +15,35 @@ const assert = chai.assert;
 // request testing library
 const request = require('supertest');
 
-const _live_server = process.env?.npm_config_test_live_server || 'false';
-const live_server = _live_server ? _live_server === 'true' : false;
-
+// set this flag in npm run command to test against live Postgres server:
+// i.e. with Postgres running,
+// npm run --test_live_pg_server=true test
+const _live_pg_server = process.env?.npm_config_test_live_pg_server || 'false';
+const live_pg_server = _live_pg_server ? _live_pg_server === 'true' : false;
+if (live_pg_server) {
+  console.log('Testing against live PostgreSQL server');
+} else {
+  console.log('Testing with PostgreSQL DB mocks');
+}
 // include object to be mocked when not using live server
 const { Pool } = require('pg');
-// include server from index.js
-const server = require('./index');
 
+// set this flag in npm run command to test against running NodeJS application
+// i.e. after running npm run start, run
+// npm run --test_live_node_server=true test
+const _live_node_server = process.env?.npm_config_test_live_node_server || 'false';
+const live_node_server = _live_node_server ? _live_node_server === 'true' : false;
+let server;
+if (live_node_server) {
+  const config = require('./config');
+  const PORT = config.conf.get('PORT');
+  server = `http://localhost:${PORT}`;
+  console.log(`Testing against live Node.JS server at ${server}`);
+} else {
+  // include server from index.js
+  server = require('./index');
+  console.log('Testing against server created in specfile');
+}
 // usage:
 // const t = generateArray();
 // const v = generateArray(10, (n) => {return {value: n};});
@@ -32,7 +53,11 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 describe('Acronym API', () => {
   after((done) => {
     try {
-      server.close(done);
+      if (!live_node_server) {
+        return server.close(done);
+      } else {
+        return done();
+      }
     } finally {
       setTimeout(function(){process.exit(0);},1000);
     }
@@ -41,25 +66,28 @@ describe('Acronym API', () => {
     let poolConnectStub;
     let queryConnectStub;
     beforeEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         poolConnectStub = sinon.stub(Pool.prototype, 'connect').resolves();
       }
       return done();
     });
     afterEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         try {
           poolConnectStub.restore();
           queryConnectStub?.restore();
-        } finally {
-          server.close(done);
+        } catch (err) {
+          console.log(err);
         }
+      }
+      if (!live_node_server) {
+        return server.close(done);
       } else {
-        done();
+        return done();
       }
     });
     it('gets a page of acronyms', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(10, (n) => { return { acronym_id: n, name: `acronym ${n}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -85,7 +113,7 @@ describe('Acronym API', () => {
         });
     });
     it('gets a page of acronyms from 50', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(10, (n) => { return { acronym_id: n + 50, name: `acronym ${n + 50}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -110,7 +138,7 @@ describe('Acronym API', () => {
         });
     });
     it('gets a page of acronyms from 50 limit 20', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(20, (n) => { return { acronym_id: n + 50, name: `acronym ${n + 50}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -135,7 +163,7 @@ describe('Acronym API', () => {
         });
     });
     it('gets a page of acronyms limit 20', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(20, (n) => { return { acronym_id: n, name: `acronym ${n}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -161,7 +189,7 @@ describe('Acronym API', () => {
         });
     });
     it('gets a page of acronyms matching the given search', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(10, (n) => { return { acronym_id: n, name: `acronym ${n}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -183,7 +211,7 @@ describe('Acronym API', () => {
         });
     });
     it('gets a page of acronyms matching the given search from 2 limit 20', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         const resultRows = generateArray(20, (n) => { return { acronym_id: n + 2, name: `acronym ${n + 2}` }; });
         queryConnectStub = sinon.stub(Pool.prototype, 'query');
         queryConnectStub.onCall(0).resolves({ rows: [{ result_count: 500 }] });
@@ -208,28 +236,31 @@ describe('Acronym API', () => {
 
   describe('POST /acronym', () => {
     // constants for request parameters
-    const name = 'TESTACRONYM';
-    const description = 'This acronym has a description';
+    const name = 'POSTACRONYM';
+    const description = 'This acronym has a description and was added in POST';
 
     // stubs stored into these variables
     let poolConnectStub;
     let queryConnectStub;
     beforeEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         poolConnectStub = sinon.stub(Pool.prototype, 'connect').resolves();
       }
       return done();
     });
     afterEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         try {
           poolConnectStub.restore();
           queryConnectStub?.restore();
-        } finally {
-          server.close(done);
+        } catch (err) {
+          console.log(err);
         }
+      }
+      if (!live_node_server) {
+        return server.close(done);
       } else {
-        done();
+        return done();
       }
     });
     it('returns an error status without a name or description', (done) => {
@@ -239,10 +270,12 @@ describe('Acronym API', () => {
         .set('Accept', 'application/json')
         .expect(400)
         .then((res) => {
-          console.log(res.body);
+          // console.log(res.body);
+          return res;
         })
         .catch((err) => {
           console.log(err);
+          return err;
         });
       request(server)
         .post('/acronym')
@@ -259,7 +292,7 @@ describe('Acronym API', () => {
         });
     });
     it('adds an acronym to the DB', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         queryConnectStub = sinon.stub(Pool.prototype, 'query').resolves();
       }
       request(server)
@@ -279,30 +312,33 @@ describe('Acronym API', () => {
 
   describe('PUT /acronym/:acronym', () => {
     // constants for request parameters
-    const oldName = 'TESTACRONYM';
-    const oldDescription = 'This acronym has a description';
-    const newName = 'NEWTESTACRONYM';
-    const newDescription = 'This acronym has a new description';
+    const oldName = 'PUTACRONYM';
+    const oldDescription = 'This acronym has a description and was added by PUT';
+    const newName = 'NEWPUTACRONYM';
+    const newDescription = 'This acronym has a new description and was modified by PUT';
 
     // stubs stored into these variables
     let poolConnectStub;
     let queryConnectStub;
     beforeEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         poolConnectStub = sinon.stub(Pool.prototype, 'connect').resolves();
       }
       return done();
     });
     afterEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         try {
           poolConnectStub.restore();
           queryConnectStub?.restore();
-        } finally {
-          server.close(done);
+        } catch (err) {
+          console.log(err);
         }
+      }
+      if (!live_node_server) {
+        return server.close(done);
       } else {
-        done();
+        return done();
       }
     });
     it('rejects without authentication', (done) => {
@@ -342,10 +378,12 @@ describe('Acronym API', () => {
         .set('Accept', 'application/json')
         .expect(405)
         .then((res) => {
-          console.log(res.body);
+          // console.log(res.body);
+          return res;
         })
         .catch((err) => {
           console.log(err);
+          return err;
         });
       request(server)
         .put(`/acronym/${newName}`)
@@ -362,11 +400,11 @@ describe('Acronym API', () => {
         });
     });
     it('adds an acronym to the database', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         queryConnectStub = sinon.stub(Pool.prototype, 'query').resolves();
       }
       request(server)
-        .put(`/acronym/${newName}`)
+        .put(`/acronym/${newName}-1`)
         .auth(process.env.API_USER, process.env.API_PASSWORD)
         .send({ name: newName, description: newDescription })
         .set('Accept', 'application/json')
@@ -380,11 +418,11 @@ describe('Acronym API', () => {
         });
     });
     it('adds an acronym to the database without a name in the body', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         queryConnectStub = sinon.stub(Pool.prototype, 'query').resolves();
       }
       request(server)
-        .put(`/acronym/${newName}`)
+        .put(`/acronym/${newName}-2`)
         .auth(process.env.API_USER, process.env.API_PASSWORD)
         .send({ description: newDescription })
         .set('Accept', 'application/json')
@@ -398,7 +436,7 @@ describe('Acronym API', () => {
         });
     });
     it('updates an acronym in the database', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         queryConnectStub = sinon.stub(Pool.prototype, 'query').resolves();
       }
       request(server)
@@ -409,9 +447,9 @@ describe('Acronym API', () => {
         .expect(200);
 
       request(server)
-        .put(`/acronym/${oldName}`)
+        .put(`/acronym/${newName}`)
         .auth(process.env.API_USER, process.env.API_PASSWORD)
-        .send({ name: newName, description: newDescription })
+        .send({ name: oldName, description: newDescription })
         .set('Accept', 'application/json')
         .expect(200)
         .then((res) => {
@@ -426,28 +464,31 @@ describe('Acronym API', () => {
 
   describe('DELETE /acronym/:acronym', () => {
     // constants for request parameters
-    const name = 'TESTACRONYM';
-    const description = 'This acronym has a description';
+    const name = 'DELETEACRONYM';
+    const description = 'This acronym has a description and is modified by DELETE endpoint';
 
     // stubs stored into these variables
     let poolConnectStub;
     let queryConnectStub;
     beforeEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         poolConnectStub = sinon.stub(Pool.prototype, 'connect').resolves();
       }
       return done();
     });
     afterEach((done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         try {
           poolConnectStub.restore();
           queryConnectStub?.restore();
-        } finally {
-          server.close(done);
+        } catch (err) {
+          console.log(err);
         }
+      }
+      if (!live_node_server) {
+        return server.close(done);
       } else {
-        done();
+        return done();
       }
     });
     it('rejects without a name', (done) => {
@@ -457,7 +498,7 @@ describe('Acronym API', () => {
         .set('Accept', 'application/json')
         .expect(405)
         .then((res) => {
-          console.log(res.body);
+          // console.log(res.body);
           return done();
         })
         .catch((err) => {
@@ -466,7 +507,7 @@ describe('Acronym API', () => {
         });
     });
     it('adds an acronym to the DB and then deletes it', (done) => {
-      if (!live_server) {
+      if (!live_pg_server) {
         queryConnectStub = sinon.stub(Pool.prototype, 'query').resolves();
       }
       request(server)

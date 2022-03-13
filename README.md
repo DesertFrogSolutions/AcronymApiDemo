@@ -1,6 +1,6 @@
 # Acronym API Demo
 
-## Install & Initialize Postgres DB
+## Install & Initialize PostgreSQL DB
 
 1. Install [PostgreSQL](https://www.postgresql.org).
 
@@ -20,6 +20,7 @@ GRANT ALL PRIVILEGES ON DATABASE defaultdb TO acronymapi;
 ```
 
 4. Run initdb script (generated from [acronym.json](./acronym.json) by [src/generate-initdb.js](src/generate-initdb.js) with `npm run generate-initdb`.)
+
 ```sh
 PGPASSWORD=password psql --file=./initdb.sql --username=acronymapi --dbname=defaultdb
 ```
@@ -28,7 +29,7 @@ PGPASSWORD=password psql --file=./initdb.sql --username=acronymapi --dbname=defa
 
 ### Configuration
 
-Default configuration aligned with the setup above is provided - see [`example.acronymapirc`](./example.config.json) for a template. The default [node-postgres](https://node-postgres.com) environment variables are used to interface for the database interface. The authentication information for the Put and Delete endpoints is `API_USER` and `API_PASSWORD`.
+Default configuration aligned with the setup above is provided - see [`example.config.json`](./example.config.json) for a template. The default [node-postgres](https://node-postgres.com) environment variables are used to interface with the database. The authentication information for the Put and Delete endpoints is `API_USER` and `API_PASSWORD`.
 
 Since the server uses [nconf](https://www.npmjs.com/package/nconf), it supports hierarchical configuration:
 
@@ -46,7 +47,7 @@ Start the server with Node:
 npm run start
 ```
 
-If actively developing the server (or you just want hot reloading), use nodemon to start the server with
+If actively developing the server (or you just want hot reloading), use `nodemon` to start the server with
 
 ```sh
 npm run dev
@@ -54,7 +55,7 @@ npm run dev
 
 ### Testing
 
-The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the Postgres access stubbed out with [Sinon](https://sinonjs.org/). Run them with
+The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the PostgreSQL access stubbed out with [Sinon](https://sinonjs.org/). Run them with
 
 ```sh
 npm run test
@@ -66,8 +67,16 @@ If actively developing the code, run [Mocha](https://mochajs.org/) in "watch" mo
 npm run test:watch
 ```
 
-If the server and Postgres are "live", run tests against the live server with
+If running with a "live" and initialized PostgreSQL database (e.g. started with `docker-compose up database`, run tests without mocked DB calls with
 
 ```sh
-npm --test_live_server=true run test
+npm --test_live_pg_server=true run test
+```
+
+> The test results can be validated in the database by using e.g. `PGPASSWORD=password psql -h localhost -U acronymapi -d defaultdb` and querying `SELECT * FROM acronym WHERE name LIKE '%ACRONYM%';` to find a PUTACRONYM and a POSTACRONYM
+
+If running with a "live" NodeJS application (e.g. started with `docker-compose up backend` or `npm run start` etc.), run tests against the live endpoint with
+
+```sh
+npm --test_live_node_server=true run test
 ```
