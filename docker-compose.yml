@@ -16,9 +16,9 @@ services:
         target: /docker-entrypoint-initdb.d/00-init.sql
         read_only: true
     environment:
-      - POSTGRES_USER: acronymapi
-      - POSTGRES_PASSWORD: password
-      - POSTGRES_DB: defaultdb
+      POSTGRES_USER: acronymapi
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: defaultdb
   # https://hub.docker.com/_/node
   backend:
     container_name: backend
@@ -35,17 +35,17 @@ services:
         target: /app/src
         read_only: true
     environment:
-      - PORT: 8080
-      - NODE_ENV: development
+      PORT: 8080
+      NODE_ENV: development
       # https://node-postgres.com/features/connecting
-      - PGUSER: acronymapi
-      - PGPASSWORD: password
-      - PGDATABASE: defaultdb
-      - PGHOST: database
-      - PGPORT: 5432
+      PGUSER: acronymapi
+      PGPASSWORD: password
+      PGDATABASE: defaultdb
+      PGHOST: database
+      PGPORT: 5432
       # Credentials for POST and DELETE endpoints
-      - API_USER: username
-      - API_PASSWORD: password
+      API_USER: username
+      API_PASSWORD: password
 
 
 volumes:

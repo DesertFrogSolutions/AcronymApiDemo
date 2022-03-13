@@ -1,54 +1,34 @@
+// Configuration
+const config = require('./config');
+
+// DB access
 const db = require('./db');
 
 // initialize REST API server
 const errors = require('restify-errors');
 
-console.log(db.COLUMNS_STR);
-
 let dbConnected = false;
 
-const API_USER = process.env.API_USER || 'username';
-const API_PASSWORD = process.env.API_PASSWORD || 'password';
+const API_USER = config.conf.get('API_USER');
+const API_PASSWORD = config.conf.get('API_PASSWORD');
 
 async function Get(req, res, next) {
   try {
-    if (!dbConnected) {
-      await db.connect();
-      dbConnected = true;
-    }
     const from = parseInt(req.query?.from || '0');
     const limit = parseInt(req.query?.limit || '10');
-    const search = req.query?.search || null;
+    const search = req.query?.search || '';
 
-    const count_query = {
-      name: 'get-acronyms-count',
-      text: '',
-      values: [from, limit]
-    };
-    const result_query = {
-      name: 'get-acronyms',
-      text: '',
-      values: [from, limit]
-    };
-    if (search) {
-      result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') ORDER BY acronym_id ASC LIMIT $2`;
-      result_query.values.push(search.toLowerCase());
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND (lower(name) LIKE '%$3%' OR lower(description) LIKE '%$3%') ORDER BY acronym_id ASC`;
-      count_query.values.push(search.toLowerCase());
-    } else {
-      result_query.text = `SELECT ${db.COLUMNS_STR} FROM acronym WHERE acronym_id >= $1 ORDER BY acronym_id ASC LIMIT $2`;
-      count_query.text = `SELECT COUNT(acronym_id) as result_count FROM acronym WHERE acronym_id >= $1 AND ORDER BY acronym_id ASC`;
-    }
-    const count = await db.query(count_query);
-    // console.log(count);
-    const results = await db.query(result_query);
-    // console.log(results);
+    const count = await db.countAcronyms(from, search);
+    const results = await db.getAcronyms(from, limit, search);
+
+    // Create Link header when there are more results
     const nResults = results.rows.length;
     if (nResults < count.rows[0].result_count) {
       const fromId = results.rows[nResults - 1].acronym_id;
       const nextLink = search ? `/acronym/?from=${fromId}&limit=${limit}&search=${search}` : `/acronym/?from=${fromId}&limit=${limit}`;
       res.link(nextLink, 'next');
     }
+
     res.send(results.rows);
     return next();
   } catch (err) {
@@ -59,12 +39,17 @@ async function Get(req, res, next) {
 
 async function Post(req, res, next) {
   try {
-    if (!dbConnected) {
-      await db.connect();
-      dbConnected = true;
+    const name = req.body?.name || null;
+    const description = req.body?.description || null;
+    // Validate name and description
+    if (!name || !description) {
+      res.status(400);
+      const message = name ? 'Missing "description"' : 'Missing "name"';
+      res.send(message);
+      return next();
     }
-    console.log(req);
-    res.send('testing');
+    const result = await db.insertAcronym(name, description);
+    res.send(result);
     return next();
   } catch (err) {
     return next(err);
@@ -73,17 +58,28 @@ async function Post(req, res, next) {
 
 async function Put(req, res, next) {
   try {
-    if (!dbConnected) {
-      await db.connect();
-      dbConnected = true;
-    }
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
         req.username !== API_USER ||
         req.authorization.basic.password !== API_PASSWORD) {
       return next(new errors.UnauthorizedError());
     }
-    res.send('testing');
+    const newName = req.params.acronym || null;
+    const oldName = req.body?.name || newName;
+    const description = req.body?.description || null;
+    // Validate name and description
+    if (!newName || !description) {
+      res.status(400);
+      if (!description) {
+        res.send('Missing "name" parameter or body');
+      } else {
+        res.send('Missing "description" in body');
+      }
+      return next();
+    }
+
+    const result = await db.upsertAcronym(oldName, newName, description);
+    res.send(result);
     return next();
   } catch (err) {
     next(err);
@@ -91,18 +87,20 @@ async function Put(req, res, next) {
 }
 async function Delete(req, res, next) {
   try {
-    if (!dbConnected) {
-      await db.connect();
-      dbConnected = true;
-    }
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
         req.username !== API_USER ||
         req.authorization.basic.password !== API_PASSWORD) {
       return next(new errors.UnauthorizedError());
     }
-    console.log(req);
-    res.send('testing');
+    const acronym = req.params?.acronym || null;
+    if (!acronym) {
+      res.status(400);
+      res.send('Missing parameter "acronym"');
+      return next();
+    }
+    const result = await db.deleteAcronym(acronym);
+    res.send(result);
     return next();
   } catch (err) {
     return next(err);
