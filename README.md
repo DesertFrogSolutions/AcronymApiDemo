@@ -1,4 +1,5 @@
 # Acronym API Demo
+[![GitHub Actions Test Status](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
 
 ## Install & Initialize PostgreSQL DB
 
