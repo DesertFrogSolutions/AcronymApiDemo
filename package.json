@@ -1,30 +1,60 @@
 {
-  "name": "acronym-api",
-  "version": "0.0.0",
-  "description": "Acronym API Demo",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --timeout 10000 --reporter spec --ui bdd **/*.spec.js",
-    "test:watch": "mocha --reporter spec --ui bdd --watch **/*.spec.js",
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "generate-initdb": "node src/generate-initdb.js > initdb.sql"
-  },
-  "author": "Jonathan Goldfarb <jgoldfar@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "bunyan": "1.8.15",
-    "nconf": "0.11.3",
-    "pg": "8.7.3",
-    "restify": "8.6.1",
-    "restify-errors": "8.0.2"
-  },
-  "devDependencies": {
-    "chai": "4.3.6",
-    "mocha": "9.2.1",
-    "nodemon": "2.0.15",
-    "sinon": "13.0.1",
-    "sqlutils": "1.4.0",
-    "supertest": "6.2.2"
-  }
+    "name": "acronym-api",
+    "version": "0.0.0",
+    "description": "Acronym API Demo",
+    "scripts": {
+        "test": "mocha --timeout 10000 --reporter spec --ui bdd **/*.spec.js",
+        "test:watch": "mocha --reporter spec --ui bdd --watch **/*.spec.js",
+        "dev:restify": "nodemon src/restify.js",
+        "start:restify": "node src/restify.js",
+        "test:restify": "mocha --timeout 10000 --reporter spec --ui bdd src/restify.spec.js",
+        "benchmark": "node src/benchmark.js",
+        "dev:koa": "nodemon src/koa.js",
+        "start:koa": "node src/koa.js",
+        "test:koa": "mocha --timeout 10000 --reporter spec --ui bdd src/koa.spec.js",
+        "dev:express": "nodemon src/express.js",
+        "start:express": "node src/express.js",
+        "test:express": "mocha --timeout 10000 --reporter spec --ui bdd src/express.spec.js",
+        "dev:fastify": "nodemon src/fastify.js",
+        "start:fastify": "node src/fastify.js",
+        "test:fastify": "mocha --timeout 10000 --reporter spec --ui bdd src/fastify.spec.js",
+        "dev:plain": "nodemon src/plain.js",
+        "start:plain": "node src/plain.js",
+        "test:plain": "mocha --timeout 10000 --reporter spec --ui bdd src/plain.spec.js",
+        "generate-initdb": "node src/generate-initdb.js > initdb.sql",
+        "curl:healthcheck": "curl --verbose http://localhost:8080/health-check",
+        "curl:get": "curl --verbose http://localhost:8080/acronym",
+        "curl:post": "curl --verbose -X POST -H 'Content-type: application/json' -d@events/post.json http://localhost:8080/acronym",
+        "curl:put": "curl --verbose -X PUT --user username:password -H 'Content-type: application/json' -d@events/put.json http://localhost:8080/acronym/CURLPUT",
+        "curl:put:unauthorized": "curl --verbose -X PUT -H 'Content-type: application/json' -d@events/put.json http://localhost:8080/acronym/CURLPUT",
+        "curl:delete": "curl --verbose -X DELETE --user username:password http://localhost:8080/acronym/CURLPUT",
+        "curl:delete:unauthorized": "curl --verbose -X DELETE http://localhost:8080/acronym/CURLPUT"
+    },
+    "author": "Jonathan Goldfarb <jgoldfar@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@koa/router": "10.1.1",
+        "body-parser": "1.19.2",
+        "bunyan": "1.8.15",
+        "express": "4.17.3",
+        "express-basic-auth": "1.2.1",
+        "fastify": "3.27.4",
+        "fastify-basic-auth": "2.2.0",
+        "koa": "2.13.4",
+        "koa-basic-auth": "4.0.0",
+        "koa-body": "4.2.0",
+        "nconf": "0.11.3",
+        "pg": "8.7.3",
+        "restify": "8.6.1",
+        "restify-errors": "8.0.2"
+    },
+    "devDependencies": {
+        "autocannon": "7.7.1",
+        "chai": "4.3.6",
+        "mocha": "9.2.1",
+        "nodemon": "2.0.15",
+        "sinon": "13.0.1",
+        "sqlutils": "1.4.0",
+        "supertest": "6.2.2"
+    }
 }
