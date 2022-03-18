@@ -8,11 +8,12 @@ on:
     - cron: '30 5 * * 2,4'
 
 jobs:
-  benchmark-restify:
-    name: Benchmark for Restify
+  benchmark:
+    name: Benchmark for Backend implementations
     strategy:
       matrix:
         nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
+        implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
     runs-on: 'ubuntu-20.04'
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
@@ -52,11 +53,19 @@ jobs:
       run: |
         PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
 
-    - name: Restart backend
+    - name: Setup Node with npm cache
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+        cache: 'npm'
+
+    - name: Install dependencies from package.json
+      run: npm install
+    - name: Start backend
       uses: docker://docker
       with:
         args: >-
-          docker exec backend sh -c "npm install && nohup npm run start:restify &" --detach
+          docker exec backend sh -c "npm install && nohup npm run start:${{matrix.implementation}} &" --detach
 
     - name: Run benchmarks with live Postgres server
       run: npm run benchmark
