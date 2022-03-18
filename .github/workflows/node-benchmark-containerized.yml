@@ -37,6 +37,7 @@ jobs:
         options: >-
           --workdir /app
           --name backend
+          --entrypoint /bin/bash
           --volume "${{ github.workspace }}:/app"
     steps:
       # https://github.com/actions/checkout
@@ -54,9 +55,9 @@ jobs:
       uses: docker://docker
       with:
         args: >-
-          docker run backend --entrypoint "sh -c \"npm install && npm run start:restify\"" --detach
+          docker exec backend sh -c "npm install && npm run start:restify" --detach
 
-    - name: Run tests against live Postgres server
+    - name: Run benchmarks with live Postgres server
       run: npm run benchmark
       env:
         PGUSER: acronymapi
