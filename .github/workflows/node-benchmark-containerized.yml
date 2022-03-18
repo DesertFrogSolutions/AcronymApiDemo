@@ -65,7 +65,7 @@ jobs:
       uses: docker://docker
       with:
         args: >-
-          docker exec backend sh -c "npm install && nohup npm run start:${{matrix.implementation}} &" --detach
+          docker exec backend --tty --detach sh -c "npm install && nohup npm run start:${{matrix.implementation}}"
 
     - name: Run benchmarks with live Postgres server
       run: npm run benchmark
