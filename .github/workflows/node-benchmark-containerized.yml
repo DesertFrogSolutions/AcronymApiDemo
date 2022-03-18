@@ -1,23 +1,16 @@
-name: Test API against Postgres Service Container
+name: Benchmark API implementations w/ Postgres Service Container
 
-# on:
-#   push:
-#     branches:
-#       - '*'
-#   schedule:
-#     - cron: '30 5 * * 2,4'
+on:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '30 5 * * 2,4'
 
 jobs:
-  install-test:
-    name: Node application tests
-    strategy:
-      matrix:
-        node: ['14', '16']
+  benchmark-restify:
+    name: Benchmark for Restify
     runs-on: 'ubuntu-20.04'
-    # These run alongside the job.
-    # See:
-    # - https://docs.github.com/en/actions/using-containerized-services/about-service-containers
-    # - https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
       database:
@@ -34,6 +27,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      backend:
+        image: 17-alpine
+        ports:
+          - 8080:8080
+        options: >-
+          --workdir /app
+          --entrypoint "npm install && npm run start:restify"
+          --name
+          --volume ${{ github.workspace }}:/app
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
@@ -45,23 +47,14 @@ jobs:
     - name: Initialize database with initdb
       run: |
         PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
-      # https://github.com/actions/setup-node
-      # https://github.com/actions/cache is no longer needed with setup-node v2
-    - name: Setup Node with npm cache
-      uses: actions/setup-node@v2
+
+    - name: Restart backend
+      uses: docker://docker
       with:
-        node-version: ${{ matrix.node }}
-        cache: 'npm'
-
-    - name: Install dependencies from package.json
-      run: npm install
-
-    - name: Run tests with mocks
-      run: npm run test
+        args: docker restart backend
 
     - name: Run tests against live Postgres server
-      if: matrix.node == '16'
-      run: npm --test_live_pg_server=true run test
+      run: npm run benchmark
       env:
         PGUSER: acronymapi
         PGPASSWORD: password
