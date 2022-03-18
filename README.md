@@ -7,7 +7,7 @@
 
 2. Start a database instance
 ```sh
-/usr/local/opt/postgresql/bin/postgres -D ./usr/local/var/postgres
+/usr/local/opt/postgresql/bin/postgres -D /usr/local/var/postgres
 ```
 
 By default, the database listens to `localhost:5432`.

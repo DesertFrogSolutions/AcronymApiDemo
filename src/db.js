@@ -21,11 +21,12 @@ const COLUMNS = {
 const COLUMNS_STR = Object.entries(COLUMNS).map(([key, value]) => {return value;}).join(',');
 
 const query = (text, params, callback) => {
-    return pool.query(text, params, callback);
+  return pool.query(text, params, callback);
 };
 const connect = () => {
   return pool.connect();
-}
+};
+
 let db_connected = false;
 
 // DB access layer
