@@ -54,7 +54,7 @@ jobs:
       uses: docker://docker
       with:
         args: >-
-          docker exec backend sh -c "npm install && npm run start:restify"
+          docker run backend --entrypoint "sh -c \"npm install && npm run start:restify\"" --detach
 
     - name: Run tests against live Postgres server
       run: npm run benchmark
