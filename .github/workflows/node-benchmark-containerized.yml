@@ -12,7 +12,7 @@ jobs:
     name: Benchmark for Backend implementations
     strategy:
       matrix:
-        nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
+        # nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
     runs-on: 'ubuntu-20.04'
     services:
@@ -31,16 +31,16 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      backend:
-        image: ${{ matrix.nodeImage }}
-        ports:
-          - 8080:8080
-        options: >-
-          --tty
-          --workdir /app
-          --name backend
-          --entrypoint /bin/sh
-          --volume "${{ github.workspace }}:/app"
+      # backend:
+      #   image: ${{ matrix.nodeImage }}
+      #   ports:
+      #     - 8080:8080
+      #   options: >-
+      #     --tty
+      #     --workdir /app
+      #     --name backend
+      #     --entrypoint /bin/sh
+      #     --volume "${{ github.workspace }}:/app"
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
