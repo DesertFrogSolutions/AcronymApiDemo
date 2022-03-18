@@ -12,8 +12,9 @@ jobs:
     name: Benchmark for Backend implementations
     strategy:
       matrix:
-        # nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
+        node: ['14', '16']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
+        # nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
     runs-on: 'ubuntu-20.04'
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
@@ -31,6 +32,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      # # Note - no docker backend needed, we can just run against the container
       # backend:
       #   image: ${{ matrix.nodeImage }}
       #   ports:
@@ -41,6 +43,7 @@ jobs:
       #     --name backend
       #     --entrypoint /bin/sh
       #     --volume "${{ github.workspace }}:/app"
+
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
@@ -61,7 +64,8 @@ jobs:
 
     - name: Install dependencies from package.json
       run: npm install
-    # - name: Start backend
+
+    # - name: Start backend in Docker
     #   uses: docker://docker
     #   with:
     #     args: >-
