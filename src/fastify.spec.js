@@ -5,7 +5,7 @@ if (!process.env.API_USER) {
 if (!process.env.API_PASSWORD) {
   process.env.API_PASSWORD = 'password';
 }
-const authorizationString = btoa(`${process.env.API_USER}:${process.env.API_PASSWORD}`);
+const authorizationString = Buffer.from(`${process.env.API_USER}:${process.env.API_PASSWORD}`).toString('base64');
 
 // mocking libraries
 const sinon = require('sinon');
@@ -314,7 +314,7 @@ describe('Acronym API - Fastify', () => {
     });
     it('rejects with invalid authentication', async () => {
       try {
-        const badAuthorizationString = btoa('fakeuser:fakepassword');
+        const badAuthorizationString = Buffer.from('fakeuser:fakepassword').toString('base64');
         const r = await server.inject({
           method: 'PUT',
           url: `/acronym/${oldName}`,
