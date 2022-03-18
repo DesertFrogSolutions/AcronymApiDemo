@@ -1,11 +1,11 @@
 name: Test API against Postgres Service Container
 
-# on:
-#   push:
-#     branches:
-#       - '*'
-#   schedule:
-#     - cron: '30 5 * * 2,4'
+on:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '30 5 * * 2,4'
 
 jobs:
   install-test:

@@ -37,8 +37,8 @@ jobs:
         options: >-
           --workdir /app
           --entrypoint "npm install && npm run start:restify"
-          --name
-          --volume ${{ github.workspace }}:/app
+          --name backend
+          --volume "${{ github.workspace }}:/app"
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
