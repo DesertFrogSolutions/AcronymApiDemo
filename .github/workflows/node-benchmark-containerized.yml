@@ -37,7 +37,7 @@ jobs:
         options: >-
           --workdir /app
           --name backend
-          --entrypoint /bin/bash
+          --entrypoint /bin/sh
           --volume "${{ github.workspace }}:/app"
     steps:
       # https://github.com/actions/checkout
