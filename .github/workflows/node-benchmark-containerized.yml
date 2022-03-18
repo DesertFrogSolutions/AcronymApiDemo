@@ -61,11 +61,14 @@ jobs:
 
     - name: Install dependencies from package.json
       run: npm install
-    - name: Start backend
-      uses: docker://docker
-      with:
-        args: >-
-          docker exec --tty --detach backend sh -c "npm install && nohup npm run start:${{matrix.implementation}}"
+    # - name: Start backend
+    #   uses: docker://docker
+    #   with:
+    #     args: >-
+    #       docker exec --tty --detach backend sh -c "npm install && nohup npm run start:${{matrix.implementation}} >server.log 2>&1"
+
+    - name: Start backend ${{matrix.implementation}}
+      run: nohup npm run start:${{matrix.implementation}} >myscript.log 2>&1 &
 
     - name: Run benchmarks with live Postgres server
       run: npm run benchmark
@@ -75,3 +78,6 @@ jobs:
         PGDATABASE: defaultdb
         PGHOST: localhost
         PGPORT: 5432
+
+    - name: Read out log
+      run: cat myscript.log
