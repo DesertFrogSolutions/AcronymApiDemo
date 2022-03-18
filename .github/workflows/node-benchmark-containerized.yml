@@ -36,7 +36,6 @@ jobs:
           - 8080:8080
         options: >-
           --workdir /app
-          --entrypoint "npm install && npm run start:restify"
           --name backend
           --volume "${{ github.workspace }}:/app"
     steps:
@@ -54,7 +53,8 @@ jobs:
     - name: Restart backend
       uses: docker://docker
       with:
-        args: docker restart backend
+        args: >-
+          docker exec backend sh -c "npm install && npm run start:restify"
 
     - name: Run tests against live Postgres server
       run: npm run benchmark
