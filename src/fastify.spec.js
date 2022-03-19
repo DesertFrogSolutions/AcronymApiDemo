@@ -188,11 +188,7 @@ describe('Acronym API - Fastify', () => {
         url: '/acronym?search=WT&from=2&limit=20'
       });
       expect(r.statusCode).to.equal(200);
-      if ('link' in r.headers) {
-        assert.isOk(r.headers.link);
-      } else {
-        assert.isOk(false, 'no link header');
-      }
+      // note - this search has < 20 results with initial data
       assert.isOk(r.body);
       assert.isAtLeast(r.body.length, 1);
     });
