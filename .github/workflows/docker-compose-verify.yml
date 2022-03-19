@@ -20,11 +20,17 @@ jobs:
       - name: Checkout the commit triggering this job
         uses: actions/checkout@v2
 
+        # Commands you use with run start in new containers with configuration defined by that of
+        # the service, including volumes, links, and other details, except:
+        # 1) The command passed as an argument overrides the defined command.
+        # 2) None of the ports specified in the service configuration are bound.
+        #
+        # - https://docs.docker.com/compose/reference/run/, https://github.com/docker/compose/pull/4954
       - name: Build and bring up the stack described in docker-compose.yml
         run: |
           docker-compose build
           docker-compose up -d database
-          docker-compose run -d --service-ports --volume "${{ github.workspace }}:/app/src" backend npm run start:${{ matrix.implementation }}
+          docker-compose run -d --service-ports backend npm run start:${{ matrix.implementation }}
 
       - name: Setup Node with npm cache
         uses: actions/setup-node@v2
