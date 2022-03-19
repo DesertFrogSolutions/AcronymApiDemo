@@ -1,4 +1,4 @@
-name: Test Docker image build and Docker-Compose run
+name: Docker-Compose Validation
 
 on:
   push:
