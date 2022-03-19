@@ -9,7 +9,7 @@ on:
 
 jobs:
   benchmark:
-    name: Benchmark for Backend implementations
+    name: Benchmark Implementation
     strategy:
       matrix:
         node: ['14', '16']

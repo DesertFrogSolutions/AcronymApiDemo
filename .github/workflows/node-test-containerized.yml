@@ -9,7 +9,7 @@ on:
 
 jobs:
   install-test:
-    name: Node application tests
+    name: Application Validation
     strategy:
       matrix:
         node: ['14', '16']

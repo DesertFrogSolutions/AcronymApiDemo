@@ -9,7 +9,7 @@ on:
 
 jobs:
   test-docker:
-    name: Build and run Docker image
+    name: Docker Image Build
     strategy:
       matrix:
         node: ['14', '16']
