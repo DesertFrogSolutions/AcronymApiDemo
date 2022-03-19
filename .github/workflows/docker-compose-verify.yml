@@ -10,25 +10,33 @@ on:
 jobs:
   test-docker:
     name: Build and run Docker image
+    strategy:
+      matrix:
+        # node: ['14', '16']
+        node: ['16']
+        implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
     runs-on: 'ubuntu-20.04'
     steps:
       - name: Checkout the commit triggering this job
         uses: actions/checkout@v2
 
       - name: Build and bring up the stack described in docker-compose.yml
-        run: docker-compose up -d
+        run: >-
+          docker-compose build
+          docker-compose up -d database
+          docker-compose run -d --service-ports --volume "${{ github.workspace }}:/app/src" backend npm run start:${{ matrix.implementation }}
 
       - name: Setup Node with npm cache
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node }}
           cache: 'npm'
 
       - name: Install dependencies from package.json
         run: npm install
 
       - name: Run tests against live Postgres and Node server
-        run: npm --test_live_pg_server=true --test_live_node_server=true run test:fastify
+        run: npm --test_live_pg_server=true --test_live_node_server=true run test:${{ matrix.implementation}}
 
       - name: Bring down stack
         run: docker-compose down
