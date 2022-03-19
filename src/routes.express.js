@@ -7,10 +7,10 @@ const db = require('./db');
 // initialize REST API server
 const errors = require('restify-errors');
 
-let dbConnected = false;
-
-const API_USER = config.conf.get('API_USER');
-const API_PASSWORD = config.conf.get('API_PASSWORD');
+async function Health(req, res, next) {
+  res.send({message: 'ok'});
+  return next();
+}
 
 async function Get(req, res, next) {
   try {
@@ -21,24 +21,26 @@ async function Get(req, res, next) {
     const count = await db.countAcronyms(from, search);
     const results = await db.getAcronyms(from, limit, search);
 
+    // req.log.info(results);
     // Create Link header when there are more results
     const nResults = results.rows.length;
     if (nResults < count.rows[0].result_count) {
       const fromId = results.rows[nResults - 1].acronym_id;
       const nextLink = search ? `/acronym/?from=${fromId}&limit=${limit}&search=${search}` : `/acronym/?from=${fromId}&limit=${limit}`;
-      res.link(nextLink, 'next');
+      res.links({next: nextLink});
     }
+    // req.log.info('Made it here');
 
     res.send(results.rows);
     return next();
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 }
 
 async function Post(req, res, next) {
   try {
+    console.log(req.body);
     const name = req.body?.name || null;
     const description = req.body?.description || null;
     // Validate name and description
@@ -58,12 +60,6 @@ async function Post(req, res, next) {
 
 async function Put(req, res, next) {
   try {
-    // check if user passed valid authentication header
-    if (req.username === 'anonymous' ||
-        req.username !== API_USER ||
-        req.authorization.basic.password !== API_PASSWORD) {
-      return next(new errors.UnauthorizedError());
-    }
     const newName = req.params.acronym || null;
     const oldName = req.body?.name || newName;
     const description = req.body?.description || null;
@@ -87,12 +83,6 @@ async function Put(req, res, next) {
 }
 async function Delete(req, res, next) {
   try {
-    // check if user passed valid authentication header
-    if (req.username === 'anonymous' ||
-        req.username !== API_USER ||
-        req.authorization.basic.password !== API_PASSWORD) {
-      return next(new errors.UnauthorizedError());
-    }
     const acronym = req.params?.acronym || null;
     if (!acronym) {
       res.status(400);
@@ -108,6 +98,7 @@ async function Delete(req, res, next) {
 }
 
 module.exports = {
+  Health: Health,
   Get: Get,
   Post: Post,
   Put: Put,
