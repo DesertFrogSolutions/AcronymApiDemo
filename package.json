@@ -3,12 +3,12 @@
     "version": "0.0.0",
     "description": "Acronym API Demo",
     "scripts": {
+        "benchmark": "node src/benchmark.js",
         "test": "mocha --timeout 10000 --reporter spec --ui bdd **/*.spec.js",
         "test:watch": "mocha --reporter spec --ui bdd --watch **/*.spec.js",
         "dev:restify": "nodemon src/restify.js",
         "start:restify": "node src/restify.js",
         "test:restify": "mocha --timeout 10000 --reporter spec --ui bdd src/restify.spec.js",
-        "benchmark": "node src/benchmark.js",
         "dev:koa": "nodemon src/koa.js",
         "start:koa": "node src/koa.js",
         "test:koa": "mocha --timeout 10000 --reporter spec --ui bdd src/koa.spec.js",

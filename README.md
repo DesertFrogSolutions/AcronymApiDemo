@@ -1,5 +1,19 @@
 # Acronym API Demo
+
 [![GitHub Actions Test Status](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
+
+[![Benchmark API implementations w/ Postgres Service Container](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml/badge.svg)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml)
+
+This project demonstrates an API built on Node.JS.
+There are multiple implementations available in this repository using different Node.JS web server frameworks, to compare performance and ergonomics.
+
+- [Node.JS HTTP Module](https://nodejs.org/docs/latest/api/http.html) (`plain`)
+- [Restify](https://github.com/restify/node-restify) (`restify`)
+- [Fastify](https://github.com/fastify/fastify) (`fastify`)
+- [Express](https://github.com/expressjs/express) (`express`)
+- [Koa](https://github.com/koajs/koa) (`koa`)
+
+> *Note* - Neither the PostgreSQL backend nor the web server implementations are configured to be production-ready.
 
 ## Install & Initialize PostgreSQL DB
 
@@ -42,21 +56,21 @@ All configuration sources that were found will be flattened into one object, so 
 
 ### Start the Server
 
-Start the server with Node:
+Start the server you select (e.g. `express`) with Node:
 
 ```sh
-npm run start
+npm run start:express
 ```
 
 If actively developing the server (or you just want hot reloading), use `nodemon` to start the server with
 
 ```sh
-npm run dev
+npm run dev:express
 ```
 
 ### Testing
 
-The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the PostgreSQL access stubbed out with [Sinon](https://sinonjs.org/). Run them with
+The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the PostgreSQL access stubbed out with [Sinon](https://sinonjs.org/). Run them all with
 
 ```sh
 npm run test
@@ -76,8 +90,16 @@ npm --test_live_pg_server=true run test
 
 > The test results can be validated in the database by using e.g. `PGPASSWORD=password psql -h localhost -U acronymapi -d defaultdb` and querying `SELECT * FROM acronym WHERE name LIKE '%ACRONYM%';` to find a PUTACRONYM and a POSTACRONYM
 
-If running with a "live" NodeJS application (e.g. started with `docker-compose up backend` or `npm run start` etc.), run tests against the live endpoint with
+If running with a "live" NodeJS application (e.g. started with `docker-compose up backend` or `npm run start:express` etc.), run tests against the live endpoint with
 
 ```sh
-npm --test_live_node_server=true run test
+npm --test_live_node_server=true run test:express
+```
+
+### Benchmarks
+
+Benchmarks are automated using [Autocannon](https://github.com/mcollina/autocannon); with a server running in another process, run benchmarks with the command
+
+```sh
+npm run benchmark
 ```

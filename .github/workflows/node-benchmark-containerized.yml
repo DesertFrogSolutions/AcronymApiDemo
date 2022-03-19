@@ -73,6 +73,8 @@ jobs:
 
     - name: Start backend ${{matrix.implementation}}
       run: nohup npm run start:${{matrix.implementation}} >myscript.log 2>&1 &
+      env:
+        NODE_ENV: production
 
     - name: Run benchmarks with live Postgres server
       run: npm run benchmark

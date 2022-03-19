@@ -7,4 +7,4 @@ RUN npm ci
 RUN chown -R node:node /app
 USER node
 
-CMD npm run start
+CMD npm run start:fastify
