@@ -1,4 +1,4 @@
-name: Test API against Postgres Service Container
+name: Test API w/ Postgres
 
 on:
   push:

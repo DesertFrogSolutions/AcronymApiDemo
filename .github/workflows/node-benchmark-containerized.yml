@@ -1,4 +1,4 @@
-name: Benchmark API implementations w/ Postgres Service Container
+name: Benchmark API Implementation
 
 on:
   push:
