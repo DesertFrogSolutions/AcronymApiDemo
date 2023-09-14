@@ -12,12 +12,12 @@ jobs:
     name: Docker Image Build
     strategy:
       matrix:
-        node: ['14', '16']
+        node: ['14', '16', '18']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
     runs-on: 'ubuntu-20.04'
     steps:
       - name: Checkout the commit triggering this job
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
         # Commands you use with run start in new containers with configuration defined by that of
         # the service, including volumes, links, and other details, except:
@@ -32,7 +32,7 @@ jobs:
           docker-compose run -d --service-ports backend npm run start:${{ matrix.implementation }}
 
       - name: Setup Node with npm cache
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
