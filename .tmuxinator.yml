@@ -1,0 +1,49 @@
+# See https://collectiveidea.com/blog/archives/2017/03/27/using-tmuxinator-to-automate-your-environment
+# and https://github.com/tmuxinator/tmuxinator
+# Note that I have not customized the leader, which is C-b (CTRL-b)
+# Use CTRL-b ? to bring up defined bindings.
+name: AcronymAPI
+
+# Note that the pre and post options have been deprecated and will be replaced by
+# project hooks.
+
+# Project hooks
+# Runs on project start, always
+# on_project_start:
+# Run on project start, the first time
+# on_project_first_start: command
+# Run on project start, after the first time
+# on_project_restart: command
+# Run on project exit ( detaching from tmux session )
+# on_project_exit: command
+# Run on project stop
+# on_project_stop: command
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
+startup_window: test
+
+# Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
+# startup_pane: 1
+
+# Controls whether the tmux session should be attached to automatically. Defaults to true.
+attach: true
+
+windows:
+  - database:
+    - /usr/local/opt/postgresql/bin/postgres -D /usr/local/var/postgres
+  # Give the PG database 5 seconds to startup
+  - query:
+    - start_time="$(date -u +%s)"
+    - while [ ! -f "/tmp/.s.PGSQL.5432" ] && [ "$(($(date -u +%s)-$start_time))" -le 5 ] ; do echo -n "." ; done
+    - PGPASSWORD=password psql --file=./initdb.sql --username=acronymapi --dbname=defaultdb
+    - sleep 1
+    - PGPASSWORD=password psql --username=acronymapi --dbname=defaultdb
+    - ALTER DATABASE defaultdb SET log_statement = 'all';
+  - start-backend:
+    - npm run dev:restify
+  - test:
+    - echo npm run --test_live_node_server=true --test_live_pg_server=true test
+    - npm run

@@ -1,4 +1,4 @@
-name: Test API against Postgres Service Container
+name: Benchmark API Implementation
 
 on:
   push:
@@ -8,16 +8,14 @@ on:
     - cron: '30 5 * * 2,4'
 
 jobs:
-  install-test:
-    name: Node application tests
+  benchmark:
+    name: Benchmark Implementation
     strategy:
       matrix:
         node: ['14', '16']
+        implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
+        # nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
     runs-on: 'ubuntu-20.04'
-    # These run alongside the job.
-    # See:
-    # - https://docs.github.com/en/actions/using-containerized-services/about-service-containers
-    # - https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
       database:
@@ -34,6 +32,18 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      # # Note - no docker backend needed, we can just run against the container
+      # backend:
+      #   image: ${{ matrix.nodeImage }}
+      #   ports:
+      #     - 8080:8080
+      #   options: >-
+      #     --tty
+      #     --workdir /app
+      #     --name backend
+      #     --entrypoint /bin/sh
+      #     --volume "${{ github.workspace }}:/app"
+
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
@@ -47,10 +57,9 @@ jobs:
     - name: Initialize database with initdb
       run: |
         PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
-      # https://github.com/actions/setup-node
-      # https://github.com/actions/cache is no longer needed with setup-node v2
+      #
     - name: Setup Node with npm cache
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
         cache: 'npm'
@@ -58,15 +67,25 @@ jobs:
     - name: Install dependencies from package.json
       run: npm install
 
-    - name: Run tests with mocks
-      run: npm run test
+    # - name: Start backend in Docker
+    #   uses: docker://docker
+    #   with:
+    #     args: >-
+    #       docker exec --tty --detach backend sh -c "npm install && nohup npm run start:${{matrix.implementation}} >server.log 2>&1"
 
-    - name: Run tests against live Postgres server
-      if: matrix.node == '16'
-      run: npm --test_live_server=true run test
+    - name: Start backend ${{matrix.implementation}}
+      run: nohup npm run start:${{matrix.implementation}} >myscript.log 2>&1 &
+      env:
+        NODE_ENV: production
+
+    - name: Run benchmarks with live Postgres server
+      run: npm run benchmark
       env:
         PGUSER: acronymapi
         PGPASSWORD: password
         PGDATABASE: defaultdb
         PGHOST: localhost
         PGPORT: 5432
+
+    - name: Read out log
+      run: cat myscript.log

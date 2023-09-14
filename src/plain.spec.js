@@ -20,11 +20,6 @@ const request = require('supertest');
 // npm run --test_live_pg_server=true test
 const _live_pg_server = process.env?.npm_config_test_live_pg_server || 'false';
 const live_pg_server = _live_pg_server ? _live_pg_server === 'true' : false;
-if (live_pg_server) {
-  console.log('Testing against live PostgreSQL server');
-} else {
-  console.log('Testing with PostgreSQL DB mocks');
-}
 // include object to be mocked when not using live server
 const { Pool } = require('pg');
 
@@ -33,24 +28,30 @@ const { Pool } = require('pg');
 // npm run --test_live_node_server=true test
 const _live_node_server = process.env?.npm_config_test_live_node_server || 'false';
 const live_node_server = _live_node_server ? _live_node_server === 'true' : false;
-let server;
-if (live_node_server) {
-  const config = require('./config');
-  const PORT = config.conf.get('PORT');
-  server = `http://localhost:${PORT}`;
-  console.log(`Testing against live Node.JS server at ${server}`);
-} else {
-  // include server from index.js
-  server = require('./index');
-  console.log('Testing against server created in specfile');
-}
+
 // usage:
 // const t = generateArray();
 // const v = generateArray(10, (n) => {return {value: n};});
 function generateArray(length = 10, generator = (n) => { return n + 1; }) {
   return Array.from({ length: length }, (_, i) => generator(i));
 }
-describe('Acronym API', () => {
+describe('Acronym API - Plain HTTP', () => {
+  if (live_pg_server) {
+    console.log('Testing against live PostgreSQL server');
+  } else {
+    console.log('Testing with PostgreSQL DB mocks');
+  }
+  let server;
+  if (live_node_server) {
+    const config = require('./config');
+    const PORT = config.conf.get('PORT');
+    server = `http://localhost:${PORT}`;
+    console.log(`Testing against live Node.JS server at ${server}`);
+  } else {
+    // include server from index.js
+    server = require('./plain');
+    console.log('Testing against server created in specfile');
+  }
   after((done) => {
     try {
       if (!live_node_server) {
@@ -80,11 +81,7 @@ describe('Acronym API', () => {
           console.log(err);
         }
       }
-      if (!live_node_server) {
-        return server.close(done);
-      } else {
-        return done();
-      }
+      return done();
     });
     it('gets a page of acronyms', (done) => {
       if (!live_pg_server) {
@@ -98,7 +95,7 @@ describe('Acronym API', () => {
         .expect(200)
         .then((res) => {
           // do something with response
-          // console.log(res);
+          // console.log(res.body);
           if ('link' in res.headers) {
             assert.isOk(res.headers.link);
           } else {
@@ -257,11 +254,7 @@ describe('Acronym API', () => {
           console.log(err);
         }
       }
-      if (!live_node_server) {
-        return server.close(done);
-      } else {
-        return done();
-      }
+      return done();
     });
     it('returns an error status without a name or description', (done) => {
       request(server)
@@ -335,11 +328,7 @@ describe('Acronym API', () => {
           console.log(err);
         }
       }
-      if (!live_node_server) {
-        return server.close(done);
-      } else {
-        return done();
-      }
+      return done();
     });
     it('rejects without authentication', (done) => {
       request(server)
@@ -349,6 +338,7 @@ describe('Acronym API', () => {
         .expect(401)
         .then((res) => {
           // do something with response
+          // console.log(res.body);
           return done();
         }).catch((err) => {
           console.log(err);
@@ -364,6 +354,7 @@ describe('Acronym API', () => {
         .expect(401)
         .then((res) => {
           // do something with response
+          // console.log(res.body);
           return done();
         }).catch((err) => {
           console.log(err);
@@ -376,7 +367,7 @@ describe('Acronym API', () => {
         .auth(process.env.API_USER, process.env.API_PASSWORD)
         .send({ description: oldDescription })
         .set('Accept', 'application/json')
-        .expect(405)
+        .expect(400)
         .then((res) => {
           // console.log(res.body);
           return res;
@@ -393,6 +384,7 @@ describe('Acronym API', () => {
         .expect(400)
         .then((res) => {
           // do something with response
+          // console.log(res.body);
           return done();
         }).catch((err) => {
           console.log(err);
@@ -411,6 +403,7 @@ describe('Acronym API', () => {
         .expect(200)
         .then((res) => {
           // do something with response
+          // console.log(res.body);
           return done();
         }).catch((err) => {
           console.log(err);
@@ -485,18 +478,14 @@ describe('Acronym API', () => {
           console.log(err);
         }
       }
-      if (!live_node_server) {
-        return server.close(done);
-      } else {
-        return done();
-      }
+      return done();
     });
     it('rejects without a name', (done) => {
       request(server)
         .delete('/acronym')
         .auth(process.env.API_USER, process.env.API_PASSWORD)
         .set('Accept', 'application/json')
-        .expect(405)
+        .expect(400)
         .then((res) => {
           // console.log(res.body);
           return done();

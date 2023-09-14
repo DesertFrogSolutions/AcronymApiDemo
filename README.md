@@ -1,5 +1,24 @@
 # Acronym API Demo
-[![GitHub Actions Test Status](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
+
+[![Test API implementation](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
+
+[![Benchmark API implementations w/ Postgres Service Container](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml/badge.svg)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml)
+
+This is a tech demo demonstrating an API built on Node.JS in 2022, and now serves as a case study in the maintenance burden for an API built in NodeJS without significant feature work.
+For the purposes of comparing performance and ergonomics, we completed multiple implementations of the same API in this repository using different Node.JS web server frameworks.
+
+- [Node.JS HTTP Module](https://nodejs.org/docs/latest/api/http.html) (`plain`)
+- [Restify](https://github.com/restify/node-restify) (`restify`)
+- [Fastify](https://github.com/fastify/fastify) (`fastify`)
+- [Express](https://github.com/expressjs/express) (`express`)
+- [Koa](https://github.com/koajs/koa) (`koa`)
+
+> *Note* - Neither the PostgreSQL backend nor the web server implementations are configured to be production-ready.
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+For more information, reach out to the team at [desert.frog.solutions@gmail.com](mailto:desert.frog.solutions@gmail.com) or [desertfrogsolutions.com](https://desertfrogsolutions.com)
 
 ## Install & Initialize PostgreSQL DB
 
@@ -7,7 +26,7 @@
 
 2. Start a database instance
 ```sh
-/usr/local/opt/postgresql/bin/postgres -D ./usr/local/var/postgres
+/usr/local/opt/postgresql/bin/postgres -D /usr/local/var/postgres
 ```
 
 By default, the database listens to `localhost:5432`.
@@ -42,16 +61,16 @@ All configuration sources that were found will be flattened into one object, so 
 
 ### Start the Server
 
-Start the server with Node:
+Start the server you select (e.g. `express`) with Node:
 
 ```sh
-npm run start
+npm run start:express
 ```
 
 If actively developing the server (or you just want hot reloading), use `nodemon` to start the server with
 
 ```sh
-npm run dev
+npm run dev:express
 ```
 
 ### Testing
@@ -76,8 +95,12 @@ npm --test_live_pg_server=true run test
 
 > The test results can be validated in the database by using e.g. `PGPASSWORD=password psql -h localhost -U acronymapi -d defaultdb` and querying `SELECT * FROM acronym WHERE name LIKE '%ACRONYM%';` to find a PUTACRONYM and a POSTACRONYM
 
-If running with a "live" NodeJS application (e.g. started with `docker-compose up backend` or `npm run start` etc.), run tests against the live endpoint with
+If running with a "live" NodeJS application (e.g. started with `docker-compose up backend` or `npm run start:express` etc.), run tests against the live endpoint with
 
 ```sh
-npm --test_live_node_server=true run test
+npm --test_live_node_server=true run test:express
 ```
+
+### Benchmarks
+
+Benchmarks are automated using [Autocannon](https://github.com/mcollina/autocannon); with a server running in another process, run benchmarks with the command

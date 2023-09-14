@@ -4,13 +4,17 @@ const config = require('./config');
 // DB access
 const db = require('./db');
 
-// initialize REST API server
+// initialize REST API server errors
 const errors = require('restify-errors');
 
-let dbConnected = false;
-
+// configuration for authenticated routes
 const API_USER = config.conf.get('API_USER');
 const API_PASSWORD = config.conf.get('API_PASSWORD');
+
+async function Health(req, res, next) {
+  res.send({message: 'ok'});
+  return next();
+}
 
 async function Get(req, res, next) {
   try {
@@ -21,6 +25,7 @@ async function Get(req, res, next) {
     const count = await db.countAcronyms(from, search);
     const results = await db.getAcronyms(from, limit, search);
 
+    // req.log.info(results);
     // Create Link header when there are more results
     const nResults = results.rows.length;
     if (nResults < count.rows[0].result_count) {
@@ -28,11 +33,11 @@ async function Get(req, res, next) {
       const nextLink = search ? `/acronym/?from=${fromId}&limit=${limit}&search=${search}` : `/acronym/?from=${fromId}&limit=${limit}`;
       res.link(nextLink, 'next');
     }
+    // req.log.info('Made it here');
 
     res.send(results.rows);
     return next();
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 }
@@ -108,6 +113,7 @@ async function Delete(req, res, next) {
 }
 
 module.exports = {
+  Health: Health,
   Get: Get,
   Post: Post,
   Put: Put,
