@@ -1,4 +1,4 @@
-name: Test API w/ Postgres
+name: Test API against Postgres Service Container
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   install-test:
-    name: Application Validation
+    name: Node application tests
     strategy:
       matrix:
         node: ['14', '16']
@@ -37,22 +37,24 @@ jobs:
     steps:
       # https://github.com/actions/checkout
     - name: Checkout the commit triggering this job
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+      #
     - name: Install Postgres Client
       run: |
         sudo apt-get update
         sudo apt-get install --yes --no-install-recommends postgresql-client
+      #
     - name: Initialize database with initdb
       run: |
         PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
       # https://github.com/actions/setup-node
       # https://github.com/actions/cache is no longer needed with setup-node v2
     - name: Setup Node with npm cache
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
         cache: 'npm'
-
+      #
     - name: Install dependencies from package.json
       run: npm install
 
@@ -61,7 +63,7 @@ jobs:
 
     - name: Run tests against live Postgres server
       if: matrix.node == '16'
-      run: npm --test_live_pg_server=true run test
+      run: npm --test_live_server=true run test
       env:
         PGUSER: acronymapi
         PGPASSWORD: password

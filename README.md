@@ -1,11 +1,11 @@
 # Acronym API Demo
 
-[![GitHub Actions Test Status](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
+[![Test API implementation](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml/badge.svg?branch=main)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-test-containerized.yml)
 
 [![Benchmark API implementations w/ Postgres Service Container](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml/badge.svg)](https://github.com/DesertFrogSolutions/AcronymApiDemo/actions/workflows/node-benchmark-containerized.yml)
 
-This project demonstrates an API built on Node.JS.
-There are multiple implementations available in this repository using different Node.JS web server frameworks, to compare performance and ergonomics.
+This is a tech demo demonstrating an API built on Node.JS in 2022, and now serves as a case study in the maintenance burden for an API built in NodeJS without significant feature work.
+For the purposes of comparing performance and ergonomics, we completed multiple implementations of the same API in this repository using different Node.JS web server frameworks.
 
 - [Node.JS HTTP Module](https://nodejs.org/docs/latest/api/http.html) (`plain`)
 - [Restify](https://github.com/restify/node-restify) (`restify`)
@@ -14,6 +14,11 @@ There are multiple implementations available in this repository using different 
 - [Koa](https://github.com/koajs/koa) (`koa`)
 
 > *Note* - Neither the PostgreSQL backend nor the web server implementations are configured to be production-ready.
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+For more information, reach out to the team at [desert.frog.solutions@gmail.com](mailto:desert.frog.solutions@gmail.com) or [desertfrogsolutions.com](https://desertfrogsolutions.com)
 
 ## Install & Initialize PostgreSQL DB
 
@@ -70,7 +75,7 @@ npm run dev:express
 
 ### Testing
 
-The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the PostgreSQL access stubbed out with [Sinon](https://sinonjs.org/). Run them all with
+The `spec.js` file contains functional tests in [Mocha](https://mochajs.org/) for the server with the PostgreSQL access stubbed out with [Sinon](https://sinonjs.org/). Run them with
 
 ```sh
 npm run test
@@ -99,7 +104,3 @@ npm --test_live_node_server=true run test:express
 ### Benchmarks
 
 Benchmarks are automated using [Autocannon](https://github.com/mcollina/autocannon); with a server running in another process, run benchmarks with the command
-
-```sh
-npm run benchmark
-```
