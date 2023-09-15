@@ -89,7 +89,7 @@ function Put(req, res, next) {
     return next();
   }).catch(e => next(e));
 }
-async function Delete(req, res, next) {
+function Delete(req, res, next) {
   // check if user passed valid authentication header
   if (req.username === 'anonymous' ||
       req.username !== API_USER ||
