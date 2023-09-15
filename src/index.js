@@ -24,7 +24,6 @@ const server = restify.createServer({
 
 server.pre(restify.plugins.requestLogger({
     log: log,
-    serializers: restify.bunyan.serializers
 }));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.authorizationParser());
