@@ -49,7 +49,6 @@ describe('Acronym API - Restify', () => {
     server = `http://localhost:${PORT}`;
     console.log(`Testing against live Node.JS server at ${server}`);
   } else {
-    // include server from index.js
     server = require('./restify');
     console.log('Testing against server created in specfile');
   }

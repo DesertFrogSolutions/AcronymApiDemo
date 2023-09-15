@@ -30,9 +30,7 @@ const { Pool } = require('pg');
 // npm run --test_live_node_server=true test
 const _live_node_server = process.env?.npm_config_test_live_node_server || 'false';
 const live_node_server = _live_node_server ? _live_node_server === 'true' : false;
-// include server from index.js
 const server = require('./fastify');
-
 
 // usage:
 // const t = generateArray();

@@ -36,10 +36,6 @@ server.use(restify.plugins.bodyParser());
 server.post('/acronym', routes.Post);
 server.put('/acronym/:acronym', routes.Put);
 
-server.listen(parseInt(config.conf.get('PORT')), function() {
-  console.log('%s listening at %s', server.name, server.url);
-});
-
 // the pool will emit an error on behalf of any idle clients
 // it contains if a backend error or network partition happens
 db.pool.on('error', (err, client) => {
@@ -74,5 +70,16 @@ function handleError(req, res, err, callback) {
 server.on('uncaughtException', handleError);
 // any other error (fallthru)
 server.on('restifyError', handleError);
+
+
+// run server if used as a module on the command line
+if (require.main === module) {
+  server.listen(parseInt(config.conf.get('PORT')), function() {
+    console.log('%s listening at %s', server.name, server.url);
+  });
+
+  process.on('SIGINT', doClose);
+  process.on('exit', doClose);
+}
 
 module.exports = server;
