@@ -37,9 +37,9 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Koa', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, koa');
   } else {
-    console.log('Testing with PostgreSQL DB mocks');
+    console.log('Testing with PostgreSQL DB mocks, koa');
   }
   let server;
   before((done) => {

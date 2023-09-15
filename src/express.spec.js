@@ -37,9 +37,9 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Express', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, express');
   } else {
-    console.log('Testing with PostgreSQL DB mocks');
+    console.log('Testing with PostgreSQL DB mocks, express');
   }
   let server;
   if (live_node_server) {

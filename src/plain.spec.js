@@ -37,9 +37,9 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Plain HTTP', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, plain');
   } else {
-    console.log('Testing with PostgreSQL DB mocks');
+    console.log('Testing with PostgreSQL DB mocks, plain');
   }
   let server;
   if (live_node_server) {

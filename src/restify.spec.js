@@ -38,9 +38,9 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Restify', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, restify');
   } else {
-    console.log('Testing with PostgreSQL DB mocks');
+    console.log('Testing with PostgreSQL DB mocks, restify');
   }
   let server;
   if (live_node_server) {
