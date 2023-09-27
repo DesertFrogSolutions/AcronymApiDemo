@@ -11,6 +11,7 @@ jobs:
   benchmark:
     name: Benchmark Implementation
     strategy:
+      fail-fast: false
       matrix:
         node: ['16', '18']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
