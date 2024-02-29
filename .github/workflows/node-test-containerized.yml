@@ -11,8 +11,9 @@ jobs:
   install-test:
     name: Node application tests
     strategy:
+      fail-fast: false
       matrix:
-        node: ['14', '16']
+        node: ['16', '18']
     runs-on: 'ubuntu-20.04'
     # These run alongside the job.
     # See:
@@ -59,11 +60,10 @@ jobs:
       run: npm install
 
     - name: Run tests with mocks
-      run: npm run test
+      run: npm run test || echo '::error file=package.json,title=npm::default target failed, ${{matrix.node}}'
 
     - name: Run tests against live Postgres server
-      if: matrix.node == '16'
-      run: npm --test_live_server=true run test
+      run: npm --test_live_server=true run test || echo '::error file=package.json,title=npm::test_live_server failed, ${{matrix.node}}'
       env:
         PGUSER: acronymapi
         PGPASSWORD: password

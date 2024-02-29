@@ -11,6 +11,7 @@ jobs:
   test-docker:
     name: Docker Image Build
     strategy:
+      fail-fast: false
       matrix:
         node: ['14', '16', '18']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']

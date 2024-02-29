@@ -8,7 +8,7 @@ const API_PASSWORD = config.conf.get('API_PASSWORD');
 const db = require('./db');
 
 // Basic Authentication - https://github.com/fastify/fastify-basic-auth
-const auth = require('fastify-basic-auth');
+const auth = require('@fastify/basic-auth');
 
 function validate(username, password, req, reply, done) {
   if (username === 'anonymous' ||
