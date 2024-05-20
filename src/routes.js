@@ -12,7 +12,7 @@ let dbConnected = false;
 const API_USER = config.conf.get('API_USER');
 const API_PASSWORD = config.conf.get('API_PASSWORD');
 
-async function Get(req, res, next) {
+async function Get(req, res) {
   try {
     const from = parseInt(req.query?.from || '0');
     const limit = parseInt(req.query?.limit || '10');
@@ -37,7 +37,7 @@ async function Get(req, res, next) {
   }
 }
 
-async function Post(req, res, next) {
+async function Post(req, res) {
   try {
     const name = req.body?.name || null;
     const description = req.body?.description || null;
@@ -56,7 +56,7 @@ async function Post(req, res, next) {
   }
 }
 
-async function Put(req, res, next) {
+async function Put(req, res) {
   try {
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
@@ -85,7 +85,7 @@ async function Put(req, res, next) {
     next(err);
   }
 }
-async function Delete(req, res, next) {
+async function Delete(req, res) {
   try {
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
