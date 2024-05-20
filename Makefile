@@ -7,3 +7,7 @@ dist.zip: ${PACKAGE_DEPS}
 
 pkg: ${PACKAGE_DEPS} ## Generate npm package (tarball)
 	npm pkg
+
+clean:
+	$(RM) -r node_modules
+.PHONY: clean
