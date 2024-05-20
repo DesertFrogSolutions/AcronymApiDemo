@@ -13,7 +13,6 @@ const API_USER = config.conf.get('API_USER');
 const API_PASSWORD = config.conf.get('API_PASSWORD');
 
 async function Get(req, res) {
-  try {
     const from = parseInt(req.query?.from || '0');
     const limit = parseInt(req.query?.limit || '10');
     const search = req.query?.search || '';
@@ -30,15 +29,9 @@ async function Get(req, res) {
     }
 
     res.send(results.rows);
-    return next();
-  } catch (err) {
-    console.log(err);
-    return next(err);
-  }
 }
 
 async function Post(req, res) {
-  try {
     const name = req.body?.name || null;
     const description = req.body?.description || null;
     // Validate name and description
@@ -46,23 +39,18 @@ async function Post(req, res) {
       res.status(400);
       const message = name ? 'Missing "description"' : 'Missing "name"';
       res.send(message);
-      return next();
+      return
     }
     const result = await db.insertAcronym(name, description);
     res.send(result);
-    return next();
-  } catch (err) {
-    return next(err);
-  }
 }
 
 async function Put(req, res) {
-  try {
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
         req.username !== API_USER ||
         req.authorization.basic.password !== API_PASSWORD) {
-      return next(new errors.UnauthorizedError());
+      throw errors.UnauthorizedError();
     }
     const newName = req.params.acronym || null;
     const oldName = req.body?.name || newName;
@@ -75,36 +63,27 @@ async function Put(req, res) {
       } else {
         res.send('Missing "description" in body');
       }
-      return next();
+      return
     }
 
     const result = await db.upsertAcronym(oldName, newName, description);
     res.send(result);
-    return next();
-  } catch (err) {
-    next(err);
-  }
 }
 async function Delete(req, res) {
-  try {
     // check if user passed valid authentication header
     if (req.username === 'anonymous' ||
         req.username !== API_USER ||
         req.authorization.basic.password !== API_PASSWORD) {
-      return next(new errors.UnauthorizedError());
+      throw errors.UnauthorizedError();
     }
     const acronym = req.params?.acronym || null;
     if (!acronym) {
       res.status(400);
       res.send('Missing parameter "acronym"');
-      return next();
+      return
     }
     const result = await db.deleteAcronym(acronym);
     res.send(result);
-    return next();
-  } catch (err) {
-    return next(err);
-  }
 }
 
 module.exports = {
