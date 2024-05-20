@@ -13,8 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['16', '18']
-    runs-on: 'ubuntu-20.04'
+        node: ['18', '20']
+        runson: ['ubuntu-20.04', 'ubuntu-22.04']
+        postgresversion: ['14.2-alpine']
+    runs-on: ${{ matrix.runson }}
     # These run alongside the job.
     # See:
     # - https://docs.github.com/en/actions/using-containerized-services/about-service-containers
@@ -22,7 +24,7 @@ jobs:
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
       database:
-        image: postgres:14.2-alpine
+        image: postgres:${{ matrix.postgresversion }}
         ports:
           - 5432:5432
         env:
@@ -51,7 +53,7 @@ jobs:
       # https://github.com/actions/setup-node
       # https://github.com/actions/cache is no longer needed with setup-node v2
     - name: Setup Node with npm cache
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
         cache: 'npm'
