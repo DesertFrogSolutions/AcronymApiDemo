@@ -105,7 +105,6 @@ if (require.main === module) {
 
   process.on('SIGINT', doClose);
   process.on('exit', doClose);
-
 }
 
 module.exports = server;

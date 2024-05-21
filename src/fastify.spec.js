@@ -30,9 +30,7 @@ const { Pool } = require('pg');
 // npm run --test_live_node_server=true test
 const _live_node_server = process.env?.npm_config_test_live_node_server || 'false';
 const live_node_server = _live_node_server ? _live_node_server === 'true' : false;
-// include server from index.js
 const server = require('./fastify');
-
 
 // usage:
 // const t = generateArray();
@@ -42,12 +40,12 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Fastify', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, fastify');
   }
   if (live_node_server) {
     console.log(`Testing against live Node.JS server not supported for Fastify impl`);
   }
-  console.log('Testing against server created in specfile');
+  console.log('Testing against server created in specfile, fastify');
 
   after((done) => {
     setTimeout(function(){process.exit(0);},1000);

@@ -38,9 +38,9 @@ function generateArray(length = 10, generator = (n) => { return n + 1; }) {
 }
 describe('Acronym API - Restify', () => {
   if (live_pg_server) {
-    console.log('Testing against live PostgreSQL server');
+    console.log('Testing against live PostgreSQL server, restify');
   } else {
-    console.log('Testing with PostgreSQL DB mocks');
+    console.log('Testing with PostgreSQL DB mocks, restify');
   }
   let server;
   if (live_node_server) {
@@ -49,7 +49,6 @@ describe('Acronym API - Restify', () => {
     server = `http://localhost:${PORT}`;
     console.log(`Testing against live Node.JS server at ${server}`);
   } else {
-    // include server from index.js
     server = require('./restify');
     console.log('Testing against server created in specfile');
   }

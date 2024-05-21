@@ -11,15 +11,18 @@ jobs:
   benchmark:
     name: Benchmark Implementation
     strategy:
+      fail-fast: false
       matrix:
-        node: ['14', '16']
+        node: ['16', '18', '20']
         implementation: ['restify', 'plain', 'express', 'koa', 'fastify']
+        runson: ['ubuntu-20.04', 'ubuntu-22.04']
+        postgresversion: ['14.2-alpine']
         # nodeImage: ['node:14-alpine', 'node:16-alpine', 'node:17-alpine']
-    runs-on: 'ubuntu-20.04'
+    runs-on: ${{ matrix.runson }}
     services:
       # label for service - since this job doesn't run in a container, this service is accessible at localhost
       database:
-        image: postgres:14.2-alpine
+        image: postgres:${{ matrix.postgresversion }}
         ports:
           - 5432:5432
         env:
@@ -59,7 +62,7 @@ jobs:
         PGPASSWORD=password psql -h localhost -U acronymapi --dbname=defaultdb --file=initdb.sql
       #
     - name: Setup Node with npm cache
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
         cache: 'npm'
